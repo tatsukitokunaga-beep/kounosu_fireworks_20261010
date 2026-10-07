@@ -322,7 +322,7 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
 }
 
 
-/* ===== v18: SIDE-RAIL COUNTDOWN / CHEERS ===== */
+/* ===== v20: SIDE-RAIL COUNTDOWN / CHEERS ===== */
 .video-side-fx{
   position:absolute!important;
   inset:0!important;
@@ -536,7 +536,7 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
 }
 
 
-/* ===== v18: OVERLAP THE VIDEO EDGES AGGRESSIVELY =====
+/* ===== v20: OVERLAP THE VIDEO EDGES AGGRESSIVELY =====
    User-designated expendable zones: roughly left/right 30% of landscape screen.
    Preserve the center ~40% for the video's main subject. */
 @media (orientation:landscape){
@@ -642,6 +642,397 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
   .side-count-number{font-size:clamp(96px,34vh,154px)!important}
   .side-cheers-main{font-size:clamp(28px,8.5vh,48px)!important}
   .side-cheers-main.emoji{font-size:clamp(36px,9.5vh,58px)!important}
+}
+
+
+/* ===== v20: CINEMATIC KANPAI SCENE ===== */
+.video-cheers-burst{
+  overflow:hidden!important;
+}
+.cheers-world{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.cheers-sky-stars{
+  position:absolute;
+  inset:-20% 0 0;
+  opacity:.75;
+  background-image:
+    radial-gradient(circle,#fff 0 1.2px,transparent 1.8px),
+    radial-gradient(circle,#ffe68a 0 1.4px,transparent 2px),
+    radial-gradient(circle,#7cecff 0 1px,transparent 1.7px);
+  background-size:34px 42px,58px 67px,83px 91px;
+  animation:cheersStarRain 7s linear infinite;
+  filter:drop-shadow(0 0 4px rgba(255,255,255,.7));
+}
+@keyframes cheersStarRain{to{transform:translateY(150px)}}
+
+.cheers-fireworks-layer{position:absolute;inset:0;overflow:hidden}
+.mega-fw{
+  position:absolute;
+  width:8px;height:8px;border-radius:50%;
+  box-shadow:
+    0 -46px 0 -2px #fff,
+    32px -32px 0 -2px #ffd75b,
+    46px 0 0 -2px #ff6eaa,
+    32px 32px 0 -2px #72ebff,
+    0 46px 0 -2px #fff,
+    -32px 32px 0 -2px #ffbd4f,
+    -46px 0 0 -2px #ff75bd,
+    -32px -32px 0 -2px #76eaff;
+  filter:drop-shadow(0 0 8px #fff);
+  opacity:0;
+  animation:megaFirework 2.8s ease-out infinite;
+}
+.mf1{left:9%;top:22%;animation-delay:.1s}
+.mf2{left:20%;top:68%;animation-delay:1.2s;transform:scale(.78)}
+.mf3{right:10%;top:25%;animation-delay:.55s}
+.mf4{right:21%;top:70%;animation-delay:1.65s;transform:scale(.82)}
+.mf5{left:27%;top:40%;animation-delay:2.05s;transform:scale(.64)}
+.mf6{right:28%;top:46%;animation-delay:2.35s;transform:scale(.62)}
+@keyframes megaFirework{
+  0%{opacity:0;transform:scale(.05)}
+  17%{opacity:1}
+  55%{opacity:.95;transform:scale(1)}
+  100%{opacity:0;transform:scale(1.45)}
+}
+
+.kanpai-title-wrap{
+  position:absolute;
+  top:7%;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(42vw,540px);
+  text-align:center;
+  z-index:9;
+  opacity:0;
+  animation:kanpaiTitleIn 1.1s .95s cubic-bezier(.12,1.3,.28,1) forwards,
+            kanpaiTitlePulse 1.7s 2.1s ease-in-out infinite;
+}
+.kanpai-title{
+  font-size:clamp(34px,8.8vh,78px);
+  font-weight:1000;
+  line-height:.92;
+  color:#fff8be;
+  text-shadow:0 0 8px #fff,0 0 25px #ffd952,0 0 64px #ff6da3;
+  white-space:nowrap;
+}
+.kanpai-subtitle{
+  margin-top:8px;
+  font-size:clamp(11px,2.6vh,18px);
+  font-weight:1000;
+  letter-spacing:.22em;
+  color:#dff7ff;
+  text-shadow:0 0 18px rgba(109,235,255,.9);
+}
+@keyframes kanpaiTitleIn{
+  from{opacity:0;transform:translateX(-50%) scale(.25) rotate(-4deg)}
+  65%{opacity:1;transform:translateX(-50%) scale(1.16) rotate(2deg)}
+  to{opacity:1;transform:translateX(-50%) scale(1)}
+}
+@keyframes kanpaiTitlePulse{
+  0%,100%{filter:brightness(1);transform:translateX(-50%) scale(1)}
+  50%{filter:brightness(1.22);transform:translateX(-50%) scale(1.035)}
+}
+
+/* arms + hands */
+.kanpai-arm{
+  position:absolute;
+  top:39%;
+  width:34vw;
+  height:29vh;
+  z-index:8;
+  will-change:transform;
+}
+.male-arm{
+  left:-35vw;
+  animation:maleArmEnter 2.28s cubic-bezier(.18,.72,.24,1) .08s forwards;
+}
+.female-arm{
+  right:-35vw;
+  animation:femaleArmEnter 2.28s cubic-bezier(.18,.72,.24,1) .08s forwards;
+}
+@keyframes maleArmEnter{to{transform:translateX(27vw)}}
+@keyframes femaleArmEnter{to{transform:translateX(-27vw)}}
+@keyframes maleArmLoop{
+  0%,100%{transform:translateX(27vw)}
+  34%{transform:translateX(23vw)}
+  52%{transform:translateX(28.3vw)}
+  65%{transform:translateX(27vw)}
+}
+@keyframes femaleArmLoop{
+  0%,100%{transform:translateX(-27vw)}
+  34%{transform:translateX(-23vw)}
+  52%{transform:translateX(-28.3vw)}
+  65%{transform:translateX(-27vw)}
+}
+.sleeve{
+  position:absolute;
+  top:47%;
+  width:76%;
+  height:33%;
+  border-radius:999px;
+}
+.male-sleeve{
+  left:0;
+  background:linear-gradient(180deg,#1d2f57,#08142b);
+  box-shadow:0 0 24px rgba(80,133,255,.25);
+}
+.female-sleeve{
+  right:0;
+  background:linear-gradient(180deg,#f5edf3,#d2b9cb);
+  box-shadow:0 0 24px rgba(255,166,211,.24);
+}
+.hand{
+  position:absolute;
+  top:42%;
+  width:26%;
+  height:42%;
+  border-radius:46% 48% 42% 42%;
+  background:linear-gradient(135deg,#f4c29f,#d99870);
+  box-shadow:inset -8px -8px 18px rgba(139,76,41,.14),0 8px 24px rgba(0,0,0,.26);
+}
+.male-hand{right:8%}
+.female-hand{left:8%;background:linear-gradient(135deg,#f6cdb3,#e0a27f)}
+.bracelet{
+  position:absolute;
+  right:-8%;
+  top:12%;
+  width:12%;
+  height:76%;
+  border-radius:999px;
+  background:linear-gradient(#fff1a1,#d9a92a);
+  box-shadow:0 0 11px rgba(255,220,94,.72);
+}
+.glass-holder{
+  position:absolute;
+  top:-23%;
+  width:30%;
+  height:130%;
+  filter:drop-shadow(0 0 12px rgba(255,255,255,.28));
+  transform-origin:50% 78%;
+}
+.left-glass{right:-2%;transform:rotate(9deg)}
+.right-glass{left:-2%;transform:rotate(-9deg)}
+.flute{width:100%;height:100%;overflow:visible}
+
+/* clink impact */
+.clink-core{
+  position:absolute;
+  left:50%;
+  top:51%;
+  width:70px;height:70px;
+  transform:translate(-50%,-50%) scale(.2);
+  z-index:12;
+  opacity:0;
+}
+.clink-core.hit{
+  animation:clinkCoreHit .85s cubic-bezier(.12,1.6,.28,1) both;
+}
+@keyframes clinkCoreHit{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.15)}
+  32%{opacity:1;transform:translate(-50%,-50%) scale(1.4)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(2.25)}
+}
+.clink-ring{
+  position:absolute;inset:0;border-radius:50%;
+  border:3px solid #fff3a2;
+  box-shadow:0 0 20px #fff,0 0 45px #ffd44f;
+  animation:ringExpand .8s ease-out both;
+}
+.clink-ring.r2{animation-delay:.12s}
+@keyframes ringExpand{to{transform:scale(2.1);opacity:0}}
+.clink-star{
+  position:absolute;font-size:24px;color:#fff7ba;
+  text-shadow:0 0 9px #fff,0 0 22px #ffd64e;
+}
+.cs1{left:26px;top:-20px}.cs2{right:-13px;top:18px}.cs3{left:-11px;bottom:0}
+.clink-word{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  font-size:20px;font-weight:1000;color:#fff;white-space:nowrap;
+  text-shadow:0 0 10px #fff,0 0 24px #ffd33e;
+}
+
+/* laughs */
+.laugh-field{position:absolute;inset:0;z-index:10;overflow:hidden}
+.laugh-chip{
+  position:absolute;
+  font-weight:1000;
+  color:white;
+  text-shadow:0 0 8px rgba(255,255,255,.8),0 0 22px rgba(255,96,163,.75);
+  opacity:0;
+  will-change:transform,opacity;
+}
+.lc1{left:6%;top:23%;font-size:clamp(22px,5vh,38px);animation:laughFloat1 4.6s 1.6s infinite}
+.lc2{left:17%;bottom:12%;font-size:clamp(26px,6vh,46px);animation:laughFloat2 5.1s 2s infinite}
+.lc3{right:7%;top:27%;font-size:clamp(20px,4.8vh,36px);animation:laughFloat3 4.8s 2.3s infinite}
+.lc4{right:18%;bottom:14%;font-size:clamp(22px,5vh,40px);animation:laughFloat4 5.3s 1.8s infinite}
+.lc5{left:28%;top:14%;font-size:clamp(18px,4vh,30px);animation:laughFloat3 5.6s 2.7s infinite}
+.lc6{right:29%;bottom:26%;font-size:clamp(18px,4vh,30px);animation:laughFloat1 5.8s 2.4s infinite}
+@keyframes laughFloat1{
+  0%{opacity:0;transform:translate(-18px,42px) scale(.55) rotate(-12deg)}
+  18%{opacity:1}
+  55%{opacity:1;transform:translate(14px,-10px) scale(1.15) rotate(6deg)}
+  100%{opacity:0;transform:translate(26px,-68px) scale(.9) rotate(14deg)}
+}
+@keyframes laughFloat2{
+  0%{opacity:0;transform:translate(-10px,38px) scale(.5) rotate(10deg)}
+  25%{opacity:1}
+  62%{opacity:1;transform:translate(18px,-22px) scale(1.18) rotate(-7deg)}
+  100%{opacity:0;transform:translate(34px,-80px) scale(.88) rotate(-15deg)}
+}
+@keyframes laughFloat3{
+  0%{opacity:0;transform:translate(18px,38px) scale(.5) rotate(12deg)}
+  24%{opacity:1}
+  62%{opacity:1;transform:translate(-14px,-18px) scale(1.14) rotate(-5deg)}
+  100%{opacity:0;transform:translate(-30px,-74px) scale(.9) rotate(-13deg)}
+}
+@keyframes laughFloat4{
+  0%{opacity:0;transform:translate(18px,42px) scale(.55) rotate(-10deg)}
+  22%{opacity:1}
+  60%{opacity:1;transform:translate(-18px,-12px) scale(1.16) rotate(7deg)}
+  100%{opacity:0;transform:translate(-32px,-68px) scale(.9) rotate(15deg)}
+}
+
+/* keep center video primary */
+.video-cheers-burst{background:transparent!important}
+@media (orientation:landscape) and (max-height:430px){
+  .kanpai-arm{top:40%;height:27vh}
+  .kanpai-title{font-size:clamp(28px,8.3vh,52px)}
+  .laugh-chip{transform-origin:center}
+}
+
+
+/* ===== v20: SHIN TAKARAJIMA BEAT SYNC (BPM 158) ===== */
+.video-side-panel.music-beat{
+  animation:musicRailBeat .22s ease-out both;
+}
+.video-side-panel.music-strong{
+  animation:musicRailStrong .34s cubic-bezier(.15,1.35,.3,1) both;
+}
+.video-side-panel.music-emphasis{
+  filter:brightness(1.34) saturate(1.18);
+}
+@keyframes musicRailBeat{
+  0%{filter:brightness(1.55) saturate(1.25)}
+  100%{filter:brightness(1) saturate(1)}
+}
+@keyframes musicRailStrong{
+  0%{filter:brightness(1.9) saturate(1.45);box-shadow:inset 0 0 100px rgba(255,211,78,.22)}
+  100%{filter:brightness(1);box-shadow:inset 0 0 50px rgba(255,211,78,.06)}
+}
+
+/* The current countdown number keeps breathing to the quarter-note even before the second changes */
+.countdown-side.music-beat .side-count-number{
+  animation:countdownMicroBeat .23s ease-out both!important;
+}
+.countdown-side.music-strong .side-count-number{
+  animation:countdownBarBeat .35s cubic-bezier(.12,1.5,.28,1) both!important;
+}
+@keyframes countdownMicroBeat{
+  0%{transform:scale(1.115);filter:brightness(1.55);text-shadow:0 0 14px #fff,0 0 35px #ffd44f,0 0 78px #ff689e}
+  100%{transform:scale(1);filter:brightness(1)}
+}
+@keyframes countdownBarBeat{
+  0%{transform:scale(.9)}
+  42%{transform:scale(1.26);filter:brightness(1.8)}
+  100%{transform:scale(1)}
+}
+
+/* After zero, the whole celebration breathes with the chorus rhythm */
+.cheers-world.music-beat .kanpai-title-wrap{
+  animation:beatTitleHit .25s ease-out both!important;
+}
+.cheers-world.music-strong .kanpai-title-wrap{
+  animation:barTitleHit .42s cubic-bezier(.12,1.35,.28,1) both!important;
+}
+.cheers-world.music-beat .cheers-sky-stars{filter:brightness(1.42) drop-shadow(0 0 7px rgba(255,255,255,.72))}
+.cheers-world.music-strong .cheers-sky-stars{filter:brightness(1.8) drop-shadow(0 0 12px rgba(255,217,79,.95))}
+@keyframes beatTitleHit{
+  0%{transform:translateX(-50%) scale(1.075);filter:brightness(1.38)}
+  100%{transform:translateX(-50%) scale(1);filter:brightness(1)}
+}
+@keyframes barTitleHit{
+  0%{transform:translateX(-50%) scale(.93)}
+  42%{transform:translateX(-50%) scale(1.13);filter:brightness(1.65)}
+  100%{transform:translateX(-50%) scale(1)}
+}
+
+/* Alternate left/right pulse on successive beats */
+.cheers-world.beat-left .male-arm .flute,
+.cheers-world.beat-right .female-arm .flute{
+  animation:glassBeatNod .24s ease-out both;
+}
+@keyframes glassBeatNod{
+  0%{transform:rotate(-2deg) scale(1.08);filter:brightness(1.42)}
+  100%{transform:rotate(0) scale(1);filter:brightness(1)}
+}
+
+/* One-beat approach before a recurring synced clink */
+.male-arm.beat-clink{
+  animation:maleBeatClink .39s ease-in forwards!important;
+}
+.female-arm.beat-clink{
+  animation:femaleBeatClink .39s ease-in forwards!important;
+}
+@keyframes maleBeatClink{
+  from{transform:translateX(27vw)}
+  to{transform:translateX(34vw)}
+}
+@keyframes femaleBeatClink{
+  from{transform:translateX(-27vw)}
+  to{transform:translateX(-34vw)}
+}
+
+/* Beat-synced laugh/party pops generated by JS */
+.beat-emoji{
+  position:absolute;
+  z-index:15;
+  font-size:clamp(24px,5.8vh,48px);
+  font-weight:1000;
+  color:#fff;
+  pointer-events:none;
+  opacity:0;
+  text-shadow:0 0 8px #fff,0 0 20px rgba(255,91,161,.85);
+  will-change:transform,opacity;
+}
+.beat-emoji.from-left{left:8%;animation:beatEmojiLeft 1.15s ease-out forwards}
+.beat-emoji.from-right{right:8%;animation:beatEmojiRight 1.15s ease-out forwards}
+@keyframes beatEmojiLeft{
+  0%{opacity:0;transform:translate(-30px,26px) scale(.45) rotate(-13deg)}
+  18%{opacity:1}
+  52%{opacity:1;transform:translate(28px,-10px) scale(1.18) rotate(5deg)}
+  100%{opacity:0;transform:translate(80px,-78px) scale(.84) rotate(14deg)}
+}
+@keyframes beatEmojiRight{
+  0%{opacity:0;transform:translate(30px,26px) scale(.45) rotate(13deg)}
+  18%{opacity:1}
+  52%{opacity:1;transform:translate(-28px,-10px) scale(1.18) rotate(-5deg)}
+  100%{opacity:0;transform:translate(-80px,-78px) scale(.84) rotate(-14deg)}
+}
+
+/* Bar accent flash is soft and stays out of the center */
+.cheers-world.music-strong:before,
+.cheers-world.music-strong:after{
+  content:"";
+  position:absolute;
+  top:0;bottom:0;
+  width:30vw;
+  z-index:5;
+  pointer-events:none;
+  animation:barEdgeFlash .34s ease-out both;
+}
+.cheers-world.music-strong:before{
+  left:0;background:linear-gradient(90deg,rgba(255,218,75,.28),transparent)
+}
+.cheers-world.music-strong:after{
+  right:0;background:linear-gradient(270deg,rgba(255,103,163,.25),transparent)
+}
+@keyframes barEdgeFlash{
+  from{opacity:1}
+  to{opacity:0}
 }
 
 </style>
@@ -762,22 +1153,85 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
       </div>
       <div class="video-spark-layer" id="videoSparkLayer"></div>
       <div class="video-cheers-burst video-side-fx" id="videoCheersBurst" aria-hidden="true">
-        <div class="video-side-panel side-left cheers-side">
-          <div class="side-rail-stars"></div>
-          <div class="rail-firework fw-a"></div>
-          <div class="rail-firework fw-b"></div>
-          <div class="side-cheers-inner">
-            <div class="side-cheers-main">乾杯〜！</div>
-            <div class="side-cheers-sub">たつき × あい</div>
+        <div class="cheers-world">
+          <div class="cheers-sky-stars"></div>
+          <div class="cheers-fireworks-layer">
+            <span class="mega-fw mf1"></span><span class="mega-fw mf2"></span>
+            <span class="mega-fw mf3"></span><span class="mega-fw mf4"></span>
+            <span class="mega-fw mf5"></span><span class="mega-fw mf6"></span>
           </div>
-        </div>
-        <div class="video-side-panel side-right cheers-side">
-          <div class="side-rail-stars"></div>
-          <div class="rail-firework fw-a"></div>
-          <div class="rail-firework fw-b"></div>
-          <div class="side-cheers-inner">
-            <div class="side-cheers-main emoji">🎉🥂</div>
-            <div class="side-cheers-sub">最高の花火ナイト！</div>
+
+          <div class="kanpai-title-wrap">
+            <div class="kanpai-title">乾杯〜！！🎉</div>
+            <div class="kanpai-subtitle">TATSUKI × AI</div>
+          </div>
+
+          <div class="laugh-field" aria-hidden="true">
+            <span class="laugh-chip lc1">😂ｗ</span>
+            <span class="laugh-chip lc2">🤣</span>
+            <span class="laugh-chip lc3">爆笑😂</span>
+            <span class="laugh-chip lc4">ｗｗｗ</span>
+            <span class="laugh-chip lc5">😂😂</span>
+            <span class="laugh-chip lc6">🤣ｗ</span>
+          </div>
+
+          <div class="kanpai-arm male-arm" id="maleArm">
+            <div class="sleeve male-sleeve"></div>
+            <div class="hand male-hand"></div>
+            <div class="glass-holder left-glass"><svg class="flute" viewBox="0 0 90 210" aria-hidden="true">
+  <defs>
+    <linearGradient id="gGlass" x1="0" x2="1">
+      <stop offset="0" stop-color="rgba(255,255,255,.18)"/>
+      <stop offset=".45" stop-color="rgba(255,255,255,.85)"/>
+      <stop offset="1" stop-color="rgba(170,225,255,.22)"/>
+    </linearGradient>
+    <linearGradient id="gDrink" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#fff3a4"/>
+      <stop offset="1" stop-color="#f7bd3d"/>
+    </linearGradient>
+  </defs>
+  <path d="M22 8h46c-2 52-8 83-23 97C30 91 24 60 22 8Z" fill="url(#gGlass)" stroke="rgba(255,255,255,.88)" stroke-width="3"/>
+  <path d="M28 51h34c-2 24-7 39-17 48-10-9-15-24-17-48Z" fill="url(#gDrink)" opacity=".9"/>
+  <circle cx="39" cy="71" r="2.5" fill="#fff" opacity=".8"/>
+  <circle cx="49" cy="61" r="2" fill="#fff" opacity=".65"/>
+  <circle cx="44" cy="80" r="1.8" fill="#fff" opacity=".7"/>
+  <path d="M45 104v72" stroke="rgba(255,255,255,.88)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M24 193h42" stroke="rgba(255,255,255,.9)" stroke-width="5" stroke-linecap="round"/>
+</svg></div>
+          </div>
+
+          <div class="kanpai-arm female-arm" id="femaleArm">
+            <div class="sleeve female-sleeve"></div>
+            <div class="hand female-hand"><span class="bracelet"></span></div>
+            <div class="glass-holder right-glass"><svg class="flute" viewBox="0 0 90 210" aria-hidden="true">
+  <defs>
+    <linearGradient id="gGlass" x1="0" x2="1">
+      <stop offset="0" stop-color="rgba(255,255,255,.18)"/>
+      <stop offset=".45" stop-color="rgba(255,255,255,.85)"/>
+      <stop offset="1" stop-color="rgba(170,225,255,.22)"/>
+    </linearGradient>
+    <linearGradient id="gDrink" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#fff3a4"/>
+      <stop offset="1" stop-color="#f7bd3d"/>
+    </linearGradient>
+  </defs>
+  <path d="M22 8h46c-2 52-8 83-23 97C30 91 24 60 22 8Z" fill="url(#gGlass)" stroke="rgba(255,255,255,.88)" stroke-width="3"/>
+  <path d="M28 51h34c-2 24-7 39-17 48-10-9-15-24-17-48Z" fill="url(#gDrink)" opacity=".9"/>
+  <circle cx="39" cy="71" r="2.5" fill="#fff" opacity=".8"/>
+  <circle cx="49" cy="61" r="2" fill="#fff" opacity=".65"/>
+  <circle cx="44" cy="80" r="1.8" fill="#fff" opacity=".7"/>
+  <path d="M45 104v72" stroke="rgba(255,255,255,.88)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M24 193h42" stroke="rgba(255,255,255,.9)" stroke-width="5" stroke-linecap="round"/>
+</svg></div>
+          </div>
+
+          <div class="clink-core" id="clinkCore">
+            <span class="clink-ring r1"></span>
+            <span class="clink-ring r2"></span>
+            <span class="clink-star cs1">✦</span>
+            <span class="clink-star cs2">✧</span>
+            <span class="clink-star cs3">★</span>
+            <span class="clink-word">カンッ！</span>
           </div>
         </div>
       </div>
@@ -1002,8 +1456,12 @@ const countdownSideLeft=document.getElementById('countdownSideLeft');
 const countdownSideRight=document.getElementById('countdownSideRight');
 const videoCheersBurst=document.getElementById('videoCheersBurst');
 const videoSparkLayer=document.getElementById('videoSparkLayer');
+const clinkCore=document.getElementById('clinkCore');
+const cheersWorld=document.querySelector('.cheers-world');
+const maleArm=document.getElementById('maleArm');
+const femaleArm=document.getElementById('femaleArm');
 let sequenceTimers=[];let orientationWatching=false;
-let ytPlayer=null,videoCountdownRaf=0,videoCheersTriggered=false,lastVideoDigit=null,ytApiReady=false,ytApiCallbacks=[],videoCheersTimer=0;
+let ytPlayer=null,videoCountdownRaf=0,videoCheersTriggered=false,lastVideoDigit=null,ytApiReady=false,ytApiCallbacks=[],videoCheersTimer=0,clinkLoopTimer=0,clinkAudioCtx=null,lastMusicBeat=null,beatClassTimer=0;
 function addSequenceTimer(fn,ms){const id=setTimeout(fn,ms);sequenceTimers.push(id);return id}
 function clearSequenceTimers(){sequenceTimers.forEach(clearTimeout);sequenceTimers=[]}
 function isLandscapeNow(){return innerWidth>innerHeight||window.matchMedia?.('(orientation: landscape)').matches}
@@ -1019,6 +1477,12 @@ function loadYouTubeAPI(){
 window.onYouTubeIframeAPIReady=()=>{ytApiReady=true;ytApiCallbacks.splice(0).forEach(fn=>fn())};
 loadYouTubeAPI();
 function resetVideoOverlays(){
+  stopClinkLoop();
+  lastMusicBeat=null;clearTimeout(beatClassTimer);beatClassTimer=0;
+  [countdownSideLeft,countdownSideRight].forEach(el=>el&&el.classList.remove('music-beat','music-strong','music-emphasis'));
+  if(cheersWorld)cheersWorld.classList.remove('music-beat','music-strong','beat-left','beat-right');
+  [maleArm,femaleArm].forEach(el=>el&&el.classList.remove('beat-clink'));
+  document.querySelectorAll('.beat-emoji').forEach(el=>el.remove());
   cancelAnimationFrame(videoCountdownRaf);videoCountdownRaf=0;clearTimeout(videoCheersTimer);videoCheersTimer=0;videoCheersTriggered=false;lastVideoDigit=null;
   showStage(videoCountdownOverlay,false);showStage(videoCheersBurst,false);
   videoSparkLayer.innerHTML=''
@@ -1056,6 +1520,110 @@ function videoSparkBurst(){
     }
   })
 }
+
+function ensureClinkAudio(){
+  if(clinkAudioCtx)return clinkAudioCtx;
+  const Ctx=window.AudioContext||window.webkitAudioContext;
+  if(!Ctx)return null;
+  try{clinkAudioCtx=new Ctx()}catch(e){return null}
+  return clinkAudioCtx
+}
+function playGlassClink(volume=0.34){
+  const ctx=ensureClinkAudio();if(!ctx)return;
+  try{if(ctx.state==='suspended')ctx.resume()}catch(e){}
+  const now=ctx.currentTime;
+  const out=ctx.createGain();out.gain.setValueAtTime(0.0001,now);out.gain.exponentialRampToValueAtTime(volume,now+.004);out.gain.exponentialRampToValueAtTime(.0001,now+.42);out.connect(ctx.destination);
+
+  // Three short inharmonic resonances approximate a real glass "カンッ".
+  [[1580,1],[2260,.58],[3140,.25]].forEach(([freq,amp],i)=>{
+    const o=ctx.createOscillator(),g=ctx.createGain(),bp=ctx.createBiquadFilter();
+    o.type='sine';o.frequency.setValueAtTime(freq,now);o.frequency.exponentialRampToValueAtTime(freq*(1.006+i*.003),now+.18);
+    bp.type='bandpass';bp.frequency.value=freq;bp.Q.value=12;
+    g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(amp,now+.002+i*.001);g.gain.exponentialRampToValueAtTime(.0001,now+.24+i*.055);
+    o.connect(bp);bp.connect(g);g.connect(out);o.start(now);o.stop(now+.5)
+  });
+}
+function fireClinkMoment(volume=0.34){
+  if(!clinkCore)return;
+  clinkCore.classList.remove('hit');void clinkCore.offsetWidth;clinkCore.classList.add('hit');
+  playGlassClink(volume);
+  videoSparkBurst();
+  if(navigator.vibrate)navigator.vibrate([35,18,70])
+}
+function startClinkLoop(){
+  clearInterval(clinkLoopTimer);
+  // first deliberate slow entrance reaches the glasses at about 2.5s
+  setTimeout(()=>fireClinkMoment(.42),2450);
+  // then re-clink in sync with the repeating hand motion
+  clinkLoopTimer=setInterval(()=>fireClinkMoment(.22),6400)
+}
+function stopClinkLoop(){clearInterval(clinkLoopTimer);clinkLoopTimer=0}
+
+const MUSIC_BPM=158;
+const MUSIC_BEAT_SEC=60/MUSIC_BPM;
+const MUSIC_ORIGIN=10; // countdown zero / chorus entry
+function normalizedMod(n,m){return ((n%m)+m)%m}
+function pulseClass(el,cls,ms=230){
+  if(!el)return;
+  el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);
+  setTimeout(()=>el.classList.remove(cls),ms)
+}
+function spawnBeatEmoji(beatIndex,strong=false){
+  if(!cheersWorld)return;
+  const pool=strong?['😂ｗ','🤣','爆笑😂','ｗｗｗ','😂😂','🎉','🥂']:['😂ｗ','🤣','ｗ','✨','😂'];
+  const count=strong?2:1;
+  for(let i=0;i<count;i++){
+    const e=document.createElement('span');
+    e.className='beat-emoji '+(((beatIndex+i)&1)?'from-right':'from-left');
+    e.textContent=pool[Math.abs(beatIndex*3+i)%pool.length];
+    e.style.top=(18+((Math.abs(beatIndex*17+i*29))%58))+'%';
+    cheersWorld.appendChild(e);
+    setTimeout(()=>e.remove(),1250)
+  }
+}
+function handleMusicBeat(t){
+  const beatIndex=Math.floor((t-MUSIC_ORIGIN)/MUSIC_BEAT_SEC);
+  if(beatIndex===lastMusicBeat)return;
+  lastMusicBeat=beatIndex;
+  const phase4=normalizedMod(beatIndex,4);
+  const phase8=normalizedMod(beatIndex,8);
+  const strong=phase4===0;
+
+  // Before zero: the same number breathes several times per second with the song.
+  if(t<MUSIC_ORIGIN){
+    [countdownSideLeft,countdownSideRight].forEach((el,i)=>{
+      if(!el)return;
+      pulseClass(el,strong?'music-strong':'music-beat',strong?340:225);
+      el.classList.toggle('music-emphasis',((beatIndex+i)&1)===0);
+    });
+    return
+  }
+
+  // Chorus: every quarter-note animates the scene, every bar gets a stronger hit.
+  if(cheersWorld){
+    cheersWorld.classList.toggle('beat-left',(beatIndex&1)===0);
+    cheersWorld.classList.toggle('beat-right',(beatIndex&1)!==0);
+    pulseClass(cheersWorld,strong?'music-strong':'music-beat',strong?390:230);
+  }
+
+  // Emoji rhythm on half notes; extra pop on each bar.
+  if(normalizedMod(beatIndex,2)===0)spawnBeatEmoji(beatIndex,strong);
+
+  // Firework/light accent on the first beat of every 4/4 bar.
+  if(strong){
+    videoSparkBurst();
+    if(navigator.vibrate)navigator.vibrate([18]);
+  }
+
+  // Repeated clink: prepare on beat 7, strike exactly on next 8-beat boundary.
+  if(beatIndex>=7 && phase8===7){
+    [maleArm,femaleArm].forEach(el=>{if(el){el.classList.remove('beat-clink');void el.offsetWidth;el.classList.add('beat-clink')}})
+  }
+  if(beatIndex>=8 && phase8===0){
+    fireClinkMoment(beatIndex===8?.40:.22);
+    setTimeout(()=>[maleArm,femaleArm].forEach(el=>el&&el.classList.remove('beat-clink')),180)
+  }
+}
 function triggerVideoCheers(){
   if(videoCheersTriggered)return;
   videoCheersTriggered=true;
@@ -1068,6 +1636,7 @@ function triggerVideoCheers(){
     void videoCheersBurst.offsetWidth;
     showStage(videoCheersBurst,true);
     videoSparkBurst();
+    /* v20: recurring clinks are driven by the song beat clock */
     if(navigator.vibrate)navigator.vibrate([100,45,150,45,220]);
     setTimeout(videoSparkBurst,260);
     setTimeout(videoSparkBurst,640);
@@ -1077,20 +1646,25 @@ function triggerVideoCheers(){
 function syncVideoCountdown(){
   if(!ytPlayer||typeof ytPlayer.getCurrentTime!=='function')return;
   let t=0;try{t=ytPlayer.getCurrentTime()||0}catch(e){}
+  handleMusicBeat(t);
   if(t<10){
     showStage(videoCountdownOverlay,true);
     const remain=Math.max(1,Math.ceil(10-t));
     pulseVideoDigit(remain);
-    videoCountdownRaf=requestAnimationFrame(syncVideoCountdown);
-    return
+  }else{
+    triggerVideoCheers()
   }
-  triggerVideoCheers()
+  videoCountdownRaf=requestAnimationFrame(syncVideoCountdown)
 }
 function onYouTubeStateChange(e){
   if(!window.YT)return;
   if(e.data===YT.PlayerState.PLAYING){
-    showStage(videoCountdownOverlay,true);
-    cancelAnimationFrame(videoCountdownRaf);videoCountdownRaf=requestAnimationFrame(syncVideoCountdown)
+    showStage(videoCountdownOverlay,!videoCheersTriggered);
+    lastMusicBeat=null;
+    cancelAnimationFrame(videoCountdownRaf);
+    videoCountdownRaf=requestAnimationFrame(syncVideoCountdown)
+  }else if(e.data===YT.PlayerState.PAUSED||e.data===YT.PlayerState.BUFFERING||e.data===YT.PlayerState.ENDED){
+    cancelAnimationFrame(videoCountdownRaf);videoCountdownRaf=0
   }
 }
 function pulseCountdownDigit(n){countdownNumber.textContent=n;countdownNumber.style.animation='none';void countdownNumber.offsetWidth;countdownNumber.style.animation='countPulse .8s cubic-bezier(.15,1.5,.35,1) both';skyFinaleWave();if(navigator.vibrate)navigator.vibrate(n===1?[45,25,85]:[28])}
@@ -1119,6 +1693,7 @@ function launchCelebration(source='manual'){
 }
 async function playFinalVideo(){
   if(!isLandscapeNow()){showStage(videoReadyPop,false);rotateStatusText.textContent='もう一度、スマホを横向きにして！';return}
+  const ac=ensureClinkAudio();if(ac&&ac.state==='suspended'){try{await ac.resume()}catch(e){}}
   stopOrientationWatch();showStage(rotateStage,false);showStage(videoReadyPop,false);celebration.classList.remove('phase-rotate');celebration.classList.add('video-playing');stopCelebrationLoops();stopFireworkSky();
   resetVideoOverlays();showStage(videoStage,true);
   if(navigator.vibrate)navigator.vibrate([45,25,80]);
