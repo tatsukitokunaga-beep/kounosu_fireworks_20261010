@@ -1,0 +1,395 @@
+{
+  "environment": "Chromium, touch mobile emulation; YouTube API mocked; external requests blocked; not iPhone device nor real audio verification",
+  "results": [
+    {
+      "check": "script_initialization_23_items",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no_duplicate_ids",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "portrait_no_overflow_320",
+      "passed": true,
+      "detail": {
+        "w": 320,
+        "sw": 320
+      }
+    },
+    {
+      "check": "portrait_no_overflow_375",
+      "passed": true,
+      "detail": {
+        "w": 375,
+        "sw": 375
+      }
+    },
+    {
+      "check": "portrait_no_overflow_390",
+      "passed": true,
+      "detail": {
+        "w": 390,
+        "sw": 390
+      }
+    },
+    {
+      "check": "portrait_no_overflow_430",
+      "passed": true,
+      "detail": {
+        "w": 430,
+        "sw": 430
+      }
+    },
+    {
+      "check": "final_gate_before_preparation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "optional_wine_excluded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "save_change_queue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "stop_gps_not_checklist_item",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "ready_without_auto_kanpai",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "state_saved_to_storage",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "final_scroll_then_intro",
+      "passed": true,
+      "detail": "intro"
+    },
+    {
+      "check": "close_intro_restores_page",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "embedded_guide_loads_offline",
+      "passed": true,
+      "detail": {
+        "ok": true,
+        "w": 1448,
+        "h": 1086
+      }
+    },
+    {
+      "check": "map_default_scroll_priority",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "guide_zoom_in",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "map_operable_only_when_enabled",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "guide_zoom_cap",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "map_fullscreen_css",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "map_exit_unlocks_scroll",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "map_unavailable_fallback_not_blank",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prep_portrait_no_primary_play_button",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "landscape_play_fits_667",
+      "passed": true,
+      "detail": {
+        "x": 89.36102294921875,
+        "y": 175.4209747314453,
+        "width": 488.2779541015625,
+        "height": 68.18930053710938
+      }
+    },
+    {
+      "check": "one_primary_start_667",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "landscape_play_fits_844",
+      "passed": true,
+      "detail": {
+        "x": 145.5799560546875,
+        "y": 214.37106323242188,
+        "width": 552.840087890625,
+        "height": 68.44537353515625
+      }
+    },
+    {
+      "check": "one_primary_start_844",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "landscape_play_fits_932",
+      "passed": true,
+      "detail": {
+        "x": 187.99954223632812,
+        "y": 234.17539978027344,
+        "width": 556.0009460449219,
+        "height": 68.83668518066406
+      }
+    },
+    {
+      "check": "one_primary_start_932",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "movie_started",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "countdown_at_9_seconds",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "glass_rims_contact_667",
+      "passed": true,
+      "detail": {
+        "leftRim": [
+          332.5,
+          137.6
+        ],
+        "rightRim": [
+          334.5,
+          137.6
+        ],
+        "gap": 2,
+        "scale": 0.6197628458498025,
+        "beat": 0
+      }
+    },
+    {
+      "check": "glass_rims_contact_844",
+      "passed": true,
+      "detail": {
+        "leftRim": [
+          421,
+          167.7
+        ],
+        "rightRim": [
+          423,
+          167.7
+        ],
+        "gap": 2,
+        "scale": 0.7553359683794466,
+        "beat": 0
+      }
+    },
+    {
+      "check": "glass_rims_contact_932",
+      "passed": true,
+      "detail": {
+        "leftRim": [
+          465,
+          184.9
+        ],
+        "rightRim": [
+          467,
+          184.9
+        ],
+        "gap": 2,
+        "scale": 0.8328063241106719,
+        "beat": 0
+      }
+    },
+    {
+      "check": "glass_recoil_then_recontact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "cheers_persistent_45_seconds",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "pause_freezes_hand_motion",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "pause_cancels_scheduled_sounds",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "buffering_freezes_motion",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "seek_backward_resets_count_and_cheers",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "rate_change_updates_clock",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "timing_adjust_20ms",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "sfx_toggle_independent_music",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "quantised_clock_monotonic",
+      "passed": true,
+      "detail": {
+        "maxAbs": 0.0342518400000672,
+        "monotonic": true
+      }
+    },
+    {
+      "check": "quantised_clock_error_under_150ms",
+      "passed": true,
+      "detail": {
+        "maxAbs": 0.0342518400000672,
+        "monotonic": true
+      }
+    },
+    {
+      "check": "close_releases_media_timers_audio",
+      "passed": true,
+      "detail": {
+        "phase": "closed",
+        "playerState": -1,
+        "videoStarted": false,
+        "settings": {
+          "bpm": 158,
+          "origin": 10,
+          "offsetMs": 0,
+          "sfx": false
+        },
+        "activeSoundNodes": 0,
+        "activeSequenceTimers": 0,
+        "raf": false,
+        "geometry": {
+          "leftRim": [
+            220.22883181277805,
+            169.75550622515667
+          ],
+          "rightRim": [
+            623.771168187222,
+            169.75550622515667
+          ],
+          "gap": 403.54233637444395,
+          "scale": 0.7553359683794466,
+          "beat": 4.099573333333452
+        }
+      }
+    },
+    {
+      "check": "corrupt_storage_recovery",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no_js_exceptions",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "glass_sound_scheduled_at_first_impact",
+      "passed": true,
+      "detail": {
+        "s": 0,
+        "ctx": "running",
+        "n": 1,
+        "t": 10.303399999999908
+      }
+    },
+    {
+      "check": "buffer_cancels_audio_nodes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "blocked_autoplay_explains_retry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "retry_resumes_video",
+      "passed": true,
+      "detail": {
+        "state": 1,
+        "hidden": true
+      }
+    },
+    {
+      "check": "embed_error_has_recovery",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "close_after_error_returns_site",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "rapid_reopen_cancel_no_stale_scene",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no_extra_exceptions",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "total": 56,
+  "passed": 56
+}
