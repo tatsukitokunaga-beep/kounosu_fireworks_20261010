@@ -1116,7 +1116,21 @@ function initReliableTicker(){
 }
 initReliableTicker();
 
-</script><script>document.addEventListener('visibilitychange',()=>{if(!document.hidden){const t=document.querySelector('.ticker-inner');if(t)t.style.animationPlayState='running'}});
+</script>
+<div class="event-lock-pop" id="eventLockPop" aria-hidden="true">
+  <div class="event-lock-card" role="dialog" aria-modal="true" aria-labelledby="eventLockTitle">
+    <div class="event-lock-icon">🙋‍♂️🎆</div>
+    <div class="event-lock-title" id="eventLockTitle">まだ秘密！</div>
+    <div class="event-lock-copy">
+      当日の<em>16時までみれないよ〜🙋‍♂️</em><br>
+      乾杯の時のお楽しみにしてて😉
+    </div>
+    <div class="event-lock-clock-wrap">
+      <div class="event-lock-clock-label">🎆 解禁まであと</div>
+      <div class="event-lock-clock" id="eventLockCountdown">00:00:00</div>
+    </div>
+
+<script>document.addEventListener('visibilitychange',()=>{if(!document.hidden){const t=document.querySelector('.ticker-inner');if(t)t.style.animationPlayState='running'}});
 /* ===== v24: 乾杯演出は2026-10-10 16:00 JSTまでロック + 秒カウント ===== */
 const CHEERS_UNLOCK_AT = new Date('2026-10-10T16:00:00+09:00').getTime();
 const cheersCtaButton = document.getElementById('cheers');
@@ -1124,9 +1138,14 @@ const cheersCtaWrap = cheersCtaButton ? cheersCtaButton.closest('.cta') : null;
 const cheersLockNote = document.getElementById('cheersLockNote');
 const cheersLockLabel = document.getElementById('cheersLockLabel');
 const cheersCountdownClock = document.getElementById('cheersCountdownClock');
-const eventLockPop = document.getElementById('eventLockPop');
-const eventLockClose = document.getElementById('eventLockClose');
-const eventLockCountdown = document.getElementById('eventLockCountdown');
+let eventLockPop = document.getElementById('eventLockPop');
+let eventLockClose = document.getElementById('eventLockClose');
+let eventLockCountdown = document.getElementById('eventLockCountdown');
+function refreshEventLockRefs(){
+  eventLockPop = document.getElementById('eventLockPop');
+  eventLockClose = document.getElementById('eventLockClose');
+  eventLockCountdown = document.getElementById('eventLockCountdown');
+}
 
 let cheersGateLastSecond = null;
 
@@ -1191,17 +1210,24 @@ function updateCheersGateUI(){
   }
 }
 function showCheersLockedPop(){
-  if(!eventLockPop) return;
+  refreshEventLockRefs();
+  if(!eventLockPop){
+    alert('当日の16時までみれないよ〜🙋‍♂️\n乾杯の時のお楽しみにしてて😉');
+    return;
+  }
   eventLockPop.classList.add('show');
   eventLockPop.setAttribute('aria-hidden','false');
   updateCheersGateUI();
   if(navigator.vibrate) navigator.vibrate([25,20,25]);
 }
 function hideCheersLockedPop(){
+  refreshEventLockRefs();
   if(!eventLockPop) return;
   eventLockPop.classList.remove('show');
   eventLockPop.setAttribute('aria-hidden','true');
 }
+
+refreshEventLockRefs();
 
 /* capture phase: 16:00までは既存の乾杯処理を完全に止める */
 if(cheersCtaButton){
@@ -1222,18 +1248,6 @@ updateCheersGateUI();
 /* 秒境界に近い頻度で更新し、表示上は1秒ずつ正確に減らす */
 setInterval(updateCheersGateUI, 250);
 </script>
-<div class="event-lock-pop" id="eventLockPop" aria-hidden="true">
-  <div class="event-lock-card" role="dialog" aria-modal="true" aria-labelledby="eventLockTitle">
-    <div class="event-lock-icon">🙋‍♂️🎆</div>
-    <div class="event-lock-title" id="eventLockTitle">まだ秘密！</div>
-    <div class="event-lock-copy">
-      当日の<em>16時までみれないよ〜🙋‍♂️</em><br>
-      乾杯の時のお楽しみにしてて😉
-    </div>
-    <div class="event-lock-clock-wrap">
-      <div class="event-lock-clock-label">🎆 解禁まであと</div>
-      <div class="event-lock-clock" id="eventLockCountdown">00:00:00</div>
-    </div>
     <div class="event-lock-sub">10月10日 16:00になった瞬間、自動で解禁！</div>
     <button class="event-lock-close" id="eventLockClose" type="button">わかった！楽しみにしとく😉</button>
   </div>
