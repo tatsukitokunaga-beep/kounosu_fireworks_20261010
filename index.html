@@ -689,6 +689,60 @@ main,.bottomnav{position:relative;z-index:2}
   max-height:none!important;
 }
 
+
+/* ===== v42: mobile launch visibility + fixed bottom nav ===== */
+@media (max-width:760px){
+  :root{--mobile-sky-lane:36px}
+
+  .hero{
+    padding-left:var(--mobile-sky-lane)!important;
+    padding-right:var(--mobile-sky-lane)!important;
+  }
+  .countdown{
+    margin-left:var(--mobile-sky-lane)!important;
+    margin-right:var(--mobile-sky-lane)!important;
+  }
+  .section{
+    padding-left:var(--mobile-sky-lane)!important;
+    padding-right:var(--mobile-sky-lane)!important;
+  }
+  .cta{
+    margin-left:var(--mobile-sky-lane)!important;
+    margin-right:var(--mobile-sky-lane)!important;
+  }
+  .ticker{
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+
+  .bottomnav{
+    position:fixed!important;
+    left:50%!important;
+    right:auto!important;
+    bottom:0!important;
+    transform:translate3d(-50%,0,0)!important;
+    width:min(640px,100%)!important;
+    z-index:1800!important;
+    padding:7px 8px calc(7px + env(safe-area-inset-bottom))!important;
+    background:rgba(4,10,26,.94)!important;
+    border-top:1px solid rgba(255,255,255,.14)!important;
+    backdrop-filter:blur(22px) saturate(145%)!important;
+    -webkit-backdrop-filter:blur(22px) saturate(145%)!important;
+    box-shadow:0 -10px 32px rgba(0,0,0,.30)!important;
+  }
+  .bottomnav button{
+    min-height:52px!important;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .app{
+    padding-bottom:calc(112px + env(safe-area-inset-bottom))!important;
+  }
+}
+@media (max-width:360px){
+  :root{--mobile-sky-lane:32px}
+}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
 <canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
@@ -1228,7 +1282,7 @@ function drawParticle(p){
 
 function launchAmbientRocket(tx,ty,style){
   const mobileSide=IS_MOBILE ? (tx<ambientVW*.5?-1:1) : 0;
-  const sy=IS_MOBILE?Math.max(120,ambientVH-92):ambientVH-4; // visible viewport, above bottom nav
+  const sy=IS_MOBILE?Math.max(160,ambientVH*.84):ambientVH-4; // intentionally inside visible phone viewport
   let sx=tx,c1x=tx,c2x=tx;
   if(IS_MOBILE){
     sx=mobileSide<0?10:ambientVW-10;
@@ -1240,7 +1294,7 @@ function launchAmbientRocket(tx,ty,style){
     sx=Math.max(24,Math.min(ambientVW-24,tx+(Math.random()-.5)*ambientVW*.18));
     c1x=mix(sx,tx,.26);c2x=mix(sx,tx,.58)
   }
-  const frames=IS_MOBILE?68+Math.random()*20:48+Math.random()*14;
+  const frames=IS_MOBILE?78+Math.random()*18:48+Math.random()*14;
   ambientRockets.push({x:sx,y:sy,sx,sy,tx,ty,style,f:0,frames,tail:[{x:sx,y:sy}],shellR:IS_MOBILE?3.8:4.3,
     c1x,c2x,c1y:mix(sy,ty,.30),c2y:mix(sy,ty,.70),wobbleAmp:IS_MOBILE?2.0+Math.random()*3.8:2.0+Math.random()*3.2,
     wobbleCycles:1.8+Math.random()*1.4,wobblePhase:Math.random()*Math.PI*2,windDrift:(Math.random()-.5)*(IS_MOBILE?9:10)});
@@ -1255,7 +1309,7 @@ function drawAmbientRocket(r){
     const fade=Math.pow(k,1.5);
 
     // Soft amber exhaust glow — intentionally subdued so it stays background.
-    ctx.globalAlpha=.04+.13*fade;
+    ctx.globalAlpha=.028+.095*fade;
     ctx.strokeStyle='#ff9b38';
     ctx.lineWidth=.8+2.4*fade;
     ctx.beginPath();
@@ -1264,7 +1318,7 @@ function drawAmbientRocket(r){
     ctx.stroke();
 
     // Thin gold filament.
-    ctx.globalAlpha=.10+.28*fade;
+    ctx.globalAlpha=.07+.22*fade;
     ctx.strokeStyle='#ffd47a';
     ctx.lineWidth=.45+1.25*fade;
     ctx.beginPath();
@@ -1440,16 +1494,41 @@ function anim(ts){
     r.f++;
 
     const t=Math.min(1,r.f/r.frames);
-    const u=1-Math.pow(1-t,2.05),iv=1-u;
-    const baseX=iv*iv*iv*r.sx+3*iv*iv*u*r.c1x+3*iv*u*u*r.c2x+u*u*u*r.tx;
+    const u=1-Math.pow(1-t,2.12);
+    const side=(r.sx<ambientVW*.5)?-1:1;
+
+    let baseX;
+    if(IS_MOBILE && t<.80){
+      // Stay in the visible side gutter for most of the climb.
+      const q=t/.80;
+      const laneBase=side<0?15:ambientVW-15;
+      const gentleInward=(side<0?1:-1)*(2+11*q);
+      baseX=laneBase+gentleInward;
+    }else if(IS_MOBILE){
+      // Only in the final 20% does the shell bend inward to its burst point.
+      const q=(t-.80)/.20;
+      const ease=q*q*(3-2*q);
+      const from=side<0?28:ambientVW-28;
+      baseX=from+(r.tx-from)*ease;
+    }else{
+      const iv=1-u;
+      baseX=iv*iv*iv*r.sx+3*iv*iv*u*r.c1x+3*iv*u*u*r.c2x+u*u*u*r.tx;
+    }
+
+    const iv=1-u;
     const baseY=iv*iv*iv*r.sy+3*iv*iv*u*r.c1y+3*iv*u*u*r.c2y+u*u*u*r.ty;
+
+    // Natural but restrained wobble: spin + air resistance, not a ruler-straight line.
     const dx=r.tx-r.sx,dy=r.ty-r.sy,len=Math.max(1,Math.hypot(dx,dy)),nx=-dy/len,ny=dx/len;
-    const envelope=Math.sin(Math.PI*t),wobble=Math.sin(r.wobblePhase+t*Math.PI*2*r.wobbleCycles)*r.wobbleAmp*envelope;
-    const wind=r.windDrift*Math.pow(t,1.65);
-    r.x=baseX+nx*wobble+wind;r.y=baseY+ny*wobble*.28;
+    const envelope=Math.sin(Math.PI*t);
+    const wobble=Math.sin(r.wobblePhase+t*Math.PI*2*r.wobbleCycles)*r.wobbleAmp*envelope;
+    const wind=r.windDrift*Math.pow(t,1.55);
+    const mobileScale=IS_MOBILE?.42:1;
+    r.x=baseX+nx*wobble*mobileScale+(IS_MOBILE?wind*.20:wind);
+    r.y=baseY+ny*wobble*.22;
 
     r.tail.push({x:r.x,y:r.y});
-    if(r.tail.length>(IS_MOBILE?40:30))r.tail.shift();
+    if(r.tail.length>(IS_MOBILE?48:30))r.tail.shift();
 
     drawAmbientRocket(r);
 
@@ -2132,6 +2211,24 @@ setInterval(updateCheersGateUI, 250);
   mo.observe(source,{subtree:true,childList:true,attributes:true,characterData:true});
   document.addEventListener('click',()=>requestAnimationFrame(readProgress),{passive:true});
   readProgress();
+})();
+
+
+/* ===== v42: reinforce bottom nav after iOS toolbar/orientation changes ===== */
+(function keepBottomNavVisible(){
+  const nav=document.querySelector('.bottomnav');
+  if(!nav)return;
+  const fix=()=>{
+    nav.style.bottom='0px';
+    nav.style.transform='translate3d(-50%,0,0)';
+  };
+  window.addEventListener('orientationchange',()=>{
+    setTimeout(fix,80);
+    setTimeout(fix,320);
+  },{passive:true});
+  window.visualViewport?.addEventListener('resize',fix,{passive:true});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(fix,50)});
+  fix();
 })();
 
 </script>
