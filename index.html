@@ -807,9 +807,50 @@ main,.bottomnav{position:relative;z-index:2}
   }
 }
 
+
+/* ===== v44: two-layer mobile fireworks ===== */
+#launchTrails{
+  position:fixed;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:3;
+  opacity:.88;
+  mix-blend-mode:screen;
+  display:none;
+  -webkit-mask-image:linear-gradient(
+    to right,
+    #000 0,
+    #000 42px,
+    rgba(0,0,0,.55) 50px,
+    transparent 62px,
+    transparent calc(100% - 62px),
+    rgba(0,0,0,.55) calc(100% - 50px),
+    #000 calc(100% - 42px),
+    #000 100%
+  );
+  mask-image:linear-gradient(
+    to right,
+    #000 0,
+    #000 42px,
+    rgba(0,0,0,.55) 50px,
+    transparent 62px,
+    transparent calc(100% - 62px),
+    rgba(0,0,0,.55) calc(100% - 50px),
+    #000 calc(100% - 42px),
+    #000 100%
+  );
+}
+@media(max-width:760px){
+  #launchTrails{display:block}
+}
+body.celebrating #launchTrails{visibility:hidden!important}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
-<canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
+<canvas id="launchTrails" aria-hidden="true"></canvas><canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
 <div class="app">
 <main>
 <div class="sticky-progress" id="stickyProgress" aria-hidden="true">
@@ -1124,6 +1165,7 @@ setMode('guide');setMapInteraction(false,true);
 
 // Cheers + fireworks — v10 adaptive mobile renderer
 const cvs=document.getElementById('fireworks'),ctx=cvs.getContext('2d',{alpha:true});
+const launchCvs=document.getElementById('launchTrails'),launchCtx=launchCvs.getContext('2d',{alpha:true});
 let particles=[],ambientRings=[],ambientRockets=[],ambientShells=[],baseRaf=0,baseLast=0,ambientLaunchTimer=0;
 const IS_MOBILE=matchMedia('(pointer:coarse)').matches||innerWidth<760;
 const REDUCED_MOTION=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1145,6 +1187,14 @@ function resize(){
   cvs.style.left='0';
   cvs.style.top='0';
   ctx.setTransform(d,0,0,d,0,0);
+
+  launchCvs.width=Math.floor(ambientVW*d);
+  launchCvs.height=Math.floor(ambientVH*d);
+  launchCvs.style.width=ambientVW+'px';
+  launchCvs.style.height=ambientVH+'px';
+  launchCvs.style.left='0';
+  launchCvs.style.top='0';
+  launchCtx.setTransform(d,0,0,d,0,0);
 }
 addEventListener('resize',resize,{passive:true});
 window.visualViewport?.addEventListener('resize',resize,{passive:true});
@@ -1370,7 +1420,7 @@ function launchAmbientRocket(tx,ty,style){
     // Keep the first ~70% of the climb in the visible side gutter, then arc inward to the burst point.
     c1x=mobileSide<0?13:innerWidth-13;
     c2x=mobileSide<0?18:innerWidth-18;
-    tx=mobileSide<0?(48+Math.random()*24):(ambientVW-(48+Math.random()*24));
+    tx=mobileSide<0?(44+Math.random()*8):(ambientVW-(44+Math.random()*8));
   }else{
     sx=Math.max(24,Math.min(ambientVW-24,tx+(Math.random()-.5)*ambientVW*.18));
     c1x=mix(sx,tx,.26);c2x=mix(sx,tx,.58)
@@ -1380,42 +1430,42 @@ function launchAmbientRocket(tx,ty,style){
     c1x,c2x,c1y:mix(sy,ty,.30),c2y:mix(sy,ty,.70),wobbleAmp:IS_MOBILE?2.0+Math.random()*3.8:2.0+Math.random()*3.2,
     wobbleCycles:1.8+Math.random()*1.4,wobblePhase:Math.random()*Math.PI*2,windDrift:(Math.random()-.5)*(IS_MOBILE?9:10)});
 } 
-function drawAmbientRocket(r){
+function drawAmbientRocket(r,g=ctx){
   const tail=r.tail;
-  ctx.globalCompositeOperation='lighter';
-  ctx.lineCap='round';
+  g.globalCompositeOperation='lighter';
+  g.lineCap='round';
 
   for(let i=1;i<tail.length;i++){
     const k=i/(tail.length-1);
     const fade=Math.pow(k,1.5);
 
     // Soft amber exhaust glow — intentionally subdued so it stays background.
-    ctx.globalAlpha=.028+.095*fade;
-    ctx.strokeStyle='#ff9b38';
-    ctx.lineWidth=.8+2.4*fade;
-    ctx.beginPath();
-    ctx.moveTo(tail[i-1].x,tail[i-1].y);
-    ctx.lineTo(tail[i].x,tail[i].y);
-    ctx.stroke();
+    g.globalAlpha=.028+.095*fade;
+    g.strokeStyle='#ff9b38';
+    g.lineWidth=.8+2.4*fade;
+    g.beginPath();
+    g.moveTo(tail[i-1].x,tail[i-1].y);
+    g.lineTo(tail[i].x,tail[i].y);
+    g.stroke();
 
     // Thin gold filament.
-    ctx.globalAlpha=.07+.22*fade;
-    ctx.strokeStyle='#ffd47a';
-    ctx.lineWidth=.45+1.25*fade;
-    ctx.beginPath();
-    ctx.moveTo(tail[i-1].x,tail[i-1].y);
-    ctx.lineTo(tail[i].x,tail[i].y);
-    ctx.stroke();
+    g.globalAlpha=.07+.22*fade;
+    g.strokeStyle='#ffd47a';
+    g.lineWidth=.45+1.25*fade;
+    g.beginPath();
+    g.moveTo(tail[i-1].x,tail[i-1].y);
+    g.lineTo(tail[i].x,tail[i].y);
+    g.stroke();
 
     // Small white core only near the shell head.
     if(k>.66){
-      ctx.globalAlpha=.14+.33*fade;
-      ctx.strokeStyle='#fff4d0';
-      ctx.lineWidth=.28+.46*fade;
-      ctx.beginPath();
-      ctx.moveTo(tail[i-1].x,tail[i-1].y);
-      ctx.lineTo(tail[i].x,tail[i].y);
-      ctx.stroke();
+      g.globalAlpha=.14+.33*fade;
+      g.strokeStyle='#fff4d0';
+      g.lineWidth=.28+.46*fade;
+      g.beginPath();
+      g.moveTo(tail[i-1].x,tail[i-1].y);
+      g.lineTo(tail[i].x,tail[i].y);
+      g.stroke();
     }
   }
 
@@ -1424,37 +1474,37 @@ function drawAmbientRocket(r){
     const angle=r.wobblePhase+r.f*.61;
     for(let j=0;j<2;j++){
       const rr=3+j*3;
-      ctx.globalAlpha=.18;
-      ctx.fillStyle=j?'#ffcf64':'#fff0c0';
-      ctx.beginPath();
-      ctx.arc(
+      g.globalAlpha=.18;
+      g.fillStyle=j?'#ffcf64':'#fff0c0';
+      g.beginPath();
+      g.arc(
         r.x+Math.cos(angle+j*2.4)*rr,
         r.y+Math.sin(angle+j*2.4)*rr,
         .65+j*.12,0,Math.PI*2
       );
-      ctx.fill();
+      g.fill();
     }
   }
 
   // Glowing shell ball — visible, but not an oversized flashlight.
   const pulse=1+.08*Math.sin(r.f*.50);
   const glowR=r.shellR*3.7*pulse;
-  const grd=ctx.createRadialGradient(r.x,r.y,0,r.x,r.y,glowR);
+  const grd=g.createRadialGradient(r.x,r.y,0,r.x,r.y,glowR);
   grd.addColorStop(0,'rgba(255,255,255,.92)');
   grd.addColorStop(.22,'rgba(255,244,196,.74)');
   grd.addColorStop(.50,'rgba(255,187,78,.34)');
   grd.addColorStop(1,'rgba(255,125,35,0)');
-  ctx.globalAlpha=.76;
-  ctx.fillStyle=grd;
-  ctx.beginPath();
-  ctx.arc(r.x,r.y,glowR,0,Math.PI*2);
-  ctx.fill();
+  g.globalAlpha=.76;
+  g.fillStyle=grd;
+  g.beginPath();
+  g.arc(r.x,r.y,glowR,0,Math.PI*2);
+  g.fill();
 
-  ctx.globalAlpha=.78;
-  ctx.fillStyle='#fff8dc';
-  ctx.beginPath();
-  ctx.arc(r.x,r.y,r.shellR*.52,0,Math.PI*2);
-  ctx.fill();
+  g.globalAlpha=.78;
+  g.fillStyle='#fff8dc';
+  g.beginPath();
+  g.arc(r.x,r.y,r.shellR*.52,0,Math.PI*2);
+  g.fill();
 }
 function spawnShellBurst(x,y,style){
   ambientShells.push({
@@ -1528,6 +1578,7 @@ function anim(ts){
   if(ts-baseLast<step)return;
   baseLast=ts;
   ctx.clearRect(0,0,ambientVW,ambientVH);
+  launchCtx.clearRect(0,0,ambientVW,ambientVH);
 
   // bright impact flash + expanding ring makes each burst readable on a small phone
   ctx.globalCompositeOperation='lighter';
@@ -1611,7 +1662,18 @@ function anim(ts){
     r.tail.push({x:r.x,y:r.y});
     if(r.tail.length>(IS_MOBILE?48:30))r.tail.shift();
 
-    drawAmbientRocket(r);
+    if(IS_MOBILE){
+      launchCtx.save();
+      launchCtx.beginPath();
+      const lane=58;
+      launchCtx.rect(0,0,lane,ambientVH);
+      launchCtx.rect(ambientVW-lane,0,lane,ambientVH);
+      launchCtx.clip();
+      drawAmbientRocket(r,launchCtx);
+      launchCtx.restore();
+    }else{
+      drawAmbientRocket(r,ctx);
+    }
 
     if(t>=1){
       // ② At the top: turn the glowing shell into a short "burst preparation" flash.
