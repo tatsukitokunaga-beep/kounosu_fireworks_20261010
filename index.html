@@ -974,6 +974,50 @@ body.celebration-video{
   .showcase-open-sky{min-height:56svh;height:56svh}
 }
 
+
+/* ===== v48: gallery is the actual bottom of the page ===== */
+.firework-showcase{
+  min-height:100svh!important;
+  margin:0!important;
+  padding:20px max(18px,env(safe-area-inset-left)) max(26px,env(safe-area-inset-bottom))!important;
+  display:flex!important;
+  flex-direction:column!important;
+  background:
+    linear-gradient(180deg,rgba(5,9,27,.54) 0%,rgba(5,9,27,.05) 13%,rgba(5,9,27,0) 48%,rgba(5,9,27,.18) 72%,rgba(5,9,27,.72) 100%)!important;
+}
+.showcase-open-sky{
+  min-height:58svh!important;
+  height:58svh!important;
+  padding-top:18px!important;
+}
+.showcase-meta{margin-top:auto!important}
+.source-links{
+  margin:0!important;
+  padding:12px 16px 18px!important;
+  background:rgba(5,9,27,.86)!important;
+}
+body.showcase-mode .bottomnav{
+  display:none!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+body.showcase-mode .sticky-progress{
+  display:none!important;
+}
+body.showcase-mode .app{
+  padding-bottom:0!important;
+}
+/* v47 center preview is intentionally removed; lower metadata card is the single source of truth. */
+.showcase-launch-badge{display:none!important}
+@media(max-width:760px){
+  .firework-showcase{min-height:100svh!important}
+  .showcase-open-sky{min-height:60svh!important;height:60svh!important}
+}
+@media(max-width:430px){
+  .showcase-open-sky{min-height:59svh!important;height:59svh!important}
+}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
 <canvas id="launchTrails" aria-hidden="true"></canvas><canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
@@ -1067,6 +1111,7 @@ body.celebration-video{
 <div style="font-size:10px;color:var(--muted);line-height:1.7;margin-top:8px">※ガイド画像には現在地を重ねません。①は参考候補で、実際の観覧区画や混雑は現地で確認してください。GPSには端末の測位誤差があります。</div>
 </section>
 
+<footer class="source-links"><b>出発前と帰りにチェック</b><br/><a href="https://kounosuhanabi.com/areainfo/event_poppy.html" rel="noopener noreferrer" target="_blank">公式会場案内</a><a href="https://kounosuhanabi.com/access/accsess-train.html" rel="noopener noreferrer" target="_blank">公式の帰り方</a><a href="https://tenki.jp/forecast/3/14/4320/11217/" rel="noopener noreferrer" target="_blank">鴻巣の天気</a><br/><span class="revision">v48 / 2026-10-08 花火ギャラリー最終調整</span></footer>
 <section class="firework-showcase" id="fireworkShowcase" aria-label="受賞花火モチーフギャラリー">
   <div class="showcase-topline">
     <div>
@@ -1077,11 +1122,6 @@ body.celebration-video{
   </div>
   <div class="showcase-open-sky" aria-hidden="true">
     <div class="showcase-sky-caption">この空間では背景花火が主役</div>
-    <div class="showcase-launch-badge" id="showcaseLaunchBadge">
-      <div class="showcase-launch-kicker">NEXT FIREWORK</div>
-      <div class="showcase-launch-title" id="showcaseLaunchTitle">モネの蓮池</div>
-      <div class="showcase-launch-award" id="showcaseLaunchAward">2025 / 受賞花火</div>
-    </div>
   </div>
   <div class="showcase-meta" id="showcaseMeta" aria-live="polite">
     <div class="showcase-meta-head">
@@ -1102,8 +1142,7 @@ body.celebration-video{
     </div>
   </div>
 </section>
-
-<footer class="source-links"><b>出発前と帰りにチェック</b><br/><a href="https://kounosuhanabi.com/areainfo/event_poppy.html" rel="noopener noreferrer" target="_blank">公式会場案内</a><a href="https://kounosuhanabi.com/access/accsess-train.html" rel="noopener noreferrer" target="_blank">公式の帰り方</a><a href="https://tenki.jp/forecast/3/14/4320/11217/" rel="noopener noreferrer" target="_blank">鴻巣の天気</a><br/><span class="revision">v21.0 / 2026-10-07 最終レビュー版</span></footer></main>
+</main>
 <nav class="bottomnav"><button class="on" data-go="home" type="button"><i>🎆</i>TOP</button><button data-go="check" type="button"><i>✅</i>準備</button><button data-go="mapsec" type="button"><i>🗺️</i>MAP</button></nav>
 </div>
 
@@ -1408,25 +1447,7 @@ function ambientPreset(id){return AWARD_INSPIRED_PRESETS.find(v=>v.id===id)||AWA
 
 let ambientShowcaseActive=false;
 let showcaseSwitchTimer=0;
-let showcasePreviewTimer=0,showcaseBadgeTimer=0;
-function setShowcasePreviewVisible(on){
-  const s=document.getElementById('fireworkShowcase');
-  if(!s)return;
-  s.classList.toggle('previewing',!!on)
-}
-function cueShowcase(styleId){
-  const p=ambientPreset(styleId);
-  const title=document.getElementById('showcaseLaunchTitle');
-  const award=document.getElementById('showcaseLaunchAward');
-  if(title)title.textContent=p.label;
-  if(award)award.textContent=`${p.year} / ${p.award}`;
-  clearTimeout(showcaseBadgeTimer);
-  setShowcasePreviewVisible(true)
-}
-function hideShowcaseCueSoon(delay=4200){
-  clearTimeout(showcaseBadgeTimer);
-  showcaseBadgeTimer=setTimeout(()=>setShowcasePreviewVisible(false),delay)
-}
+let showcaseLaunchTimer=0;
 function renderShowcaseMeta(styleId,instant=false){
   const p=ambientPreset(styleId);
   const box=document.getElementById('showcaseMeta');
@@ -1442,8 +1463,6 @@ function renderShowcaseMeta(styleId,instant=false){
     set('showcaseMaker',p.maker);
     set('showcaseCount',`${String(idx+1).padStart(2,'0')} / ${String(AWARD_INSPIRED_PRESETS.length).padStart(2,'0')}`);
     const link=document.getElementById('showcaseSource');if(link)link.href=p.source;
-    const launchTitle=document.getElementById('showcaseLaunchTitle');if(launchTitle)launchTitle.textContent=p.label;
-    const launchAward=document.getElementById('showcaseLaunchAward');if(launchAward)launchAward.textContent=`${p.year} / ${p.award}`;
     const progress=document.getElementById('showcaseProgress');
     if(progress){progress.style.animation='none';void progress.offsetWidth;progress.style.animation=''}
     box.classList.remove('switching');
@@ -1967,12 +1986,8 @@ function launchAmbientFirework(){
 
   const fire=()=>{
     if(document.visibilityState!=='visible'||document.body.classList.contains('celebrating'))return;
-    renderShowcaseMeta(style);
-    if(Math.random()<.985){
-      launchAmbientRocket(x,y,style)
-    }else{
-      burst(x,y,null,style)
-    }
+    if(Math.random()<.985) launchAmbientRocket(x,y,style);
+    else burst(x,y,null,style);
 
     const secondChance=ambientShowcaseActive?0:(IS_MOBILE?.14:.12);
     if(Math.random()<secondChance){
@@ -1997,20 +2012,19 @@ function launchAmbientFirework(){
   };
 
   if(ambientShowcaseActive){
-    clearTimeout(showcasePreviewTimer);
-    cueShowcase(style);
-    showcasePreviewTimer=setTimeout(()=>{
-      fire();
-      hideShowcaseCueSoon(4200);
-    },980);
+    // Lower explanation card changes first; the matching shell follows shortly after.
+    renderShowcaseMeta(style);
+    clearTimeout(showcaseLaunchTimer);
+    showcaseLaunchTimer=setTimeout(fire,620);
   }else{
+    renderShowcaseMeta(style);
     fire();
   }
 }
 function scheduleAmbientFirework(){
   clearTimeout(ambientLaunchTimer);
   const delay=ambientShowcaseActive
-    ? 7600+Math.random()*1800
+    ? 8800+Math.random()*2200
     : REDUCED_MOTION
       ? (IS_MOBILE?1900+Math.random()*800:2800+Math.random()*900)
       : (IS_MOBILE?2200+Math.random()*1600:2200+Math.random()*1600);
@@ -2634,21 +2648,22 @@ setInterval(updateCheersGateUI, 250);
 })();
 
 
-/* ===== v46: curated bottom gallery mode ===== */
+/* ===== v48: final gallery mode ===== */
 (function initFireworkShowcase(){
   const section=document.getElementById('fireworkShowcase');
   if(!section)return;
   renderShowcaseMeta(AWARD_INSPIRED_PRESETS[0].id,true);
   const io=new IntersectionObserver(entries=>{
     for(const entry of entries){
-      const on=entry.isIntersecting && entry.intersectionRatio>.22;
+      const on=entry.isIntersecting;
       if(on===ambientShowcaseActive)continue;
       ambientShowcaseActive=on;
+      document.body.classList.toggle('showcase-mode',on);
       section.classList.toggle('in-view',on);
       scheduleAmbientFirework();
-      if(on)setTimeout(()=>{if(ambientShowcaseActive)launchAmbientFirework()},340);
+      if(on)setTimeout(()=>{if(ambientShowcaseActive)launchAmbientFirework()},420);
     }
-  },{threshold:[0,.22,.45]});
+  },{threshold:[0,.05,.25],rootMargin:'0px 0px -4% 0px'});
   io.observe(section);
 })();
 
