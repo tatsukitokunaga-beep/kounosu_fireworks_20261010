@@ -372,6 +372,66 @@ body.celebrating .app *,body.celebrating .bottomnav *{animation-play-state:pause
   50%{transform:translateY(-5px) rotate(4deg)}
 }
 
+
+/* ===== v24: 16:00 unlock countdown ===== */
+.cheers-lock-note{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+}
+.cheers-countdown-label{
+  font-size:9px;
+  font-weight:950;
+  letter-spacing:.14em;
+  color:#aebdd7;
+}
+.cheers-countdown-clock{
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+  font-size:clamp(27px,8vw,42px);
+  line-height:1;
+  font-weight:1000;
+  letter-spacing:.06em;
+  color:#fff4b4;
+  text-shadow:0 0 10px rgba(255,255,255,.34),0 0 26px rgba(255,209,78,.34);
+}
+.cheers-countdown-clock.tick{
+  animation:unlockTick .24s ease-out;
+}
+.event-lock-clock-wrap{
+  margin:18px auto 2px;
+  padding:14px 12px 13px;
+  border-radius:20px;
+  background:rgba(0,5,18,.34);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:inset 0 0 28px rgba(255,218,88,.06);
+}
+.event-lock-clock-label{
+  font-size:9px;
+  font-weight:1000;
+  letter-spacing:.18em;
+  color:#aebdd7;
+}
+.event-lock-clock{
+  margin-top:7px;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+  font-size:clamp(39px,12vw,58px);
+  line-height:1;
+  font-weight:1000;
+  letter-spacing:.05em;
+  color:#fff6bd;
+  text-shadow:0 0 12px #fff7,0 0 30px rgba(255,209,78,.42),0 0 50px rgba(255,98,177,.20);
+}
+.event-lock-clock.tick{
+  animation:unlockTick .24s ease-out;
+}
+@keyframes unlockTick{
+  0%{transform:scale(1.06);filter:brightness(1.35)}
+  100%{transform:scale(1);filter:brightness(1)}
+}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
 <canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
@@ -407,7 +467,10 @@ body.celebrating .app *,body.celebrating .bottomnav *{animation-play-state:pause
 <div class="glass cat final" data-cat="乾杯準備" id="finalCheckCard"><div class="cat-head"><b>🥂 最後の乾杯準備</b><span id="finalHint">ほかの準備が終わると解放</span></div></div>
 </section>
 <div class="cta" id="cheersZone"><div class="cta-kicker">たつき × あい</div><div class="cta-title">グラスを持ったら、ふたりで乾杯！</div><div class="cta-sub">最後のチェックで乾杯シーンへ！動画を横向き・音付きで楽しもう。未準備でも、下のボタンから演出を試せます！</div><button id="cheers" type="button"><span aria-hidden="true" class="cheers-icon">🥂</span><span id="cheersText">乾杯シーンを試してみる</span></button>
-<div class="cheers-lock-note" id="cheersLockNote">🔒 10月10日 16:00まで秘密！</div></div>
+<div class="cheers-lock-note" id="cheersLockNote">
+  <div class="cheers-countdown-label" id="cheersLockLabel">🔒 16:00の解禁まで</div>
+  <div class="cheers-countdown-clock" id="cheersCountdownClock">00:00:00</div>
+</div></div>
 <section class="section" id="mapsec">
 <div class="section-title"><h2>ライブ会場MAP</h2><p>ピンチ拡大・現在地対応</p></div>
 <div class="glass map-shell">
@@ -1023,34 +1086,80 @@ function initReliableTicker(){
 initReliableTicker();
 
 </script><script>document.addEventListener('visibilitychange',()=>{if(!document.hidden){const t=document.querySelector('.ticker-inner');if(t)t.style.animationPlayState='running'}});
-/* ===== v23: 乾杯演出は2026-10-10 16:00 JSTまでロック ===== */
+/* ===== v24: 乾杯演出は2026-10-10 16:00 JSTまでロック + 秒カウント ===== */
 const CHEERS_UNLOCK_AT = new Date('2026-10-10T16:00:00+09:00').getTime();
 const cheersCtaButton = document.getElementById('cheers');
 const cheersCtaWrap = cheersCtaButton ? cheersCtaButton.closest('.cta') : null;
 const cheersLockNote = document.getElementById('cheersLockNote');
+const cheersLockLabel = document.getElementById('cheersLockLabel');
+const cheersCountdownClock = document.getElementById('cheersCountdownClock');
 const eventLockPop = document.getElementById('eventLockPop');
 const eventLockClose = document.getElementById('eventLockClose');
+const eventLockCountdown = document.getElementById('eventLockCountdown');
+
+let cheersGateLastSecond = null;
 
 function cheersIsUnlocked(){
   return Date.now() >= CHEERS_UNLOCK_AT;
 }
+function formatUnlockRemaining(ms){
+  const total = Math.max(0, Math.ceil(ms / 1000));
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const seconds = total % 60;
+  // イベントまで24時間以上ある場合は、日数に分けず総時間で表示（例: 64:12:08）
+  return String(hours).padStart(2,'0') + ':' +
+         String(minutes).padStart(2,'0') + ':' +
+         String(seconds).padStart(2,'0');
+}
+function pulseUnlockClock(el){
+  if(!el) return;
+  el.classList.remove('tick');
+  void el.offsetWidth;
+  el.classList.add('tick');
+}
 function updateCheersGateUI(){
-  const unlocked = cheersIsUnlocked();
+  const now = Date.now();
+  const remaining = Math.max(0, CHEERS_UNLOCK_AT - now);
+  const unlocked = remaining <= 0;
+  const sec = Math.ceil(remaining / 1000);
+  const text = formatUnlockRemaining(remaining);
+
   if(cheersCtaWrap) cheersCtaWrap.classList.toggle('locked-until-event', !unlocked);
-  if(cheersLockNote){
-    cheersLockNote.textContent = unlocked
-      ? '🎉 乾杯演出 解禁！'
-      : '🔒 10月10日 16:00まで秘密！';
+
+  if(cheersCountdownClock){
+    cheersCountdownClock.textContent = text;
   }
+  if(eventLockCountdown){
+    eventLockCountdown.textContent = text;
+  }
+
+  if(sec !== cheersGateLastSecond){
+    cheersGateLastSecond = sec;
+    if(!unlocked){
+      pulseUnlockClock(cheersCountdownClock);
+      if(eventLockPop && eventLockPop.classList.contains('show')) pulseUnlockClock(eventLockCountdown);
+    }
+  }
+
+  if(cheersLockLabel){
+    cheersLockLabel.textContent = unlocked ? '🎉 乾杯演出 解禁！' : '🔒 16:00の解禁まで';
+  }
+
   if(cheersCtaButton){
     cheersCtaButton.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
     cheersCtaButton.title = unlocked ? '' : '10月10日16:00までお楽しみ！';
+  }
+
+  if(unlocked && eventLockPop && eventLockPop.classList.contains('show')){
+    hideCheersLockedPop();
   }
 }
 function showCheersLockedPop(){
   if(!eventLockPop) return;
   eventLockPop.classList.add('show');
   eventLockPop.setAttribute('aria-hidden','false');
+  updateCheersGateUI();
   if(navigator.vibrate) navigator.vibrate([25,20,25]);
 }
 function hideCheersLockedPop(){
@@ -1059,7 +1168,7 @@ function hideCheersLockedPop(){
   eventLockPop.setAttribute('aria-hidden','true');
 }
 
-/* capture phase: prevent all existing celebration handlers before 16:00 */
+/* capture phase: 16:00までは既存の乾杯処理を完全に止める */
 if(cheersCtaButton){
   cheersCtaButton.addEventListener('click', (e)=>{
     if(cheersIsUnlocked()) return;
@@ -1070,11 +1179,13 @@ if(cheersCtaButton){
   }, true);
 }
 if(eventLockClose) eventLockClose.addEventListener('click', hideCheersLockedPop);
-if(eventLockPop) eventLockPop.addEventListener('click', e=>{ if(e.target===eventLockPop) hideCheersLockedPop(); });
+if(eventLockPop) eventLockPop.addEventListener('click', e=>{
+  if(e.target===eventLockPop) hideCheersLockedPop();
+});
 
 updateCheersGateUI();
-setInterval(updateCheersGateUI, 15000);
-
+/* 秒境界に近い頻度で更新し、表示上は1秒ずつ正確に減らす */
+setInterval(updateCheersGateUI, 250);
 </script>
 <div class="event-lock-pop" id="eventLockPop" aria-hidden="true">
   <div class="event-lock-card" role="dialog" aria-modal="true" aria-labelledby="eventLockTitle">
@@ -1084,7 +1195,11 @@ setInterval(updateCheersGateUI, 15000);
       当日の<em>16時までみれないよ〜🙋‍♂️</em><br>
       乾杯の時のお楽しみにしてて😉
     </div>
-    <div class="event-lock-sub">10月10日 16:00になったら自動で解放されます！</div>
+    <div class="event-lock-clock-wrap">
+      <div class="event-lock-clock-label">🎆 解禁まであと</div>
+      <div class="event-lock-clock" id="eventLockCountdown">00:00:00</div>
+    </div>
+    <div class="event-lock-sub">10月10日 16:00になった瞬間、自動で解禁！</div>
     <button class="event-lock-close" id="eventLockClose" type="button">わかった！楽しみにしとく😉</button>
   </div>
 </div>
