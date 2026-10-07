@@ -446,6 +446,53 @@ body.celebrating .app *,body.celebrating .bottomnav *{animation-play-state:pause
   color:#ffe6a5;
 }
 
+
+/* ===== v27: lock POP closes instantly ===== */
+.event-lock-close{
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+.event-lock-close:active{
+  transform:scale(.985);
+}
+.event-lock-pop.instant-hide{
+  transition:none!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+.event-lock-pop.instant-hide .event-lock-card{
+  animation:none!important;
+  transform:none!important;
+}
+
+
+/* ===== v28: repaired lock POP DOM + exact tap target ===== */
+.event-lock-card{
+  overflow:visible!important;
+}
+.event-lock-pop.show .event-lock-card{
+  animation:eventLockPop .38s cubic-bezier(.12,1.25,.28,1) forwards;
+}
+.event-lock-close{
+  position:relative!important;
+  z-index:5!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-height:54px!important;
+  margin:18px 0 0!important;
+  padding:13px 16px!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:transparent!important;
+  transform:none!important;
+}
+.event-lock-close:active{
+  transform:scale(.985)!important;
+}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
 <canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
@@ -1117,18 +1164,29 @@ function initReliableTicker(){
 initReliableTicker();
 
 </script>
+
 <div class="event-lock-pop" id="eventLockPop" aria-hidden="true">
   <div class="event-lock-card" role="dialog" aria-modal="true" aria-labelledby="eventLockTitle">
     <div class="event-lock-icon">🙋‍♂️🎆</div>
     <div class="event-lock-title" id="eventLockTitle">まだ秘密！</div>
+
     <div class="event-lock-copy">
       当日の<em>16時までみれないよ〜🙋‍♂️</em><br>
       乾杯の時のお楽しみにしてて😉
     </div>
+
     <div class="event-lock-clock-wrap">
       <div class="event-lock-clock-label">🎆 解禁まであと</div>
       <div class="event-lock-clock" id="eventLockCountdown">00:00:00</div>
     </div>
+
+    <div class="event-lock-sub">10月10日 16:00になった瞬間、自動で解禁！</div>
+
+    <button class="event-lock-close" id="eventLockClose" type="button">
+      わかった！楽しみにしとく😉
+    </button>
+  </div>
+</div>
 
 <script>document.addEventListener('visibilitychange',()=>{if(!document.hidden){const t=document.querySelector('.ticker-inner');if(t)t.style.animationPlayState='running'}});
 /* ===== v24: 乾杯演出は2026-10-10 16:00 JSTまでロック + 秒カウント ===== */
@@ -1223,8 +1281,13 @@ function showCheersLockedPop(){
 function hideCheersLockedPop(){
   refreshEventLockRefs();
   if(!eventLockPop) return;
+  eventLockPop.classList.add('instant-hide');
   eventLockPop.classList.remove('show');
   eventLockPop.setAttribute('aria-hidden','true');
+  /* restore normal opening behavior on the next frame */
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(eventLockPop) eventLockPop.classList.remove('instant-hide');
+  }));
 }
 
 refreshEventLockRefs();
@@ -1239,8 +1302,16 @@ if(cheersCtaButton){
     showCheersLockedPop();
   }, true);
 }
-if(eventLockClose) eventLockClose.addEventListener('click', hideCheersLockedPop);
-if(eventLockPop) eventLockPop.addEventListener('click', e=>{
+if(eventLockClose){
+  const instantCloseLockPop = (e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    hideCheersLockedPop();
+  };
+  eventLockClose.addEventListener('pointerdown', instantCloseLockPop, {passive:false});
+  eventLockClose.addEventListener('click', instantCloseLockPop, {passive:false});
+}
+if(eventLockPop) eventLockPop.addEventListener('pointerdown', e=>{
   if(e.target===eventLockPop) hideCheersLockedPop();
 });
 
@@ -1248,9 +1319,4 @@ updateCheersGateUI();
 /* 秒境界に近い頻度で更新し、表示上は1秒ずつ正確に減らす */
 setInterval(updateCheersGateUI, 250);
 </script>
-    <div class="event-lock-sub">10月10日 16:00になった瞬間、自動で解禁！</div>
-    <button class="event-lock-close" id="eventLockClose" type="button">わかった！楽しみにしとく😉</button>
-  </div>
-</div>
-
 </body></html>
