@@ -651,7 +651,7 @@ main,.bottomnav{position:relative;z-index:2}
 
 /* ===== v38: subtle mobile sky lanes for rising shells ===== */
 @media (max-width:760px){
-  :root{--mobile-sky-lane:24px}
+  :root{--mobile-sky-lane:32px}
 
   .hero{
     padding-left:var(--mobile-sky-lane)!important;
@@ -674,7 +674,7 @@ main,.bottomnav{position:relative;z-index:2}
   .ticker{margin-left:0!important;margin-right:0!important}
 }
 @media (max-width:360px){
-  :root{--mobile-sky-lane:20px}
+  :root{--mobile-sky-lane:28px}
 }
 
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
@@ -990,21 +990,34 @@ function resize(){
 addEventListener('resize',resize,{passive:true});resize();
 
 
-const AMBIENT_STYLES=[
-  {name:'chrysanthemum',weight:27},
-  {name:'peony',weight:22},
-  {name:'willow',weight:18},
-  {name:'ring',weight:13},
-  {name:'palm',weight:12},
-  {name:'crackle',weight:8}
+
+/* v39: 20 procedural motifs inspired by award-winning Japanese competition-firework themes.
+   These are lightweight visual interpretations, not literal reproductions of any pyrotechnic work. */
+const AWARD_INSPIRED_PRESETS=[
+  {id:'takizakura',label:'滝桜',base:'willow',shape:'radial',pal:['#fff8e8','#ffd6e8','#ff9fc8','#ffe07a'],gravity:1.08,tail:1.20,speed:.95},
+  {id:'blueImpulse',label:'ブルーインパルス',base:'peony',shape:'spokes',sym:6,pal:['#ffffff','#c9f6ff','#69dcff','#3d8dff'],speed:1.14,tail:.88},
+  {id:'shizuku',label:'雫',base:'ring',shape:'droplet',pal:['#f7fdff','#bfeeff','#66cfff','#8f78ff'],speed:.98,tail:1.08},
+  {id:'akane',label:'秋茜',base:'peony',shape:'dragonfly',pal:['#fff2bb','#ffb84f','#ff7f45','#ff4f77'],speed:1.02,tail:.95},
+  {id:'minamo',label:'水面のゆらめき',base:'ring',shape:'ellipse',yScale:.42,bands:3,pal:['#e9fbff','#7fe6ff','#4ba8ff','#ffffff'],speed:.94,tail:1.06},
+  {id:'autumnRice',label:'秋茜・稲穂',base:'chrysanthemum',shape:'layered',bands:3,pal:['#fff8d2','#f7d154','#ff9b43','#d95a46'],speed:1.00,tail:1.05},
+  {id:'monetLotus',label:'モネの蓮池',base:'peony',shape:'petals',sym:8,pal:['#fff1f6','#ff9ecf','#8cf1c2','#67c8ff'],speed:.92,tail:1.00},
+  {id:'blueCrystal',label:'青色の結晶',base:'ring',shape:'spokes',sym:8,pal:['#ffffff','#d9f7ff','#79ddff','#557dff'],speed:1.03,tail:.96},
+  {id:'yachiyo',label:'八千代の花',base:'chrysanthemum',shape:'petals',sym:12,pal:['#fff7dd','#ffd46c','#ff8ab5','#91e9ff'],speed:1.02,tail:1.00},
+  {id:'kagero',label:'陽炎',base:'peony',shape:'heat',pal:['#fff7d7','#ffd06c','#ff8e47','#ff5f59'],speed:.88,tail:1.12,wave:1},
+  {id:'kakkouLight',label:'赫々たる光',base:'chrysanthemum',shape:'radial',pal:['#ffffff','#fff0a0','#ffd047','#ff9d32'],speed:1.12,tail:1.08,bright:1},
+  {id:'oboroMoon',label:'朧月夜に星明り',base:'ring',shape:'moonstars',pal:['#fffde8','#fff4a6','#c7d4ff','#8f9fff'],speed:.88,tail:1.12},
+  {id:'blueMemory',label:'追憶・青のメモリー',base:'willow',shape:'radial',pal:['#eefcff','#9ceaff','#4789ff','#846cff'],speed:.90,tail:1.28},
+  {id:'tanabata',label:'七夕飾り',base:'willow',shape:'streamers',pal:['#fff7d7','#ff8dc6','#77e9ff','#ab8dff','#7cffb3'],speed:.94,tail:1.35},
+  {id:'renryu',label:'連竜の舞',base:'palm',shape:'doubleSpiral',pal:['#fff1c7','#ffbc55','#ff7255','#66e6ff'],speed:1.05,tail:1.18,twist:2.2},
+  {id:'fiveDragon',label:'五色の煙竜',base:'palm',shape:'spokes',sym:5,pal:['#ff5e72','#ffd95c','#62f3a3','#58cfff','#b58cff'],speed:1.00,tail:1.22},
+  {id:'rainbowCloud',label:'虹を食べた雲',base:'crackle',shape:'cloud',pal:['#ff626f','#ffb447','#ffe45d','#66e897','#65cfff','#a27dff'],speed:.84,tail:.90},
+  {id:'auroraCloud',label:'オーロラに染まる雲',base:'willow',shape:'aurora',pal:['#55f0d0','#67c7ff','#9b80ff','#ff7cc9'],speed:.82,tail:1.30},
+  {id:'koi',label:'泳ぐ宝石・錦鯉',base:'peony',shape:'koi',pal:['#ffffff','#ff6d55','#ffb34f','#65d8ff'],speed:.92,tail:1.08},
+  {id:'poppingShower',label:'ポッピングシャワー',base:'crackle',shape:'shower',pal:['#ffffff','#fff27d','#ff8dc0','#7beaff'],speed:1.08,tail:.82,crackle:1}
 ];
-function chooseAmbientStyle(){
-  const total=AMBIENT_STYLES.reduce((s,v)=>s+v.weight,0);
-  let r=Math.random()*total;
-  for(const v of AMBIENT_STYLES){r-=v.weight;if(r<=0)return v.name}
-  return 'chrysanthemum'
-}
-function styleConfig(style){
+function chooseAmbientStyle(){return AWARD_INSPIRED_PRESETS[Math.floor(Math.random()*AWARD_INSPIRED_PRESETS.length)].id}
+function ambientPreset(id){return AWARD_INSPIRED_PRESETS.find(v=>v.id===id)||AWARD_INSPIRED_PRESETS[0]}
+function baseStyleConfig(style){
   const palettes={
     warm:['#fffbe2','#ffe07a','#ffbd4a','#ff813a'],
     blue:['#f3fdff','#8cefff','#43dcff','#5295ff'],
@@ -1012,86 +1025,53 @@ function styleConfig(style){
     green:['#f5fff1','#8dffbd','#54efa0','#36d7bd'],
     violet:['#ffffff','#ded9ff','#ad9aff','#8f78ff']
   };
-  if(style==='willow')return{
-    pal:palettes.warm,amount:IS_MOBILE?44:54,life:136,speedMin:2.4,speedMax:5.6,
-    drag:.996,grav:.048,tail:12,heroEvery:3,thick:1.15,jitter:.045
-  };
-  if(style==='ring')return{
-    pal:[palettes.blue,palettes.pink,palettes.violet][Math.floor(Math.random()*3)],
-    amount:IS_MOBILE?44:56,life:92,speedMin:5.0,speedMax:5.25,
-    drag:.991,grav:.029,tail:11,heroEvery:6,thick:.95,jitter:.010,ring:true
-  };
-  if(style==='palm')return{
-    pal:palettes.warm,amount:IS_MOBILE?20:25,life:128,speedMin:4.4,speedMax:7.2,
-    drag:.995,grav:.051,tail:13,heroEvery:1,thick:1.55,jitter:.08,palm:true
-  };
-  if(style==='peony')return{
-    pal:[palettes.pink,palettes.blue,palettes.green][Math.floor(Math.random()*3)],
-    amount:IS_MOBILE?50:64,life:76,speedMin:3.2,speedMax:7.5,
-    drag:.987,grav:.029,tail:9,heroEvery:8,thick:.95,jitter:.045
-  };
-  if(style==='crackle')return{
-    pal:['#fff','#fff4a6','#ffd35b','#ffffff'],amount:IS_MOBILE?58:72,life:76,
-    speedMin:2.7,speedMax:6.4,drag:.989,grav:.034,tail:6,heroEvery:9,
-    thick:.86,jitter:.11,crackle:true
-  };
-  return{
-    pal:[palettes.warm,palettes.blue,palettes.pink,palettes.violet][Math.floor(Math.random()*4)],
-    amount:IS_MOBILE?60:78,life:102,speedMin:2.9,speedMax:7.1,
-    drag:.992,grav:.032,tail:12,heroEvery:6,thick:1.0,jitter:.032
-  }
+  if(style==='willow')return{pal:palettes.warm,amount:IS_MOBILE?42:52,life:136,speedMin:2.4,speedMax:5.6,drag:.996,grav:.048,tail:12,heroEvery:3,thick:1.15,jitter:.04};
+  if(style==='ring')return{pal:palettes.blue,amount:IS_MOBILE?44:56,life:92,speedMin:5.0,speedMax:5.25,drag:.991,grav:.029,tail:11,heroEvery:6,thick:.95,jitter:.010,ring:true};
+  if(style==='palm')return{pal:palettes.warm,amount:IS_MOBILE?22:27,life:128,speedMin:4.4,speedMax:7.2,drag:.995,grav:.051,tail:13,heroEvery:1,thick:1.45,jitter:.07,palm:true};
+  if(style==='peony')return{pal:palettes.pink,amount:IS_MOBILE?48:62,life:78,speedMin:3.2,speedMax:7.3,drag:.987,grav:.029,tail:9,heroEvery:8,thick:.95,jitter:.04};
+  if(style==='crackle')return{pal:['#fff','#fff4a6','#ffd35b','#ffffff'],amount:IS_MOBILE?54:68,life:76,speedMin:2.7,speedMax:6.4,drag:.989,grav:.034,tail:6,heroEvery:9,thick:.86,jitter:.09,crackle:true};
+  return{pal:palettes.warm,amount:IS_MOBILE?56:72,life:104,speedMin:2.9,speedMax:7.0,drag:.992,grav:.032,tail:12,heroEvery:6,thick:1.0,jitter:.03}
+}
+function styleConfig(id){
+  const p=ambientPreset(id),cfg=Object.assign({},baseStyleConfig(p.base));
+  cfg.preset=p;cfg.pal=p.pal||cfg.pal;cfg.tail=Math.max(5,Math.round(cfg.tail*(p.tail||1)));
+  cfg.speedMin*=p.speed||1;cfg.speedMax*=p.speed||1;cfg.grav*=p.gravity||1;
+  if(p.crackle)cfg.crackle=true;return cfg
+}
+function particleVector(cfg,i,amount,baseAngle){
+  const p=cfg.preset,shape=p.shape||'radial',u=i/amount;
+  let a=baseAngle+Math.PI*2*u, speed=cfg.speedMin+Math.random()*(cfg.speedMax-cfg.speedMin), xs=1,ys=1;
+  const jitter=()=> (Math.random()-.5)*cfg.jitter;
+  if(shape==='ring'){a+=jitter();speed=(cfg.speedMin+cfg.speedMax)/2}
+  else if(shape==='ellipse'){a+=jitter();ys=p.yScale||.45;const band=i%(p.bands||2);speed*=.78+band*.18}
+  else if(shape==='spokes'){const n=p.sym||6;const spoke=i%n;a=baseAngle+Math.PI*2*spoke/n+jitter();speed*=.72+.32*((Math.floor(i/n)%3)/2)}
+  else if(shape==='petals'){const n=p.sym||8;const petal=i%n;const q=(Math.floor(i/n)%5)-2;a=baseAngle+Math.PI*2*petal/n+q*.035+jitter()*.35;speed*=.74+Math.abs(q)*.10}
+  else if(shape==='layered'){const band=i%(p.bands||3);a+=jitter();speed*=.68+band*.18}
+  else if(shape==='dragonfly'){const centers=[.12,.38,.62,.88];const k=centers[i%4];a=baseAngle+Math.PI*2*k+jitter()*1.8;speed*=.82+((i>>2)%3)*.13;ys=.72}
+  else if(shape==='droplet'){a+=jitter();ys=.78;speed*=.92+Math.sin(a)*.08}
+  else if(shape==='heat'){a+=jitter()*2.2;ys=.88;speed*=.86+Math.random()*.18}
+  else if(shape==='moonstars'){const inner=i%5===0;a+=jitter();speed*=inner?.54:1.0}
+  else if(shape==='streamers'){a+=jitter();ys=.82;speed*=.82+Math.random()*.15}
+  else if(shape==='doubleSpiral'){const arm=i%2;a=baseAngle+Math.PI*arm+u*Math.PI*(p.twist||2)+jitter();speed*=.80+.25*u}
+  else if(shape==='cloud'){a+=jitter()*2.6;xs=1.08;ys=.58;speed*=.70+Math.random()*.20}
+  else if(shape==='aurora'){const side=(i%2?1:-1);a=baseAngle+(side>0?.12:.88)*Math.PI*2+jitter()*2.0;speed*=.64+Math.random()*.24;ys=.72}
+  else if(shape==='koi'){const side=i%2?1:-1;a=baseAngle+(side>0?.08:.58)*Math.PI*2+jitter()*1.2;speed*=.70+Math.random()*.28;ys=.72}
+  else if(shape==='shower'){a=baseAngle+Math.PI*(.18+.64*u)+jitter();speed*=.84+Math.random()*.28;ys=.92}
+  else {a+=jitter()}
+  return {a,speed,xs,ys}
 }
 function burst(x=Math.random()*innerWidth,y=70+Math.random()*innerHeight*.50,amount=null,style=null){
-  style=style||chooseAmbientStyle();
-  const cfg=styleConfig(style);
-  const pal=cfg.pal;
-  amount=Math.min(amount??cfg.amount,IS_MOBILE?98:136);
-
-  ambientRings.push({
-    x,y,r:3,a:IS_MOBILE?.76:.68,c:pal[1]||pal[0],
-    s:style==='willow'?3.4:(IS_MOBILE?4.0:3.5),
-    spokes:true,spokeSeed:Math.random()*Math.PI*2
-  });
+  style=style||chooseAmbientStyle();const cfg=styleConfig(style),p=cfg.preset,pal=cfg.pal;
+  amount=Math.min(amount??cfg.amount,IS_MOBILE?92:128);
+  ambientRings.push({x,y,r:3,a:IS_MOBILE?.70:.62,c:pal[1]||pal[0],s:p.base==='willow'?3.3:(IS_MOBILE?3.8:3.4),spokes:true,spokeSeed:Math.random()*Math.PI*2});
   if(ambientRings.length>12)ambientRings.shift();
-
   const baseAngle=Math.random()*Math.PI*2;
   for(let i=0;i<amount;i++){
-    let a, speed;
-    if(cfg.ring){
-      a=baseAngle+(Math.PI*2*i/amount)+(Math.random()-.5)*cfg.jitter;
-      speed=cfg.speedMin+Math.random()*(cfg.speedMax-cfg.speedMin);
-    }else if(cfg.palm){
-      // Fewer, broad heavy spokes — classic palm shape.
-      a=baseAngle+(Math.PI*2*i/amount)+(Math.random()-.5)*cfg.jitter;
-      speed=cfg.speedMin+Math.random()*(cfg.speedMax-cfg.speedMin);
-    }else{
-      a=(Math.PI*2*i/amount)+(Math.random()-.5)*cfg.jitter;
-      speed=cfg.speedMin+Math.random()*(cfg.speedMax-cfg.speedMin);
-    }
-
-    const hero=cfg.heroEvery===1 || i%cfg.heroEvery===0;
-    const life=cfg.life+Math.random()*24+(hero?12:0);
-    const c=pal[i%pal.length];
-    const r=((hero?1.7:1.0)+Math.random()*(hero?1.25:.82))*cfg.thick;
-
-    particles.push({
-      x,y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,
-      life,maxLife:life,c,r,hero,
-      drag:cfg.drag,grav:cfg.grav+(Math.random()*.006),
-      twinkle:Math.random()*Math.PI*2,
-      crackle:!!cfg.crackle,
-      style,
-      ox:x,oy:y,
-      tailMax:cfg.tail+(hero?2:0),
-      tail:[{x,y}],
-      radialProgress:0,
-      ageFrames:0,
-      openFrames:(style==='willow'?14:(style==='palm'?12:9))
-    });
+    const v=particleVector(cfg,i,amount,baseAngle);const hero=cfg.heroEvery===1||i%cfg.heroEvery===0;
+    const life=cfg.life+Math.random()*22+(hero?10:0),c=pal[i%pal.length];
+    particles.push({x,y,vx:Math.cos(v.a)*v.speed*v.xs,vy:Math.sin(v.a)*v.speed*v.ys,life,maxLife:life,c,r:(hero?1.6:1)+Math.random()*(hero?1.1:.75),hero,drag:cfg.drag,grav:cfg.grav+(Math.random()*.005),twinkle:Math.random()*Math.PI*2,crackle:!!cfg.crackle,style:p.base,presetId:style,ox:x,oy:y,tailMax:cfg.tail+(hero?2:0),tail:[{x,y}],ageFrames:0,openFrames:(p.base==='willow'?14:(p.base==='palm'?12:9)),wave:p.wave||0});
   }
-
-  const cap=IS_MOBILE?470:600;
-  if(particles.length>cap)particles.splice(0,particles.length-cap);
+  const cap=IS_MOBILE?440:570;if(particles.length>cap)particles.splice(0,particles.length-cap)
 }
 
 function drawTrail(p,alpha,twinkle){
@@ -1216,50 +1196,24 @@ function drawParticle(p){
 
 
 function launchAmbientRocket(tx,ty,style){
-  if(ambientRockets.length>3){
-    // Too many rockets already in flight: use a shorter visible launch instead of skipping the sequence.
-    const sx=IS_MOBILE
-      ? (tx<innerWidth*.5 ? 9+Math.random()*10 : innerWidth-(9+Math.random()*10))
-      : Math.max(22,Math.min(innerWidth-22,tx+(Math.random()-.5)*innerWidth*.16));
-    ambientRockets.push({
-      x:sx,y:innerHeight-4,sx,sy:innerHeight-4,tx,ty,style,
-      f:0,frames:IS_MOBILE?44:34,
-      tail:[{x:sx,y:innerHeight-4}],
-      shellR:IS_MOBILE?3.9:4.1,
-      wobbleAmp:IS_MOBILE?2.2+Math.random()*4.2:1.8+Math.random()*3.2,
-      wobbleCycles:2.0+Math.random()*1.5,
-      wobblePhase:Math.random()*Math.PI*2,
-      windDrift:(Math.random()-.5)*(IS_MOBILE?14:10)
-    });
-    return;
-  }
-
-  let sx;
+  const mobileSide=IS_MOBILE ? (tx<innerWidth*.5?-1:1) : 0;
+  const sy=IS_MOBILE?innerHeight-86:innerHeight-4; // above the fixed bottom nav on phones
+  let sx=tx,c1x=tx,c2x=tx;
   if(IS_MOBILE){
-    const leftSide=tx<innerWidth*.5;
-    sx=leftSide ? 8+Math.random()*11 : innerWidth-(8+Math.random()*11);
-
-    // If this is a side-lane firework, keep its apex in the same visible lane.
-    if(leftSide && tx<105)tx=30+Math.random()*42;
-    if(!leftSide && tx>innerWidth-105)tx=innerWidth-(30+Math.random()*42);
+    sx=mobileSide<0?10:innerWidth-10;
+    // Keep the first ~70% of the climb in the visible side gutter, then arc inward to the burst point.
+    c1x=mobileSide<0?13:innerWidth-13;
+    c2x=mobileSide<0?18:innerWidth-18;
+    tx=mobileSide<0?(48+Math.random()*24):(innerWidth-(48+Math.random()*24));
   }else{
-    sx=Math.max(24,Math.min(innerWidth-24,tx+(Math.random()-.5)*innerWidth*.22));
+    sx=Math.max(24,Math.min(innerWidth-24,tx+(Math.random()-.5)*innerWidth*.18));
+    c1x=mix(sx,tx,.26);c2x=mix(sx,tx,.58)
   }
-  const sy=innerHeight-4;
-  const frames=IS_MOBILE?58+Math.random()*18:48+Math.random()*14;
-
-  ambientRockets.push({
-    x:sx,y:sy,sx,sy,tx,ty,style,
-    f:0,frames,
-    tail:[{x:sx,y:sy}],
-    shellR:IS_MOBILE?4.1:4.4,
-    wobbleAmp:IS_MOBILE?2.8+Math.random()*5.2:2.0+Math.random()*3.8,
-    wobbleCycles:2.0+Math.random()*1.7,
-    wobblePhase:Math.random()*Math.PI*2,
-    windDrift:(Math.random()-.5)*(IS_MOBILE?18:12)
-  });
-}
-
+  const frames=IS_MOBILE?68+Math.random()*20:48+Math.random()*14;
+  ambientRockets.push({x:sx,y:sy,sx,sy,tx,ty,style,f:0,frames,tail:[{x:sx,y:sy}],shellR:IS_MOBILE?3.8:4.3,
+    c1x,c2x,c1y:mix(sy,ty,.30),c2y:mix(sy,ty,.70),wobbleAmp:IS_MOBILE?2.0+Math.random()*3.8:2.0+Math.random()*3.2,
+    wobbleCycles:1.8+Math.random()*1.4,wobblePhase:Math.random()*Math.PI*2,windDrift:(Math.random()-.5)*(IS_MOBILE?9:10)});
+} 
 function drawAmbientRocket(r){
   const tail=r.tail;
   ctx.globalCompositeOperation='lighter';
@@ -1270,7 +1224,7 @@ function drawAmbientRocket(r){
     const fade=Math.pow(k,1.5);
 
     // Soft amber exhaust glow — intentionally subdued so it stays background.
-    ctx.globalAlpha=.025+.095*fade;
+    ctx.globalAlpha=.04+.13*fade;
     ctx.strokeStyle='#ff9b38';
     ctx.lineWidth=.8+2.4*fade;
     ctx.beginPath();
@@ -1279,7 +1233,7 @@ function drawAmbientRocket(r){
     ctx.stroke();
 
     // Thin gold filament.
-    ctx.globalAlpha=.07+.23*fade;
+    ctx.globalAlpha=.10+.28*fade;
     ctx.strokeStyle='#ffd47a';
     ctx.lineWidth=.45+1.25*fade;
     ctx.beginPath();
@@ -1289,7 +1243,7 @@ function drawAmbientRocket(r){
 
     // Small white core only near the shell head.
     if(k>.66){
-      ctx.globalAlpha=.12+.30*fade;
+      ctx.globalAlpha=.14+.33*fade;
       ctx.strokeStyle='#fff4d0';
       ctx.lineWidth=.28+.46*fade;
       ctx.beginPath();
@@ -1455,27 +1409,16 @@ function anim(ts){
     r.f++;
 
     const t=Math.min(1,r.f/r.frames);
-    // Fast launch, then a readable slowdown near the apex.
-    const e=1-Math.pow(1-t,2.35);
-
-    const baseX=r.sx+(r.tx-r.sx)*e;
-    const baseY=r.sy+(r.ty-r.sy)*e - Math.sin(t*Math.PI)*innerHeight*.020;
-
-    // Real shells never read as a mathematically perfect ruler line:
-    // a tiny rotational wobble + cumulative wind drift makes the climb feel organic.
-    const dx=r.tx-r.sx,dy=r.ty-r.sy;
-    const len=Math.max(1,Math.hypot(dx,dy));
-    const nx=-dy/len,ny=dx/len; // perpendicular to the main flight path
-    const wobbleEnvelope=Math.sin(Math.PI*t); // zero at launch/apex, strongest mid-flight
-    const wobble=Math.sin(r.wobblePhase+t*Math.PI*2*r.wobbleCycles)*
-                 r.wobbleAmp*wobbleEnvelope;
-    const wind=r.windDrift*Math.pow(t,1.55);
-
-    r.x=baseX+nx*wobble+wind;
-    r.y=baseY+ny*wobble*.32;
+    const u=1-Math.pow(1-t,2.05),iv=1-u;
+    const baseX=iv*iv*iv*r.sx+3*iv*iv*u*r.c1x+3*iv*u*u*r.c2x+u*u*u*r.tx;
+    const baseY=iv*iv*iv*r.sy+3*iv*iv*u*r.c1y+3*iv*u*u*r.c2y+u*u*u*r.ty;
+    const dx=r.tx-r.sx,dy=r.ty-r.sy,len=Math.max(1,Math.hypot(dx,dy)),nx=-dy/len,ny=dx/len;
+    const envelope=Math.sin(Math.PI*t),wobble=Math.sin(r.wobblePhase+t*Math.PI*2*r.wobbleCycles)*r.wobbleAmp*envelope;
+    const wind=r.windDrift*Math.pow(t,1.65);
+    r.x=baseX+nx*wobble+wind;r.y=baseY+ny*wobble*.28;
 
     r.tail.push({x:r.x,y:r.y});
-    if(r.tail.length>(IS_MOBILE?34:28))r.tail.shift();
+    if(r.tail.length>(IS_MOBILE?40:30))r.tail.shift();
 
     drawAmbientRocket(r);
 
@@ -1510,7 +1453,7 @@ function anim(ts){
     const open=Math.min(1,p.ageFrames/Math.max(1,p.openFrames));
     const speedRamp=.22+.78*(1-Math.pow(1-open,2.1));
 
-    p.x+=p.vx*speedRamp;
+    p.x+=p.vx*speedRamp + (p.wave?Math.sin(p.ageFrames*.34+p.twinkle)*.22:0);
     p.y+=p.vy*speedRamp;
 
     p.vy+=p.grav*(.35+.65*open);
@@ -1552,25 +1495,25 @@ function launchAmbientFirework(){
   const y=IS_MOBILE ? pickMobileBurstY() : 70+Math.random()*Math.min(420,innerHeight*.70);
 
   // Most fireworks now visibly rise before they open.
-  if(!REDUCED_MOTION && Math.random()<.96){
+  if(!REDUCED_MOTION && Math.random()<.985){
     launchAmbientRocket(x,y,style)
   }else{
     burst(x,y,null,style)
   }
 
-  const secondChance=IS_MOBILE?.22:.16;
+  const secondChance=IS_MOBILE?.14:.12;
   if(Math.random()<secondChance){
     setTimeout(()=>{
       if(document.visibilityState!=='visible'||document.body.classList.contains('celebrating'))return;
       const s2=chooseAmbientStyle();
       const x2=IS_MOBILE?pickMobileBurstX():innerWidth*(.08+Math.random()*.84);
       const y2=IS_MOBILE?pickMobileBurstY():70+Math.random()*Math.min(420,innerHeight*.70);
-      if(!REDUCED_MOTION && Math.random()<.92)launchAmbientRocket(x2,y2,s2);
+      if(!REDUCED_MOTION && Math.random()<.97)launchAmbientRocket(x2,y2,s2);
       else burst(x2,y2,null,s2)
     },220+Math.random()*360)
   }
 
-  if(IS_MOBILE && !REDUCED_MOTION && Math.random()<.03){
+  if(IS_MOBILE && !REDUCED_MOTION && Math.random()<.015){
     setTimeout(()=>{
       if(document.visibilityState!=='visible'||document.body.classList.contains('celebrating'))return;
       const s3=chooseAmbientStyle();
@@ -1583,7 +1526,7 @@ function scheduleAmbientFirework(){
   clearTimeout(ambientLaunchTimer);
   const delay=REDUCED_MOTION
     ? (IS_MOBILE?1900+Math.random()*800:2800+Math.random()*900)
-    : (IS_MOBILE?1700+Math.random()*1300:1800+Math.random()*1400);
+    : (IS_MOBILE?2200+Math.random()*1600:2200+Math.random()*1600);
   ambientLaunchTimer=setTimeout(()=>{
     launchAmbientFirework();
     scheduleAmbientFirework()
