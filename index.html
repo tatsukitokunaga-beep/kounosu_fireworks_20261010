@@ -54,6 +54,65 @@ main,.bottomnav{position:relative;z-index:2}.hero{padding:18px 16px 6px;position
 @keyframes celebrationSpin{to{transform:rotate(360deg)}}@keyframes rainbowBreath{to{transform:scale(1.1);filter:blur(58px) saturate(210%)}}@keyframes rainbowWheel{to{transform:rotate(360deg);filter:hue-rotate(360deg) blur(18px) saturate(240%)}}@keyframes discoPulse{50%{opacity:.9;transform:scale(1.08)}}@keyframes prismDrift{to{transform:translate3d(7%,-4%,0) scale(1.12);filter:hue-rotate(55deg)}}@keyframes megaBoom{0%{opacity:0;transform:translateX(-50%) scale(.35) rotate(-6deg)}60%{opacity:1;transform:translateX(-50%) scale(1.16) rotate(2deg)}100%{opacity:.92;transform:translateX(-50%) scale(1)}}@keyframes megaRainbow{to{background-position:300% 0;filter:hue-rotate(360deg) drop-shadow(0 0 34px rgba(255,255,255,.4))}}@keyframes ringBoom{0%{transform:scale(.3);opacity:0}18%{opacity:1}100%{transform:scale(4.4);opacity:0}}@keyframes celebrationCard{to{transform:scale(1) translateY(0) rotateX(0);opacity:1}}@keyframes cardFloat{50%{transform:translateY(-7px) scale(1.018)}}@keyframes borderRainbow{to{background-position:300% 300%}}@keyframes cardShine{0%{transform:translateX(-60%) rotate(0)}60%,100%{transform:translateX(70%) rotate(0)}}@keyframes clinkIn{0%{transform:scale(.15) rotate(-28deg);opacity:0}55%{transform:scale(1.3) rotate(10deg);opacity:1}78%{transform:scale(.94) rotate(-4deg)}100%{transform:scale(1) rotate(0);opacity:1}}@keyframes glassFloat{50%{transform:translateY(-10px) rotate(5deg) scale(1.08)}}@keyframes sparkPop{0%{transform:scale(.1) rotate(0);opacity:0}18%{opacity:1}100%{transform:scale(3.6) rotate(210deg);opacity:0}}@keyframes titleRise{to{opacity:1;transform:translateY(0) scale(1)}}@keyframes titleRainbow{to{background-position:240% 0;filter:hue-rotate(360deg) drop-shadow(0 0 22px rgba(255,255,255,.25))}}@keyframes miniDance{25%{transform:translateY(-5px) rotate(-2deg)}75%{transform:translateY(3px) rotate(2deg)}}@keyframes fxFall{0%{transform:translate3d(var(--x0,0),-7vh,0) rotate(0) scale(.55);opacity:0}7%{opacity:1}100%{transform:translate3d(var(--x1,0),110vh,0) rotate(var(--rot,720deg)) scale(1.25);opacity:0}}@keyframes starFall{0%{transform:translate3d(0,-12vh,0) scale(.25) rotate(0);opacity:0}8%{opacity:1}100%{transform:translate3d(var(--drift,0),112vh,0) scale(1.15) rotate(var(--rot,360deg));opacity:0}}@keyframes beamSweep{0%{opacity:0;transform:rotate(var(--a0,-70deg)) translateX(-8%)}20%{opacity:.78}100%{opacity:.18;transform:rotate(var(--a1,70deg)) translateX(5%)}}@keyframes ringFirework{0%{transform:translate(-50%,-50%) scale(.1);opacity:0}20%{opacity:1}100%{transform:translate(-50%,-50%) scale(12);opacity:0}}@keyframes screenRainbow{to{background-position:300% 300%;filter:hue-rotate(360deg)}}@keyframes screenGlow{50%{opacity:.55}}@keyframes flashBang{0%{opacity:0}8%{opacity:.92}25%{opacity:.12}100%{opacity:0}}@keyframes discoWheel{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.celebration-bg,.celebration-rings i,.glass-one,.cta button,.cheers-icon,.cheers-glow{animation:none!important}}
 
+
+/* v8: endless SUPER CHEERS until close button */
+.celebration.show .glass-one{
+  animation:clinkIn .9s .18s cubic-bezier(.12,1.5,.3,1) forwards,
+            endlessClink 1.15s 1.05s cubic-bezier(.36,.07,.19,.97) infinite!important;
+  transform-origin:50% 76%;
+}
+.celebration.show .spark-core{
+  animation:endlessSpark 1.15s .72s ease-out infinite!important;
+}
+.celebration.show .celebration-title{
+  animation:titleRise .55s .52s ease-out forwards,
+            titleRainbow 1.15s 1.05s linear infinite,
+            titleBeat 1.15s 1.05s ease-in-out infinite!important;
+}
+.celebration.show .celebration-mini{
+  animation:titleRise .55s .8s ease-out forwards,
+            miniDance .75s 1.05s ease-in-out infinite,
+            miniHue 2.2s 1.05s linear infinite!important;
+}
+.celebration.show #closeCelebration{
+  animation:titleRise .55s .95s ease-out forwards,
+            closeGlow 1.5s 1.25s ease-in-out infinite!important;
+}
+.celebration.show .celebration-content{
+  animation:celebrationCard .8s .1s cubic-bezier(.12,1.35,.28,1) forwards,
+            cardFloat 1.8s .95s ease-in-out infinite,
+            cardHue 5s 1s linear infinite!important;
+}
+.celebration.show .celebration-mega{
+  animation:megaBoom .9s .05s cubic-bezier(.16,1.45,.32,1) forwards,
+            megaRainbow 1.15s .9s linear infinite,
+            megaPulse 1.15s .9s ease-in-out infinite!important;
+}
+.celebration.show .celebration-bg{animation:celebrationSpin 2.6s linear infinite,rainbowBreath .95s ease-in-out infinite alternate!important}
+.celebration.show .celebration-rainbow{animation:rainbowWheel 1.7s linear infinite,discoPulse .62s ease-in-out infinite!important}
+.celebration.show .celebration-prism{animation:prismDrift 2.2s ease-in-out infinite alternate,prismHue 2.4s linear infinite!important}
+.celebration.show:before{content:"";position:absolute;inset:-35%;z-index:5208;pointer-events:none;background:
+  repeating-linear-gradient(102deg,transparent 0 9%,rgba(255,255,255,.12) 9.4% 9.8%,transparent 10.2% 19%),
+  repeating-linear-gradient(12deg,transparent 0 12%,rgba(64,231,255,.10) 12.3% 12.7%,transparent 13% 24%);
+  mix-blend-mode:screen;animation:laserGrid 1.7s linear infinite;filter:hue-rotate(0deg) saturate(180%)}
+#closeCelebration{position:relative;z-index:60;min-height:46px;padding:12px 20px!important;font-size:11px!important;box-shadow:0 0 30px rgba(64,231,255,.18),0 0 50px rgba(255,79,163,.14)!important}
+@keyframes endlessClink{
+  0%,100%{transform:translateY(0) rotate(-10deg) scale(1)}
+  20%{transform:translate(-11px,-5px) rotate(-18deg) scale(1.06)}
+  43%{transform:translate(8px,-3px) rotate(15deg) scale(1.12)}
+  52%{transform:translate(0,-9px) rotate(0deg) scale(1.24)}
+  60%{transform:translate(0,0) rotate(0deg) scale(1.03)}
+  77%{transform:translate(-7px,-2px) rotate(-9deg) scale(1.08)}
+}
+@keyframes endlessSpark{0%,36%{opacity:0;transform:scale(.15) rotate(0)}48%{opacity:1;transform:scale(.8) rotate(45deg)}65%{opacity:.95;transform:scale(2.2) rotate(140deg)}100%{opacity:0;transform:scale(3.7) rotate(250deg)}}
+@keyframes titleBeat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-3px) scale(1.045)}}
+@keyframes miniHue{to{filter:hue-rotate(360deg) drop-shadow(0 0 18px rgba(255,255,255,.55))}}
+@keyframes closeGlow{0%,100%{box-shadow:0 0 16px rgba(64,231,255,.18),0 0 28px rgba(255,79,163,.12)}50%{box-shadow:0 0 34px rgba(64,231,255,.38),0 0 60px rgba(255,79,163,.28);transform:scale(1.04)}}
+@keyframes cardHue{to{filter:hue-rotate(360deg)}}
+@keyframes megaPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.065)}}
+@keyframes prismHue{to{filter:hue-rotate(360deg) saturate(220%)}}
+@keyframes laserGrid{to{transform:translate3d(8%,6%,0) rotate(8deg);filter:hue-rotate(360deg) saturate(240%)}}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./config.js"></script></head>
 <body>
@@ -87,7 +146,7 @@ main,.bottomnav{position:relative;z-index:2}.hero{padding:18px 16px 6px;position
   <div class="glass cat blue" data-cat="おつまみ"><div class="cat-head"><b>🧀 おつまみ・消耗品</b><span>屋台と併用</span></div></div>
   <div class="glass cat purple" data-cat="服装"><div class="cat-head"><b>🧥 服装・夜対策</b><span>河川敷向け</span></div></div>
 </section>
-<div class="cta" id="cheersZone"><div class="cta-kicker">TATSUKI × AI</div><div class="cta-title">全部そろったら、ふたりで乾杯！</div><div class="cta-sub">準備完了の瞬間は、虹色ディスコ・花火・星降るフィナーレで祝います！</div><button id="cheers"><span class="cheers-glow"></span><span class="cheers-icon">🥂</span><span>SUPER乾杯モードを起動！</span></button></div>
+<div class="cta" id="cheersZone"><div class="cta-kicker">TATSUKI × AI</div><div class="cta-title">全部そろったら、ふたりで乾杯！</div><div class="cta-sub">準備完了の瞬間は、虹色ディスコ・連発花火・星降る演出が、閉じるまでずっと続きます！</div><button id="cheers"><span class="cheers-glow"></span><span class="cheers-icon">🥂</span><span>エンドレス乾杯モードを起動！</span></button></div>
 <section id="mapsec" class="section">
   <div class="section-title"><h2>ライブ会場MAP</h2><p>ピンチ拡大・現在地対応</p></div>
   <div class="glass map-shell">
@@ -123,7 +182,7 @@ main,.bottomnav{position:relative;z-index:2}.hero{padding:18px 16px 6px;position
     <div class="celebration-title">乾杯！</div>
     <div class="celebration-copy">準備完了！<br><b>最高の花火ナイトへ！</b></div>
     <div class="celebration-mini">🎆 🍺 🍢 ✨ 💖</div>
-    <button id="closeCelebration">余韻を楽しんで閉じる</button>
+    <button id="closeCelebration">演出を閉じる</button>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -236,15 +295,49 @@ function fireworkFinale(){
   anchors.forEach((a,idx)=>setTimeout(()=>{burst(innerWidth*a[0],innerHeight*a[1],130+Math.floor(Math.random()*55));setTimeout(()=>burst(innerWidth*a[0],innerHeight*a[1],70),160)},idx*190));
   for(let wave=0;wave<26;wave++)setTimeout(()=>{const y=40+Math.random()*innerHeight*.58;burst(Math.random()*innerWidth,y,80+Math.floor(Math.random()*70));if(wave%4===0){burst(innerWidth*.5,innerHeight*(.18+Math.random()*.36),150)}},wave*125)
 }
-function launchCelebration(source='manual'){
-  clearTimeout(celebrationTimer);celebration.classList.add('show');celebration.setAttribute('aria-hidden','false');document.body.classList.add('celebrating');
-  spawnCelebrationPieces();fireworkFinale();
-  if(navigator.vibrate)navigator.vibrate([80,40,120,45,170,55,220,60,120]);
-  toast(source==='complete'?'🌈🎆 全部そろった！たつきとあい、SUPER乾杯！':'🌈🥂 TATSUKI × AI SUPER CHEERS！');
-  celebrationTimer=setTimeout(closeCelebration,9000)
+let celebrationLoops=[];
+function stopCelebrationLoops(){celebrationLoops.forEach(id=>{clearInterval(id);clearTimeout(id)});celebrationLoops=[]}
+function miniStarShower(count=22){
+  const colors=['#fff','#40e7ff','#ff4fa3','#ffd45e','#86ffb6','#b69cff'];
+  for(let i=0;i<count;i++){
+    const st=document.createElement('span');st.className='star-rain';st.textContent=Math.random()>.38?'✦':'★';
+    st.style.left=(Math.random()*100)+'vw';st.style.fontSize=(9+Math.random()*22)+'px';st.style.color=colors[Math.floor(Math.random()*colors.length)];
+    st.style.setProperty('--drift',(Math.random()*180-90)+'px');st.style.setProperty('--rot',(Math.random()*720-360)+'deg');
+    st.style.setProperty('--dur',(1.7+Math.random()*2.1)+'s');st.style.setProperty('--delay',(Math.random()*.35)+'s');
+    document.body.appendChild(st);setTimeout(()=>st.remove(),4600)
+  }
 }
-function closeCelebration(){clearTimeout(celebrationTimer);celebration.classList.remove('show');celebration.setAttribute('aria-hidden','true');document.body.classList.remove('celebrating')}
-document.getElementById('closeCelebration').onclick=closeCelebration;celebration.addEventListener('click',e=>{if(e.target===celebration)closeCelebration()});document.getElementById('cheers').onclick=()=>launchCelebration('manual');
+function discoFlash(){
+  const flash=document.createElement('div');flash.className='screen-flash go';
+  const hues=['#ffffff','#6ff7ff','#ff77c8','#ffe45f','#9d7dff','#74ffb0'];flash.style.background=hues[Math.floor(Math.random()*hues.length)];
+  document.body.appendChild(flash);setTimeout(()=>flash.remove(),900)
+}
+function randomFireworkWave(){
+  const n=3+Math.floor(Math.random()*4);for(let i=0;i<n;i++)setTimeout(()=>burst(innerWidth*(.08+Math.random()*.84),innerHeight*(.10+Math.random()*.54),90+Math.floor(Math.random()*85)),i*120)
+}
+function startCelebrationLoops(){
+  stopCelebrationLoops();
+  celebrationLoops.push(setInterval(()=>randomFireworkWave(),1450));
+  celebrationLoops.push(setInterval(()=>miniStarShower(18+Math.floor(Math.random()*14)),1100));
+  celebrationLoops.push(setInterval(()=>spawnCelebrationPieces(),6900));
+  celebrationLoops.push(setInterval(()=>fireworkFinale(),5200));
+  celebrationLoops.push(setInterval(()=>discoFlash(),2600));
+  celebrationLoops.push(setInterval(()=>{if(navigator.vibrate)navigator.vibrate([45,30,70])},4600));
+}
+function launchCelebration(source='manual'){
+  stopCelebrationLoops();
+  celebration.classList.add('show');celebration.setAttribute('aria-hidden','false');document.body.classList.add('celebrating');
+  spawnCelebrationPieces();fireworkFinale();miniStarShower(42);discoFlash();startCelebrationLoops();
+  if(navigator.vibrate)navigator.vibrate([80,40,120,45,170,55,220,60,120]);
+  toast(source==='complete'?'🌈🎆 全部そろった！たつきとあい、エンドレス乾杯！':'🌈🥂 TATSUKI × AI ENDLESS CHEERS！');
+}
+function closeCelebration(){
+  stopCelebrationLoops();clearTimeout(celebrationTimer);
+  celebration.classList.remove('show');celebration.setAttribute('aria-hidden','true');document.body.classList.remove('celebrating');
+  document.querySelectorAll('.fx-piece,.star-rain,.disco-beam,.firework-ring,.screen-rainbow,.screen-flash').forEach(el=>el.remove())
+}
+document.getElementById('closeCelebration').onclick=closeCelebration;
+document.getElementById('cheers').onclick=()=>launchCelebration('manual');
 function smoothScrollCenter(el,duration=1450){const start=window.scrollY,target=Math.max(0,el.getBoundingClientRect().top+window.scrollY-(innerHeight-el.offsetHeight)/2),change=target-start,t0=performance.now();const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;function step(now){const t=Math.min(1,(now-t0)/duration);window.scrollTo(0,start+change*ease(t));if(t<1)requestAnimationFrame(step)}requestAnimationFrame(step)}
 function queueCompletionCelebration(){if(completionScheduled)return;completionScheduled=true;const zone=document.getElementById('cheersZone');smoothScrollCenter(zone,1550);setTimeout(()=>{const done=allKeys.filter(k=>state[k]).length;if(done===allKeys.length){burst(innerWidth*.5,Math.max(100,zone.getBoundingClientRect().top+60),120);launchCelebration('complete')}else{completionScheduled=false}},1750)};
 </script>
