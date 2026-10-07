@@ -743,6 +743,70 @@ main,.bottomnav{position:relative;z-index:2}
   :root{--mobile-sky-lane:32px}
 }
 
+
+/* ===== v43: hero info is one cohesive block, not individual tabs ===== */
+.hero-summary{
+  margin-top:16px;
+  padding-top:13px;
+  border-top:1px solid rgba(255,255,255,.12);
+}
+.hero-couple{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+.hero-avatar{
+  width:28px;
+  height:28px;
+  flex:0 0 28px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:12px;
+  font-weight:1000;
+  color:#07101f;
+  background:linear-gradient(135deg,#65efff,#fff,#ffd45e);
+  box-shadow:0 0 16px rgba(64,231,255,.28);
+}
+.hero-avatar.ai{
+  background:linear-gradient(135deg,#ff7bbe,#fff,#bcaaff);
+  box-shadow:0 0 16px rgba(255,79,163,.28);
+}
+.hero-person-name{
+  font-size:13px;
+  font-weight:950;
+  color:#f9fbff;
+}
+.hero-couple-x{
+  margin:0 2px;
+  font-size:11px;
+  font-weight:900;
+  color:#8698b9;
+}
+.hero-meta{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:5px 7px;
+  margin-top:10px;
+  color:#b9c7df;
+  font-size:10px;
+  font-weight:800;
+  line-height:1.5;
+}
+.hero-meta i{
+  font-style:normal;
+  color:rgba(255,255,255,.24);
+  font-size:9px;
+}
+@media(max-width:390px){
+  .hero-meta{
+    gap:4px 6px;
+    font-size:9.5px;
+  }
+}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
 <canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
@@ -769,7 +833,24 @@ main,.bottomnav{position:relative;z-index:2}
 <div class="eyebrow">たつきとあいの、特別な一日</div>
 <h1><span class="grad">こうのす花火大会</span><span class="hero-second">ふたりの花火ナイト</span></h1>
 <div class="sub">屋台ごはんを選んで、お酒を冷やして。準備する時間から、ふたりの花火ナイトを楽しもう！</div>
-<div aria-label="参加者" class="duo-row"><span class="person-chip tatsuki"><span class="person-avatar">た</span><b>たつき</b></span><span class="duo-x">×</span><span class="person-chip ai"><span class="person-avatar">あ</span><b>あい</b></span></div><div class="hero-badges"><span class="pill">🎆 10/10 SAT</span><span class="pill">📍 ポピー会場</span><span class="pill">🍺 買い出しあり</span><span class="pill">🥂 ふたりで乾杯</span></div>
+<div class="hero-summary">
+  <div class="hero-couple" aria-label="参加者">
+    <span class="hero-avatar tatsuki">た</span>
+    <span class="hero-person-name">たつき</span>
+    <span class="hero-couple-x">×</span>
+    <span class="hero-avatar ai">あ</span>
+    <span class="hero-person-name">あい</span>
+  </div>
+  <div class="hero-meta" aria-label="イベント情報">
+    <span>🎆 10/10 SAT</span>
+    <i>•</i>
+    <span>📍 ポピー会場</span>
+    <i>•</i>
+    <span>🍺 買い出しあり</span>
+    <i>•</i>
+    <span>🥂 ふたりで乾杯</span>
+  </div>
+</div>
 </div>
 </section>
 <div class="countdown">
