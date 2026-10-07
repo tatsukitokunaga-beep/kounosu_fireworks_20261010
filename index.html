@@ -151,6 +151,10 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
   <div class="glass weather"><span class="sun">☀️</span><small>鴻巣の予報</small><div class="temp" id="weatherTemp">26℃</div><small id="weatherSub">夕方は20℃前後</small></div>
 </div>
 <div class="ticker" aria-label="当日の楽しみ方"><div class="ticker-inner"><div class="ticker-group"><div class="ticker-item beer"><div class="ticker-icon">🍺</div><div class="ticker-copy"><strong>お酒は事前に確保</strong><small>冷たいまま会場へ</small></div></div><div class="ticker-item food"><div class="ticker-icon">🍢</div><div class="ticker-copy"><strong>屋台飯は現地で楽しむ</strong><small>気になるものをゆったり</small></div></div><div class="ticker-item plane"><div class="ticker-icon">🛩</div><div class="ticker-copy"><strong>16:00 ブルーインパルス</strong><small>早めに場所を確保</small></div></div><div class="ticker-item drone"><div class="ticker-icon">✨</div><div class="ticker-copy"><strong>17:45ごろ ドローン</strong><small>空が暗くなる頃</small></div></div><div class="ticker-item fireworks"><div class="ticker-icon">🎆</div><div class="ticker-copy"><strong>いよいよ花火本番</strong><small>たつき × あい 花火ナイト</small></div></div></div><div class="ticker-group"><div class="ticker-item beer"><div class="ticker-icon">🍺</div><div class="ticker-copy"><strong>お酒は事前に確保</strong><small>冷たいまま会場へ</small></div></div><div class="ticker-item food"><div class="ticker-icon">🍢</div><div class="ticker-copy"><strong>屋台飯は現地で楽しむ</strong><small>気になるものをゆったり</small></div></div><div class="ticker-item plane"><div class="ticker-icon">🛩</div><div class="ticker-copy"><strong>16:00 ブルーインパルス</strong><small>早めに場所を確保</small></div></div><div class="ticker-item drone"><div class="ticker-icon">✨</div><div class="ticker-copy"><strong>17:45ごろ ドローン</strong><small>空が暗くなる頃</small></div></div><div class="ticker-item fireworks"><div class="ticker-icon">🎆</div><div class="ticker-copy"><strong>いよいよ花火本番</strong><small>たつき × あい 花火ナイト</small></div></div></div></div></div>
+<section class="section preflight" id="dress">
+  <div class="section-title"><h2>出発前の服装チェック</h2><p>家を出る前に確認</p></div>
+  <div class="glass cat purple" data-cat="服装"><div class="cat-head"><b>🧥 服装・足元</b><span>15時→夜の河川敷向け</span></div></div>
+</section>
 <section class="section">
   <div class="section-title"><h2>当日の流れ</h2><p>横にスワイプ</p></div>
   <div class="timeline">
@@ -163,7 +167,6 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
   <div class="glass cat red" data-cat="持ち物"><div class="cat-head"><b>🎒 最優先で持つもの</b><span>快適さの土台</span></div></div>
   <div class="glass cat orange" data-cat="お酒"><div class="cat-head"><b>🍺 お酒・飲み物</b><span>事前調達推奨</span></div></div>
   <div class="glass cat blue" data-cat="おつまみ"><div class="cat-head"><b>🧀 おつまみ・消耗品</b><span>屋台と併用</span></div></div>
-  <div class="glass cat purple" data-cat="服装"><div class="cat-head"><b>🧥 服装・夜対策</b><span>河川敷向け</span></div></div>
   <div class="glass cat final" data-cat="乾杯準備" id="finalCheckCard"><div class="cat-head"><b>🥂 最後の乾杯準備</b><span id="finalHint">ほかの準備が終わると解放</span></div></div>
 </section>
 <div class="cta" id="cheersZone"><div class="cta-kicker">TATSUKI × AI</div><div class="cta-title">グラスに注いだら、ふたりで乾杯！</div><div class="cta-sub">最後のチェックを入れた瞬間、夜空いっぱいに花火が打ち上がり続けます！閉じるまでフィナーレは終わりません！</div><button id="cheers"><span class="cheers-glow"></span><span class="cheers-icon">🥂</span><span>花火フィナーレで乾杯！</span></button></div>
@@ -212,13 +215,22 @@ const items={
   ['厚手のレジャーシート','2人なら大きめ','1枚'],['折りたたみクッション','長時間座るので重要','2個'],['モバイルバッテリー','写真・地図・LINE対策','1台'],['現金','屋台・トイレ用に小銭も','必須'],['ウェットティッシュ','屋台飯に便利','1個'],['ゴミ袋','持ち帰り＋荷物の防水','2〜3枚']
  ],
  'お酒':[
-  ['ビール','好きな本数を事前購入','2〜4本'],['ハイボール / チューハイ','気分で追加','2〜4本'],['水・お茶','お酒だけにしない','各1'],['保冷バッグ','小さめでOK','1個'],['保冷剤 / 凍らせた水','夕方まで冷たく','1〜2個'],['紙コップ','必要なら','2〜4個']
+  ['ビール','好きな本数を事前購入','2〜4本'],
+  ['ハイボール / チューハイ','気分で追加','2〜4本'],
+  ['日本酒','カップ酒・小瓶など持ち運びやすい物','1〜2本'],
+  ['ワイン / その他好きなお酒','気分に合わせて追加','任意'],
+  ['水・お茶','お酒だけにしない','各1'],
+  ['保冷バッグ','小さめでOK','1個'],
+  ['保冷剤 / 凍らせた水','夕方まで冷たく','1〜2個'],
+  ['プラスチックカップ / 二重ステンレスタンブラー','乾杯用。好みでどちらか','2個']
  ],
  'おつまみ':[
   ['枝豆 / チーズ','軽くつまめる物','適量'],['ナッツ / 乾き物','持ち歩きやすい','1袋'],['割り箸','屋台で不足した時用','2膳'],['おしぼり','手拭き用','2枚'],['屋台飯は現地で選ぶ','焼きそば・焼鳥・唐揚げなど','楽しむ']
  ],
  '服装':[
-  ['薄手の羽織り','夜は気温が下がる','各1'],['ブランケット','脚が冷えた時用','1枚'],['汚れてもよいスニーカー','河川敷・芝対策','必須'],['帽子 / 日焼け止め','15時台の日差し対策','任意']
+  ['薄手の羽織り','夜は気温が下がるので出発時から携帯','各1'],
+  ['汚れてもよいスニーカー','河川敷・芝対策','必須'],
+  ['帽子 / 日焼け止め','15時台の日差し対策','任意']
  ],
  '乾杯準備':[
   ['グラスに飲み物を注いだ？','これを最後にチェックすると花火フィナーレ開始','LAST']
@@ -253,7 +265,7 @@ function progress(allowCelebrate=false){
 progress(false);
 document.addEventListener('click',e=>{
   const b=e.target.closest('.check');if(!b)return;const k=b.dataset.k;
-  if(k===FINAL_KEY&&!prepReady()){toast('まずは持ち物・お酒・服装の準備を全部そろえてください！');const card=document.getElementById('finalCheckCard');card?.animate([{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],{duration:360});return}
+  if(k===FINAL_KEY&&!prepReady()){toast('まずは服装・持ち物・お酒・おつまみの準備を全部そろえてください！');const card=document.getElementById('finalCheckCard');card?.animate([{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],{duration:360});return}
   state[k]=!state[k];localStorage.setItem('kounosu2026-check-'+ROOM,JSON.stringify(state));if(sb)syncOne(k,state[k]);b.classList.toggle('done',state[k]);b.closest('.item').classList.toggle('done',state[k]);progress(true);burst(b.getBoundingClientRect().left+12,b.getBoundingClientRect().top+12);toast(k===FINAL_KEY&&state[k]?'🥂 注いだ！花火フィナーレへ！':(state[k]?'準備完了！ ✨':'チェックを戻しました'))
 });
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>el.classList.remove('show'),1800)}
