@@ -870,6 +870,64 @@ body.celebration-video{
   }
 }
 
+
+/* ===== v46: bottom fireworks gallery ===== */
+.firework-showcase{
+  position:relative;
+  min-height:min(62svh,560px);
+  margin:12px 0 6px;
+  padding:18px max(18px,env(safe-area-inset-left)) calc(104px + env(safe-area-inset-bottom));
+  overflow:hidden;
+  isolation:isolate;
+  border-top:1px solid rgba(255,255,255,.10);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  background:
+    linear-gradient(180deg,rgba(5,9,27,.52) 0%,rgba(5,9,27,.04) 16%,rgba(5,9,27,0) 48%,rgba(5,9,27,.18) 70%,rgba(5,9,27,.82) 100%);
+}
+.firework-showcase:before{
+  content:"";
+  position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 34%,rgba(71,118,255,.08),transparent 38%),
+    radial-gradient(circle at 18% 18%,rgba(64,231,255,.05),transparent 26%);
+}
+.showcase-topline{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;position:relative;z-index:2}
+.showcase-kicker{font-size:9px;font-weight:950;letter-spacing:.19em;color:#7cecff}
+.showcase-heading{margin-top:4px;font-size:17px;font-weight:950;letter-spacing:-.025em;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.5)}
+.showcase-count{flex:0 0 auto;font-size:10px;font-weight:950;color:#b7c8e8;letter-spacing:.08em;padding-top:2px}
+.showcase-open-sky{min-height:250px;display:flex;align-items:flex-start;justify-content:center;padding-top:16px;pointer-events:none}
+.showcase-sky-caption{opacity:.42;font-size:9px;font-weight:800;letter-spacing:.08em;color:#a9b8d3;text-shadow:0 2px 10px #000}
+.showcase-meta{
+  position:relative;z-index:2;padding:16px 16px 14px;border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(145deg,rgba(6,14,35,.76),rgba(13,21,47,.66));
+  -webkit-backdrop-filter:blur(13px) saturate(125%);backdrop-filter:blur(13px) saturate(125%);
+  box-shadow:0 18px 50px rgba(0,0,0,.28);
+  transition:opacity .26s ease,transform .30s cubic-bezier(.2,.8,.2,1),filter .26s ease;
+}
+.showcase-meta.switching{opacity:.08;transform:translateY(9px) scale(.985);filter:blur(4px)}
+.showcase-meta-head{display:flex;align-items:center;gap:8px;min-width:0}
+.showcase-year{font-size:11px;font-weight:1000;color:#ffe079}
+.showcase-award{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;font-weight:900;color:#96a9c9}
+.showcase-title{margin-top:7px;font-size:20px;line-height:1.25;font-weight:1000;letter-spacing:-.035em;color:#fff}
+.showcase-sub{margin-top:6px;font-size:10px;font-weight:850;color:#c7d5ec}
+.showcase-detail{margin-top:5px;display:flex;flex-wrap:wrap;gap:4px 7px;font-size:9.5px;line-height:1.5;color:#91a4c4}
+.showcase-sep{color:rgba(255,255,255,.25)}
+.showcase-progress{height:2px;overflow:hidden;margin-top:13px;border-radius:999px;background:rgba(255,255,255,.08)}
+.showcase-progress i{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#56eaff,#ba8cff,#ffe06d)}
+.firework-showcase.in-view .showcase-progress i{animation:showcaseTimer 6.2s linear both}
+@keyframes showcaseTimer{from{width:0}to{width:100%}}
+.showcase-note{margin-top:10px;font-size:8.5px;line-height:1.6;color:#6f82a3}
+.showcase-note a{color:#8edff0;text-decoration:none;margin-left:4px}
+@media(max-width:760px){
+  .firework-showcase{min-height:58svh;padding-left:18px;padding-right:18px}
+  .showcase-open-sky{min-height:270px}
+}
+@media(max-width:390px){
+  .showcase-title{font-size:19px}
+  .showcase-open-sky{min-height:250px}
+}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
 <canvas id="launchTrails" aria-hidden="true"></canvas><canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
@@ -962,6 +1020,38 @@ body.celebration-video{
 </div>
 <div style="font-size:10px;color:var(--muted);line-height:1.7;margin-top:8px">※ガイド画像には現在地を重ねません。①は参考候補で、実際の観覧区画や混雑は現地で確認してください。GPSには端末の測位誤差があります。</div>
 </section>
+
+<section class="firework-showcase" id="fireworkShowcase" aria-label="受賞花火モチーフギャラリー">
+  <div class="showcase-topline">
+    <div>
+      <div class="showcase-kicker">AWARD FIREWORK GALLERY</div>
+      <div class="showcase-heading">受賞花火をモチーフにした夜空</div>
+    </div>
+    <div class="showcase-count" id="showcaseCount">01 / 20</div>
+  </div>
+  <div class="showcase-open-sky" aria-hidden="true">
+    <div class="showcase-sky-caption">この空間では背景花火が主役</div>
+  </div>
+  <div class="showcase-meta" id="showcaseMeta" aria-live="polite">
+    <div class="showcase-meta-head">
+      <span class="showcase-year" id="showcaseYear">2025</span>
+      <span class="showcase-award" id="showcaseAward">受賞花火</span>
+    </div>
+    <div class="showcase-title" id="showcaseTitle">モネの蓮池</div>
+    <div class="showcase-sub" id="showcaseEvent">第97回 全国花火競技大会「大曲の花火」</div>
+    <div class="showcase-detail">
+      <span id="showcasePlace">秋田県大仙市</span>
+      <span class="showcase-sep">•</span>
+      <span id="showcaseMaker">株式会社 北日本花火興業</span>
+    </div>
+    <div class="showcase-progress"><i id="showcaseProgress"></i></div>
+    <div class="showcase-note">
+      ※実際の受賞花火映像ではなく、公式受賞作の玉名・世界観を参考にしたWeb演出です。
+      <a id="showcaseSource" href="https://www.omagari-hanabi.com/results/2025competition" target="_blank" rel="noopener noreferrer">公式結果</a>
+    </div>
+  </div>
+</section>
+
 <footer class="source-links"><b>出発前と帰りにチェック</b><br/><a href="https://kounosuhanabi.com/areainfo/event_poppy.html" rel="noopener noreferrer" target="_blank">公式会場案内</a><a href="https://kounosuhanabi.com/access/accsess-train.html" rel="noopener noreferrer" target="_blank">公式の帰り方</a><a href="https://tenki.jp/forecast/3/14/4320/11217/" rel="noopener noreferrer" target="_blank">鴻巣の天気</a><br/><span class="revision">v21.0 / 2026-10-07 最終レビュー版</span></footer></main>
 <nav class="bottomnav"><button class="on" data-go="home" type="button"><i>🎆</i>TOP</button><button data-go="check" type="button"><i>✅</i>準備</button><button data-go="mapsec" type="button"><i>🗺️</i>MAP</button></nav>
 </div>
@@ -1232,29 +1322,66 @@ resize();
 /* v39: 20 procedural motifs inspired by award-winning Japanese competition-firework themes.
    These are lightweight visual interpretations, not literal reproductions of any pyrotechnic work. */
 const AWARD_INSPIRED_PRESETS=[
-  {id:'takizakura',label:'滝桜',base:'willow',shape:'radial',pal:['#fff8e8','#ffd6e8','#ff9fc8','#ffe07a'],gravity:1.08,tail:1.20,speed:.95},
-  {id:'blueImpulse',label:'ブルーインパルス',base:'peony',shape:'spokes',sym:6,pal:['#ffffff','#c9f6ff','#69dcff','#3d8dff'],speed:1.14,tail:.88},
-  {id:'shizuku',label:'雫',base:'ring',shape:'droplet',pal:['#f7fdff','#bfeeff','#66cfff','#8f78ff'],speed:.98,tail:1.08},
-  {id:'akane',label:'秋茜',base:'peony',shape:'dragonfly',pal:['#fff2bb','#ffb84f','#ff7f45','#ff4f77'],speed:1.02,tail:.95},
-  {id:'minamo',label:'水面のゆらめき',base:'ring',shape:'ellipse',yScale:.42,bands:3,pal:['#e9fbff','#7fe6ff','#4ba8ff','#ffffff'],speed:.94,tail:1.06},
-  {id:'autumnRice',label:'秋茜・稲穂',base:'chrysanthemum',shape:'layered',bands:3,pal:['#fff8d2','#f7d154','#ff9b43','#d95a46'],speed:1.00,tail:1.05},
-  {id:'monetLotus',label:'モネの蓮池',base:'peony',shape:'petals',sym:8,pal:['#fff1f6','#ff9ecf','#8cf1c2','#67c8ff'],speed:.92,tail:1.00},
-  {id:'blueCrystal',label:'青色の結晶',base:'ring',shape:'spokes',sym:8,pal:['#ffffff','#d9f7ff','#79ddff','#557dff'],speed:1.03,tail:.96},
-  {id:'yachiyo',label:'八千代の花',base:'chrysanthemum',shape:'petals',sym:12,pal:['#fff7dd','#ffd46c','#ff8ab5','#91e9ff'],speed:1.02,tail:1.00},
-  {id:'kagero',label:'陽炎',base:'peony',shape:'heat',pal:['#fff7d7','#ffd06c','#ff8e47','#ff5f59'],speed:.88,tail:1.12,wave:1},
-  {id:'kakkouLight',label:'赫々たる光',base:'chrysanthemum',shape:'radial',pal:['#ffffff','#fff0a0','#ffd047','#ff9d32'],speed:1.12,tail:1.08,bright:1},
-  {id:'oboroMoon',label:'朧月夜に星明り',base:'ring',shape:'moonstars',pal:['#fffde8','#fff4a6','#c7d4ff','#8f9fff'],speed:.88,tail:1.12},
-  {id:'blueMemory',label:'追憶・青のメモリー',base:'willow',shape:'radial',pal:['#eefcff','#9ceaff','#4789ff','#846cff'],speed:.90,tail:1.28},
-  {id:'tanabata',label:'七夕飾り',base:'willow',shape:'streamers',pal:['#fff7d7','#ff8dc6','#77e9ff','#ab8dff','#7cffb3'],speed:.94,tail:1.35},
-  {id:'renryu',label:'連竜の舞',base:'palm',shape:'doubleSpiral',pal:['#fff1c7','#ffbc55','#ff7255','#66e6ff'],speed:1.05,tail:1.18,twist:2.2},
-  {id:'fiveDragon',label:'五色の煙竜',base:'palm',shape:'spokes',sym:5,pal:['#ff5e72','#ffd95c','#62f3a3','#58cfff','#b58cff'],speed:1.00,tail:1.22},
-  {id:'rainbowCloud',label:'虹を食べた雲',base:'crackle',shape:'cloud',pal:['#ff626f','#ffb447','#ffe45d','#66e897','#65cfff','#a27dff'],speed:.84,tail:.90},
-  {id:'auroraCloud',label:'オーロラに染まる雲',base:'willow',shape:'aurora',pal:['#55f0d0','#67c7ff','#9b80ff','#ff7cc9'],speed:.82,tail:1.30},
-  {id:'koi',label:'泳ぐ宝石・錦鯉',base:'peony',shape:'koi',pal:['#ffffff','#ff6d55','#ffb34f','#65d8ff'],speed:.92,tail:1.08},
-  {id:'poppingShower',label:'ポッピングシャワー',base:'crackle',shape:'shower',pal:['#ffffff','#fff27d','#ff8dc0','#7beaff'],speed:1.08,tail:.82,crackle:1}
-];
-function chooseAmbientStyle(){return AWARD_INSPIRED_PRESETS[Math.floor(Math.random()*AWARD_INSPIRED_PRESETS.length)].id}
+  {id:'monetLotus',label:'モネの蓮池',year:2025,edition:'第97回',maker:'株式会社 北日本花火興業',award:'10号玉・芯入割物 準優勝',source:'https://www.omagari-hanabi.com/results/2025competition',base:'peony',shape:'petals',sym:8,pal:['#fff1f6','#ff9ecf','#8cf1c2','#67c8ff'],speed:.92,tail:1.00},
+  {id:'blueCrystal',label:'青色の結晶',year:2025,edition:'第97回',maker:'株式会社 小松煙火工業',award:'10号玉・芯入割物 優秀賞',source:'https://www.omagari-hanabi.com/results/2025competition',base:'ring',shape:'spokes',sym:8,pal:['#ffffff','#d9f7ff','#79ddff','#557dff'],speed:1.03,tail:.96},
+  {id:'yachiyo',label:'八千代の花',year:2025,edition:'第97回',maker:'有限会社 菊屋小幡花火店',award:'10号玉・芯入割物 優秀賞',source:'https://www.omagari-hanabi.com/results/2025competition',base:'chrysanthemum',shape:'petals',sym:12,pal:['#fff7dd','#ffd46c','#ff8ab5','#91e9ff'],speed:1.02,tail:1.00},
+  {id:'kagero',label:'陽炎',year:2025,edition:'第97回',maker:'株式会社 山﨑煙火製造所',award:'10号玉・芯入割物 入賞',source:'https://www.omagari-hanabi.com/results/2025competition',base:'peony',shape:'heat',pal:['#fff7d7','#ffd06c','#ff8e47','#ff5f59'],speed:.88,tail:1.12,wave:1},
+  {id:'kakkouLight',label:'赫々たる光',year:2025,edition:'第97回',maker:'アルプス煙火工業株式会社',award:'10号玉・芯入割物 入賞',source:'https://www.omagari-hanabi.com/results/2025competition',base:'chrysanthemum',shape:'radial',pal:['#ffffff','#fff0a0','#ffd047','#ff9d32'],speed:1.12,tail:1.08,bright:1},
+  {id:'oboroMoon',label:'朧月夜に星明り',year:2025,edition:'第97回',maker:'有限会社 伊那火工 堀内煙火店',award:'10号玉・芯入割物 入賞',source:'https://www.omagari-hanabi.com/results/2025competition',base:'ring',shape:'moonstars',pal:['#fffde8','#fff4a6','#c7d4ff','#8f9fff'],speed:.88,tail:1.12},
+  {id:'blueMemory',label:'追憶 ～青のメモリー～',year:2025,edition:'第97回',maker:'株式会社 小松煙火工業',award:'創造花火 優勝',source:'https://www.omagari-hanabi.com/results/2025competition',base:'willow',shape:'radial',pal:['#eefcff','#9ceaff','#4789ff','#846cff'],speed:.90,tail:1.28},
+  {id:'tanabata',label:'七夕飾り ～織姫の祈り・彦星の願い～',year:2025,edition:'第97回',maker:'有限会社 伊那火工 堀内煙火店',award:'創造花火 準優勝',source:'https://www.omagari-hanabi.com/results/2025competition',base:'willow',shape:'streamers',pal:['#fff7d7','#ff8dc6','#77e9ff','#ab8dff','#7cffb3'],speed:.94,tail:1.35},
+  {id:'koi',label:'日本庭園を彩るニシキゴイ',year:2025,edition:'第97回',maker:'野村花火工業株式会社',award:'創造花火 優秀賞',source:'https://www.omagari-hanabi.com/results/2025competition',base:'peony',shape:'koi',pal:['#ffffff','#ff6d55','#ffb34f','#65d8ff'],speed:.92,tail:1.08},
+  {id:'fiveDragon',label:'五色連竜之舞',year:2025,edition:'第97回',maker:'株式会社 小松煙火工業',award:'昼花火 優勝',source:'https://www.omagari-hanabi.com/results/2025competition',base:'palm',shape:'spokes',sym:5,pal:['#ff5e72','#ffd95c','#62f3a3','#58cfff','#b58cff'],speed:1.00,tail:1.22},
+  {id:'mossTree',label:'苔むす大樹',year:2024,edition:'第96回',maker:'株式会社 小松煙火工業',award:'10号玉・自由玉 優勝',source:'https://www.omagari-hanabi.com/results/2024competition',base:'willow',shape:'radial',pal:['#f0ffd4','#94e483','#55b978','#ffe6a3'],gravity:1.08,tail:1.24,speed:.93},
+  {id:'takizakura',label:'滝桜',year:2024,edition:'第96回',maker:'株式会社 紅屋青木煙火店',award:'10号玉・自由玉 準優勝',source:'https://www.omagari-hanabi.com/results/2024competition',base:'willow',shape:'radial',pal:['#fff8e8','#ffd6e8','#ff9fc8','#ffe07a'],gravity:1.08,tail:1.20,speed:.95},
+  {id:'blueImpulse',label:'ブルーインパルス',year:2024,edition:'第96回',maker:'有限会社 菊屋小幡花火店',award:'10号玉・自由玉 優秀賞',source:'https://www.omagari-hanabi.com/results/2024competition',base:'peony',shape:'spokes',sym:6,pal:['#ffffff','#c9f6ff','#69dcff','#3d8dff'],speed:1.14,tail:.88},
+  {id:'sweetAlyssum',label:'スイートアリッサム',year:2024,edition:'第96回',maker:'響屋大曲煙火株式会社',award:'10号玉・自由玉 優秀賞',source:'https://www.omagari-hanabi.com/results/2024competition',base:'peony',shape:'petals',sym:10,pal:['#ffffff','#ffd9ec','#d7b7ff','#8ee6ff'],speed:.94,tail:1.02},
+  {id:'shizuku',label:'雫',year:2024,edition:'第96回',maker:'株式会社 山﨑煙火製造所',award:'10号玉・自由玉 入賞／観光庁長官賞',source:'https://www.omagari-hanabi.com/results/2024competition',base:'ring',shape:'droplet',pal:['#f7fdff','#bfeeff','#66cfff','#8f78ff'],speed:.98,tail:1.08},
+  {id:'akane',label:'夕陽に遊ぶ秋茜',year:2024,edition:'第96回',maker:'有限会社 伊那火工 堀内煙火店',award:'10号玉・自由玉 入賞',source:'https://www.omagari-hanabi.com/results/2024competition',base:'peony',shape:'dragonfly',pal:['#fff2bb','#ffb84f','#ff7f45','#ff4f77'],speed:1.02,tail:.95},
+  {id:'minamo',label:'水面のゆらめき',year:2024,edition:'第96回',maker:'野村花火工業株式会社',award:'10号玉・自由玉 入賞',source:'https://www.omagari-hanabi.com/results/2024competition',base:'ring',shape:'ellipse',yScale:.42,bands:3,pal:['#e9fbff','#7fe6ff','#4ba8ff','#ffffff'],speed:.94,tail:1.06},
+  {id:'autumnRice',label:'秋茜 ～稲穂に集い・夕陽に遊ぶ～',year:2024,edition:'第96回',maker:'有限会社 伊那火工 堀内煙火店',award:'創造花火 優勝',source:'https://www.omagari-hanabi.com/results/2024competition',base:'chrysanthemum',shape:'layered',bands:3,pal:['#fff8d2','#f7d154','#ff9b43','#d95a46'],speed:1.00,tail:1.05},
+  {id:'lateAutumnLake',label:'晩秋の湖 ～色葉散り、浮かぶ波紋～',year:2024,edition:'第96回',maker:'野村花火工業株式会社',award:'創造花火 準優勝',source:'https://www.omagari-hanabi.com/results/2024competition',base:'ring',shape:'ellipse',yScale:.48,bands:3,pal:['#ffe8b0','#ff9a54','#df6a72','#66bfe8'],speed:.90,tail:1.10},
+  {id:'mossForest',label:'苔むす森 ～鬱蒼とした緑の世界～',year:2024,edition:'第96回',maker:'株式会社 小松煙火工業',award:'創造花火 優秀賞',source:'https://www.omagari-hanabi.com/results/2024competition',base:'willow',shape:'streamers',pal:['#ecffd5','#7dde82','#3ca66a','#ffe4a2'],speed:.86,tail:1.30}
+]
+let lastAmbientStyleId=null;
+function chooseAmbientStyle(){
+  let p=null;
+  for(let tries=0;tries<8;tries++){
+    p=AWARD_INSPIRED_PRESETS[Math.floor(Math.random()*AWARD_INSPIRED_PRESETS.length)];
+    if(p.id!==lastAmbientStyleId)break;
+  }
+  lastAmbientStyleId=p.id;
+  return p.id
+}
 function ambientPreset(id){return AWARD_INSPIRED_PRESETS.find(v=>v.id===id)||AWARD_INSPIRED_PRESETS[0]}
+
+let ambientShowcaseActive=false;
+let showcaseSwitchTimer=0;
+function renderShowcaseMeta(styleId,instant=false){
+  const p=ambientPreset(styleId);
+  const box=document.getElementById('showcaseMeta');
+  if(!box)return;
+  const apply=()=>{
+    const idx=AWARD_INSPIRED_PRESETS.findIndex(v=>v.id===p.id);
+    const set=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val};
+    set('showcaseYear',String(p.year));
+    set('showcaseAward',p.award);
+    set('showcaseTitle',p.label);
+    set('showcaseEvent',`${p.edition} 全国花火競技大会「大曲の花火」`);
+    set('showcasePlace','秋田県大仙市');
+    set('showcaseMaker',p.maker);
+    set('showcaseCount',`${String(idx+1).padStart(2,'0')} / ${String(AWARD_INSPIRED_PRESETS.length).padStart(2,'0')}`);
+    const link=document.getElementById('showcaseSource');if(link)link.href=p.source;
+    const progress=document.getElementById('showcaseProgress');
+    if(progress){progress.style.animation='none';void progress.offsetWidth;progress.style.animation=''}
+    box.classList.remove('switching');
+  };
+  clearTimeout(showcaseSwitchTimer);
+  if(instant){apply();return}
+  box.classList.add('switching');
+  showcaseSwitchTimer=setTimeout(apply,210);
+}
+
 function baseStyleConfig(style){
   const palettes={
     warm:['#fffbe2','#ffe07a','#ffbd4a','#ff813a'],
@@ -1434,24 +1561,36 @@ function drawParticle(p){
 
 
 function launchAmbientRocket(tx,ty,style){
+  const gallery=IS_MOBILE && ambientShowcaseActive;
   const mobileSide=IS_MOBILE ? (tx<ambientVW*.5?-1:1) : 0;
-  const sy=IS_MOBILE?Math.max(160,ambientVH*.84):ambientVH-4; // intentionally inside visible phone viewport
+  const sy=IS_MOBILE?Math.max(160,ambientVH*.86):ambientVH-4;
   let sx=tx,c1x=tx,c2x=tx;
-  if(IS_MOBILE){
-    sx=mobileSide<0?10:ambientVW-10;
-    // Keep the first ~70% of the climb in the visible side gutter, then arc inward to the burst point.
-    c1x=mobileSide<0?13:innerWidth-13;
-    c2x=mobileSide<0?18:innerWidth-18;
-    tx=mobileSide<0?(44+Math.random()*8):(ambientVW-(44+Math.random()*8));
+
+  if(IS_MOBILE && gallery){
+    sx=Math.max(42,Math.min(ambientVW-42,tx+(Math.random()-.5)*28));
+    c1x=sx+(Math.random()-.5)*8;
+    c2x=tx+(Math.random()-.5)*6;
+  }else if(IS_MOBILE){
+    sx=mobileSide<0?11:ambientVW-11;
+    tx=mobileSide<0?(28+Math.random()*10):(ambientVW-(28+Math.random()*10));
+    c1x=sx+(tx-sx)*.34+(Math.random()-.5)*2;
+    c2x=sx+(tx-sx)*.70+(Math.random()-.5)*2;
   }else{
     sx=Math.max(24,Math.min(ambientVW-24,tx+(Math.random()-.5)*ambientVW*.18));
-    c1x=mix(sx,tx,.26);c2x=mix(sx,tx,.58)
+    c1x=mix(sx,tx,.30)+(Math.random()-.5)*5;
+    c2x=mix(sx,tx,.68)+(Math.random()-.5)*4;
   }
+
   const frames=IS_MOBILE?78+Math.random()*18:48+Math.random()*14;
-  ambientRockets.push({x:sx,y:sy,sx,sy,tx,ty,style,f:0,frames,tail:[{x:sx,y:sy}],shellR:IS_MOBILE?3.8:4.3,
-    c1x,c2x,c1y:mix(sy,ty,.30),c2y:mix(sy,ty,.70),wobbleAmp:IS_MOBILE?2.0+Math.random()*3.8:2.0+Math.random()*3.2,
-    wobbleCycles:1.8+Math.random()*1.4,wobblePhase:Math.random()*Math.PI*2,windDrift:(Math.random()-.5)*(IS_MOBILE?9:10)});
-} 
+  ambientRockets.push({
+    x:sx,y:sy,sx,sy,tx,ty,style,gallery,
+    f:0,frames,tail:[{x:sx,y:sy}],shellR:IS_MOBILE?3.8:4.3,
+    c1x,c2x,c1y:mix(sy,ty,.30),c2y:mix(sy,ty,.70),
+    wobbleAmp:IS_MOBILE?1.8+Math.random()*3.2:2.0+Math.random()*3.2,
+    wobbleCycles:1.6+Math.random()*1.2,wobblePhase:Math.random()*Math.PI*2,
+    windDrift:(Math.random()-.5)*(IS_MOBILE?7:10)
+  });
+}
 function drawAmbientRocket(r,g=ctx){
   const tail=r.tail;
   g.globalCompositeOperation='lighter';
@@ -1649,42 +1788,27 @@ function anim(ts){
 
     const t=Math.min(1,r.f/r.frames);
     const u=1-Math.pow(1-t,2.12);
-    const side=(r.sx<ambientVW*.5)?-1:1;
-
-    let baseX;
-    if(IS_MOBILE && t<.80){
-      // Stay in the visible side gutter for most of the climb.
-      const q=t/.80;
-      const laneBase=side<0?15:ambientVW-15;
-      const gentleInward=(side<0?1:-1)*(2+11*q);
-      baseX=laneBase+gentleInward;
-    }else if(IS_MOBILE){
-      // Only in the final 20% does the shell bend inward to its burst point.
-      const q=(t-.80)/.20;
-      const ease=q*q*(3-2*q);
-      const from=side<0?28:ambientVW-28;
-      baseX=from+(r.tx-from)*ease;
-    }else{
-      const iv=1-u;
-      baseX=iv*iv*iv*r.sx+3*iv*iv*u*r.c1x+3*iv*u*u*r.c2x+u*u*u*r.tx;
-    }
-
     const iv=1-u;
+
+    // One continuous cubic path from launch to burst — no last-second sideways hook.
+    const baseX=iv*iv*iv*r.sx+3*iv*iv*u*r.c1x+3*iv*u*u*r.c2x+u*u*u*r.tx;
     const baseY=iv*iv*iv*r.sy+3*iv*iv*u*r.c1y+3*iv*u*u*r.c2y+u*u*u*r.ty;
 
-    // Natural but restrained wobble: spin + air resistance, not a ruler-straight line.
-    const dx=r.tx-r.sx,dy=r.ty-r.sy,len=Math.max(1,Math.hypot(dx,dy)),nx=-dy/len,ny=dx/len;
+    const dx=r.tx-r.sx,dy=r.ty-r.sy;
+    const len=Math.max(1,Math.hypot(dx,dy)),nx=-dy/len,ny=dx/len;
     const envelope=Math.sin(Math.PI*t);
     const wobble=Math.sin(r.wobblePhase+t*Math.PI*2*r.wobbleCycles)*r.wobbleAmp*envelope;
     const wind=r.windDrift*Math.pow(t,1.55);
-    const mobileScale=IS_MOBILE?.42:1;
-    r.x=baseX+nx*wobble*mobileScale+(IS_MOBILE?wind*.20:wind);
-    r.y=baseY+ny*wobble*.22;
+
+    r.x=baseX+nx*wobble+(IS_MOBILE?wind*.22:wind);
+    r.y=baseY+ny*wobble*.20;
 
     r.tail.push({x:r.x,y:r.y});
     if(r.tail.length>(IS_MOBILE?48:30))r.tail.shift();
 
-    if(IS_MOBILE){
+    if(IS_MOBILE && r.gallery){
+      drawAmbientRocket(r,ctx);
+    }else if(IS_MOBILE){
       launchCtx.save();
       launchCtx.beginPath();
       const lane=58;
@@ -1756,16 +1880,17 @@ function pickMobileBurstY(){
   return h*(.62+Math.random()*.16);               // 62–78%
 }
 function pickMobileBurstX(){
+  if(ambientShowcaseActive)return ambientVW*(.18+Math.random()*.64);
   const r=Math.random();
-  // Most mobile shells open near the side sky lanes so the ascent remains visible.
-  if(r<.42)return 28+Math.random()*46;                      // left
-  if(r<.84)return ambientVW-(28+Math.random()*46);         // right
-  return ambientVW*(.30+Math.random()*.40);                // occasional center
+  if(r<.42)return 28+Math.random()*46;
+  if(r<.84)return ambientVW-(28+Math.random()*46);
+  return ambientVW*(.30+Math.random()*.40);
 }
 function launchAmbientFirework(){
   if(document.visibilityState!=='visible'||document.body.classList.contains('celebrating'))return;
 
   const style=chooseAmbientStyle();
+  renderShowcaseMeta(style);
   const x=IS_MOBILE ? pickMobileBurstX() : ambientVW*(.08+Math.random()*.84);
   const y=IS_MOBILE ? pickMobileBurstY() : 70+Math.random()*Math.min(420,ambientVH*.70);
 
@@ -1777,7 +1902,7 @@ function launchAmbientFirework(){
     burst(x,y,null,style)
   }
 
-  const secondChance=IS_MOBILE?.14:.12;
+  const secondChance=ambientShowcaseActive?0:(IS_MOBILE?.14:.12);
   if(Math.random()<secondChance){
     setTimeout(()=>{
       if(document.visibilityState!=='visible'||document.body.classList.contains('celebrating'))return;
@@ -1789,7 +1914,7 @@ function launchAmbientFirework(){
     },220+Math.random()*360)
   }
 
-  if(IS_MOBILE && !REDUCED_MOTION && Math.random()<.015){
+  if(IS_MOBILE && !ambientShowcaseActive && !REDUCED_MOTION && Math.random()<.015){
     setTimeout(()=>{
       if(document.visibilityState!=='visible'||document.body.classList.contains('celebrating'))return;
       const s3=chooseAmbientStyle();
@@ -2420,6 +2545,25 @@ setInterval(updateCheersGateUI, 250);
   window.visualViewport?.addEventListener('resize',syncVideoNav,{passive:true});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncVideoNav()});
   syncVideoNav();
+})();
+
+
+/* ===== v46: curated bottom gallery mode ===== */
+(function initFireworkShowcase(){
+  const section=document.getElementById('fireworkShowcase');
+  if(!section)return;
+  renderShowcaseMeta(AWARD_INSPIRED_PRESETS[0].id,true);
+  const io=new IntersectionObserver(entries=>{
+    for(const entry of entries){
+      const on=entry.isIntersecting && entry.intersectionRatio>.22;
+      if(on===ambientShowcaseActive)continue;
+      ambientShowcaseActive=on;
+      section.classList.toggle('in-view',on);
+      scheduleAmbientFirework();
+      if(on)setTimeout(()=>{if(ambientShowcaseActive)launchAmbientFirework()},260);
+    }
+  },{threshold:[0,.22,.45]});
+  io.observe(section);
 })();
 
 </script>
