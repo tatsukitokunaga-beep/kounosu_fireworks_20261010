@@ -113,6 +113,12 @@ main,.bottomnav{position:relative;z-index:2}.hero{padding:18px 16px 6px;position
 @keyframes prismHue{to{filter:hue-rotate(360deg) saturate(220%)}}
 @keyframes laserGrid{to{transform:translate3d(8%,6%,0) rotate(8deg);filter:hue-rotate(360deg) saturate(240%)}}
 
+
+/* v9: final drink check + pure fireworks finale (no disco) */
+.cat.final{position:relative;overflow:hidden;border-color:rgba(255,212,94,.34);background:radial-gradient(circle at 90% 0%,rgba(255,212,94,.12),transparent 35%),linear-gradient(145deg,rgba(38,31,16,.88),rgba(11,22,47,.88))}.cat.final:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 25%,rgba(255,255,255,.12) 47%,transparent 67%);transform:translateX(-120%)}.cat.final.ready:before{animation:finalShine 2s ease-in-out infinite}.cat.final.ready{box-shadow:0 0 0 1px rgba(255,212,94,.28),0 0 34px rgba(255,183,55,.16)}.final-row.locked{opacity:.48}.final-row.locked .check{cursor:not-allowed;border-style:dashed}.cat.final.ready .check{border-color:#ffd45e;box-shadow:0 0 0 4px rgba(255,212,94,.08),0 0 28px rgba(255,212,94,.22);animation:finalCheckPulse 1.45s ease-in-out infinite}.cat.final.ready .name{color:#fff7d0}.cat.final.ready .qty{background:rgba(255,212,94,.14);color:#ffe995}.cat.final .meta{color:#d9c99c}@keyframes finalShine{0%,35%{transform:translateX(-120%)}75%,100%{transform:translateX(120%)}}@keyframes finalCheckPulse{50%{transform:scale(1.08);box-shadow:0 0 0 7px rgba(255,212,94,.04),0 0 36px rgba(255,212,94,.40)}}
+
+.celebration{background:radial-gradient(circle at 50% 58%,rgba(11,32,72,.18),transparent 42%),linear-gradient(#010511,#02071a 58%,#050918);backdrop-filter:none;isolation:isolate}.celebration-bg{inset:0;background:radial-gradient(circle at 20% 10%,rgba(34,91,190,.16),transparent 28%),radial-gradient(circle at 80% 15%,rgba(160,50,120,.13),transparent 30%),linear-gradient(180deg,#01030b 0%,#020716 45%,#050b1e 100%);filter:none;animation:none!important;z-index:0}.celebration-rainbow,.celebration-prism,.celebration-rings,.screen-rainbow,.disco-beam{display:none!important}.celebration.show:before,.celebration.show:after{display:none!important}#celebrationFireworks{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none}.celebration-night-stars{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.56;background-image:radial-gradient(circle,rgba(255,255,255,.95) 0 1px,transparent 1.4px),radial-gradient(circle,rgba(120,205,255,.8) 0 1px,transparent 1.5px);background-size:48px 48px,91px 91px;background-position:0 0,17px 29px;animation:nightTwinkle 3s ease-in-out infinite alternate}.celebration-mega{z-index:7;top:8%;background:linear-gradient(180deg,#fff,#fff0b1 45%,#ffcb57);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 18px rgba(255,255,255,.55)) drop-shadow(0 0 42px rgba(255,190,58,.34));text-shadow:none}.celebration.show .celebration-mega{animation:megaBoom .9s .05s cubic-bezier(.16,1.45,.32,1) forwards,megaFirePulse 1.8s .95s ease-in-out infinite!important}.celebration-content{z-index:20;background:linear-gradient(160deg,rgba(5,13,35,.80),rgba(12,18,38,.70));border-color:rgba(255,226,145,.32);box-shadow:0 30px 120px rgba(0,0,0,.70),0 0 50px rgba(255,201,74,.16),0 0 80px rgba(74,178,255,.10);backdrop-filter:blur(11px) saturate(120%)}.celebration-content:before{background:linear-gradient(120deg,#fff0a8,#40e7ff,#ff7aa8,#fff0a8);background-size:200% 200%;animation:fireBorder 2.5s linear infinite}.celebration-content:after{background:linear-gradient(110deg,transparent 39%,rgba(255,236,175,.20) 49%,transparent 60%);animation:cardShine 2.8s 1.2s ease-in-out infinite}.celebration.show .celebration-content{animation:celebrationCard .8s .1s cubic-bezier(.12,1.35,.28,1) forwards,cardFloat 2s .95s ease-in-out infinite!important;filter:none!important}.celebration-kicker{color:#ffe8a4;text-shadow:0 0 12px rgba(255,210,95,.8),0 0 30px rgba(255,160,50,.28)}.celebration-title{background:linear-gradient(180deg,#fff,#ffe78f 48%,#ffb445);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 20px rgba(255,199,77,.36))}.celebration.show .celebration-title{animation:titleRise .55s .52s ease-out forwards,titleFireBeat 1.15s 1.05s ease-in-out infinite!important}.celebration-mini{filter:drop-shadow(0 0 14px rgba(255,208,92,.35))}.celebration.show .celebration-mini{animation:titleRise .55s .8s ease-out forwards,miniDance .8s 1.05s ease-in-out infinite!important}.celebration #closeCelebration{background:rgba(2,8,24,.66);border-color:rgba(255,226,145,.30);box-shadow:0 0 22px rgba(255,201,74,.14)!important}.celebration.show #closeCelebration{animation:titleRise .55s .95s ease-out forwards,closeFireGlow 1.7s 1.25s ease-in-out infinite!important}.celebration.show .glass-one{animation:clinkIn .75s .18s cubic-bezier(.12,1.5,.3,1) forwards,fireworkClink 1.15s .95s cubic-bezier(.36,.07,.19,.97) infinite!important;filter:drop-shadow(0 0 14px #fff) drop-shadow(0 0 28px rgba(255,210,90,.74))}.celebration.show .spark-core{animation:endlessSpark 1.15s .63s ease-out infinite!important;color:#fff3b3;text-shadow:0 0 12px #fff,0 0 28px #ffd45e,0 0 56px #ff953d}.clink-spark{position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:50%;background:var(--c,#ffd45e);box-shadow:0 0 9px var(--c,#ffd45e),0 0 20px var(--c,#ffd45e);pointer-events:none;animation:clinkSpark .82s ease-out forwards;z-index:6}@keyframes clinkSpark{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}15%{opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.15);opacity:0}}@keyframes fireworkClink{0%,100%{transform:translateY(0) rotate(-9deg) scale(1)}24%{transform:translate(-10px,-4px) rotate(-18deg) scale(1.06)}44%{transform:translate(9px,-2px) rotate(16deg) scale(1.10)}52%{transform:translate(0,-10px) rotate(0) scale(1.25)}61%{transform:translate(0,0) rotate(0) scale(1.03)}80%{transform:translate(-6px,-2px) rotate(-8deg) scale(1.08)}}@keyframes megaFirePulse{50%{transform:translateX(-50%) scale(1.06);filter:drop-shadow(0 0 30px rgba(255,255,255,.7)) drop-shadow(0 0 65px rgba(255,178,42,.46))}}@keyframes titleFireBeat{50%{transform:translateY(-3px) scale(1.045);filter:drop-shadow(0 0 30px rgba(255,199,77,.56))}}@keyframes fireBorder{to{background-position:200% 200%}}@keyframes closeFireGlow{50%{box-shadow:0 0 34px rgba(255,209,83,.30),0 0 60px rgba(64,231,255,.12)!important;transform:scale(1.035)}}@keyframes nightTwinkle{to{opacity:.85;filter:brightness(1.25)}}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./config.js"></script></head>
 <body>
@@ -145,8 +151,9 @@ main,.bottomnav{position:relative;z-index:2}.hero{padding:18px 16px 6px;position
   <div class="glass cat orange" data-cat="お酒"><div class="cat-head"><b>🍺 お酒・飲み物</b><span>事前調達推奨</span></div></div>
   <div class="glass cat blue" data-cat="おつまみ"><div class="cat-head"><b>🧀 おつまみ・消耗品</b><span>屋台と併用</span></div></div>
   <div class="glass cat purple" data-cat="服装"><div class="cat-head"><b>🧥 服装・夜対策</b><span>河川敷向け</span></div></div>
+  <div class="glass cat final" data-cat="乾杯準備" id="finalCheckCard"><div class="cat-head"><b>🥂 最後の乾杯準備</b><span id="finalHint">ほかの準備が終わると解放</span></div></div>
 </section>
-<div class="cta" id="cheersZone"><div class="cta-kicker">TATSUKI × AI</div><div class="cta-title">全部そろったら、ふたりで乾杯！</div><div class="cta-sub">準備完了の瞬間は、虹色ディスコ・連発花火・星降る演出が、閉じるまでずっと続きます！</div><button id="cheers"><span class="cheers-glow"></span><span class="cheers-icon">🥂</span><span>エンドレス乾杯モードを起動！</span></button></div>
+<div class="cta" id="cheersZone"><div class="cta-kicker">TATSUKI × AI</div><div class="cta-title">グラスに注いだら、ふたりで乾杯！</div><div class="cta-sub">最後のチェックを入れた瞬間、夜空いっぱいに花火が打ち上がり続けます！閉じるまでフィナーレは終わりません！</div><button id="cheers"><span class="cheers-glow"></span><span class="cheers-icon">🥂</span><span>花火フィナーレで乾杯！</span></button></div>
 <section id="mapsec" class="section">
   <div class="section-title"><h2>ライブ会場MAP</h2><p>ピンチ拡大・現在地対応</p></div>
   <div class="glass map-shell">
@@ -172,16 +179,15 @@ main,.bottomnav{position:relative;z-index:2}.hero{padding:18px 16px 6px;position
 </div>
 <div class="celebration" id="celebration" aria-hidden="true">
   <div class="celebration-bg"></div>
-  <div class="celebration-rainbow"></div>
-  <div class="celebration-prism"></div>
+  <canvas id="celebrationFireworks" aria-hidden="true"></canvas>
+  <div class="celebration-night-stars" aria-hidden="true"></div>
   <div class="celebration-mega">CHEERS!</div>
-  <div class="celebration-rings"><i></i><i></i><i></i></div>
   <div class="celebration-content">
     <div class="celebration-kicker">TATSUKI × AI</div>
     <div class="clink-wrap"><span class="glass-one">🥂</span><span class="spark-core">✦</span></div>
     <div class="celebration-title">乾杯！</div>
-    <div class="celebration-copy">準備完了！<br><b>最高の花火ナイトへ！</b></div>
-    <div class="celebration-mini">🎆 🍺 🍢 ✨ 💖</div>
+    <div class="celebration-copy">グラスも準備完了！<br><b>たつき × あい、最高の花火ナイトへ！</b></div>
+    <div class="celebration-mini">🎆 🎇 ✨ 🥂 ✨ 🎇 🎆</div>
     <button id="closeCelebration">演出を閉じる</button>
   </div>
 </div>
@@ -200,6 +206,9 @@ const items={
  ],
  '服装':[
   ['薄手の羽織り','夜は気温が下がる','各1'],['ブランケット','脚が冷えた時用','1枚'],['汚れてもよいスニーカー','河川敷・芝対策','必須'],['帽子 / 日焼け止め','15時台の日差し対策','任意']
+ ],
+ '乾杯準備':[
+  ['グラスに飲み物を注いだ？','これを最後にチェックすると花火フィナーレ開始','LAST']
  ]
 };
 const ROOM=new URLSearchParams(location.search).get('room')||'hanabi-2026';
@@ -207,10 +216,33 @@ const state=JSON.parse(localStorage.getItem('kounosu2026-check-'+ROOM)||'{}');
 let sb=null;
 if(window.SUPABASE_URL&&window.SUPABASE_ANON_KEY&&window.supabase){try{sb=window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY)}catch(e){}}
 const cats=[...document.querySelectorAll('.cat')];let allKeys=[];
-for(const cat of cats){const name=cat.dataset.cat;items[name].forEach((it,idx)=>{const key=name+'-'+idx;allKeys.push(key);const row=document.createElement('div');row.className='item'+(state[key]?' done':'');row.innerHTML=`<button class="check ${state[key]?'done':''}" data-k="${key}" aria-label="チェック"></button><div><div class="name">${it[0]}</div><div class="meta">${it[1]}</div></div><span class="qty">${it[2]}</span>`;cat.appendChild(row)})}
+for(const cat of cats){const name=cat.dataset.cat;items[name].forEach((it,idx)=>{const key=name+'-'+idx;allKeys.push(key);const row=document.createElement('div');row.className='item'+(state[key]?' done':'')+(key==='乾杯準備-0'?' final-row':'');row.innerHTML=`<button class="check ${state[key]?'done':''}" data-k="${key}" aria-label="チェック"></button><div><div class="name">${it[0]}</div><div class="meta">${it[1]}</div></div><span class="qty">${it[2]}</span>`;cat.appendChild(row)})}
+const FINAL_KEY='乾杯準備-0';
+const prepKeys=allKeys.filter(k=>k!==FINAL_KEY);
 let previousProgress=null,completionScheduled=false;
-function progress(allowCelebrate=false){const done=allKeys.filter(k=>state[k]).length,p=Math.round(done/allKeys.length*100);document.getElementById('pct').textContent=p+'%';document.getElementById('doneCount').textContent=`${done} / ${allKeys.length} 完了`;document.getElementById('ring').style.setProperty('--p',p+'%');document.getElementById('bar').style.width=p+'%';const becameComplete=previousProgress!==null&&previousProgress<100&&p===100;previousProgress=p;if(allowCelebrate&&becameComplete)queueCompletionCelebration();if(p<100)completionScheduled=false}progress(false);
-document.addEventListener('click',e=>{const b=e.target.closest('.check');if(!b)return;const k=b.dataset.k;state[k]=!state[k];localStorage.setItem('kounosu2026-check-'+ROOM,JSON.stringify(state)); if(sb) syncOne(k,state[k]);b.classList.toggle('done',state[k]);b.closest('.item').classList.toggle('done',state[k]);progress(true);burst(b.getBoundingClientRect().left+12,b.getBoundingClientRect().top+12);toast(state[k]?'準備完了！ ✨':'チェックを戻しました')});
+function prepReady(){return prepKeys.every(k=>!!state[k])}
+function updateFinalGate(){
+  const btn=document.querySelector(`.check[data-k="${FINAL_KEY}"]`),row=btn?.closest('.item'),card=document.getElementById('finalCheckCard'),hint=document.getElementById('finalHint');
+  const ready=prepReady();
+  if(row)row.classList.toggle('locked',!ready);
+  if(card)card.classList.toggle('ready',ready && !state[FINAL_KEY]);
+  if(hint)hint.textContent=state[FINAL_KEY]?'乾杯準備まで完了！':(ready?'グラスに注いだら最後にチェック！':'ほかの準備が終わると解放');
+  if(btn){btn.setAttribute('aria-disabled',String(!ready));btn.title=ready?'最後のチェック！':'先にほかの準備を完了してください';}
+  if(!ready && state[FINAL_KEY]){state[FINAL_KEY]=false;localStorage.setItem('kounosu2026-check-'+ROOM,JSON.stringify(state));if(sb)syncOne(FINAL_KEY,false);btn?.classList.remove('done');row?.classList.remove('done')}
+}
+function progress(allowCelebrate=false){
+  updateFinalGate();
+  const done=allKeys.filter(k=>state[k]).length,p=Math.round(done/allKeys.length*100);
+  document.getElementById('pct').textContent=p+'%';document.getElementById('doneCount').textContent=`${done} / ${allKeys.length} 完了`;document.getElementById('ring').style.setProperty('--p',p+'%');document.getElementById('bar').style.width=p+'%';
+  const becameComplete=previousProgress!==null&&previousProgress<100&&p===100&&!!state[FINAL_KEY];previousProgress=p;
+  if(allowCelebrate&&becameComplete)queueCompletionCelebration();if(p<100)completionScheduled=false
+}
+progress(false);
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.check');if(!b)return;const k=b.dataset.k;
+  if(k===FINAL_KEY&&!prepReady()){toast('まずは持ち物・お酒・服装の準備を全部そろえてください！');const card=document.getElementById('finalCheckCard');card?.animate([{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],{duration:360});return}
+  state[k]=!state[k];localStorage.setItem('kounosu2026-check-'+ROOM,JSON.stringify(state));if(sb)syncOne(k,state[k]);b.classList.toggle('done',state[k]);b.closest('.item').classList.toggle('done',state[k]);progress(true);burst(b.getBoundingClientRect().left+12,b.getBoundingClientRect().top+12);toast(k===FINAL_KEY&&state[k]?'🥂 注いだ！花火フィナーレへ！':(state[k]?'準備完了！ ✨':'チェックを戻しました'))
+});
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>el.classList.remove('show'),1800)}
 for(const b of document.querySelectorAll('.bottomnav button'))b.onclick=()=>{document.querySelectorAll('.bottomnav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById(b.dataset.go).scrollIntoView({behavior:'smooth',block:'start'})};
 
@@ -266,80 +298,55 @@ setMode('guide');setMapInteraction(false,true);loader.className='map-loader ok';
 
 // Cheers + fireworks
 const cvs=document.getElementById('fireworks'),ctx=cvs.getContext('2d');let particles=[];function resize(){cvs.width=innerWidth*devicePixelRatio;cvs.height=innerHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}addEventListener('resize',resize);resize();function burst(x=Math.random()*innerWidth,y=80+Math.random()*innerHeight*.55,amount=44){const colors=['#40e7ff','#ff4fa3','#ffd45e','#ff8a3d','#8f78ff','#50ef9d','#ffffff'];for(let i=0;i<amount;i++){const a=Math.random()*Math.PI*2,s=1.4+Math.random()*4.8;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:74+Math.random()*42,c:colors[i%colors.length],r:1+Math.random()*2.5})}}function anim(){ctx.clearRect(0,0,innerWidth,innerHeight);for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.025;p.vx*=.992;p.life--;ctx.globalAlpha=Math.max(0,p.life/95);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();if(p.life<=0)particles.splice(i,1)}ctx.globalAlpha=1;requestAnimationFrame(anim)}anim();setInterval(()=>{if(document.visibilityState==='visible'&&Math.random()>.35)burst(Math.random()*innerWidth,80+Math.random()*180,22)},2600);
-const celebration=document.getElementById('celebration');let celebrationTimer=null;
-function spawnCelebrationPieces(){
-  document.querySelectorAll('.fx-piece,.star-rain,.disco-beam,.firework-ring,.screen-flash,.screen-rainbow').forEach(n=>n.remove());
-  const emojis=['✨','⭐','🌟','💫','🎆','🎇','🍺','🍻','🥂','🍢','💖','💎'];
-  const colors=['#40e7ff','#ff4fa3','#ffd45e','#ff8a3d','#8f78ff','#50ef9d','#ffffff','#ff3d6e','#58ffea'];
-  const rainbow=document.createElement('div');rainbow.className='screen-rainbow';document.body.appendChild(rainbow);
-  for(let i=0;i<150;i++){
-    const el=document.createElement('span');el.className='fx-piece';const emoji=Math.random()>.48;el.textContent=emoji?emojis[Math.floor(Math.random()*emojis.length)]:'◆';
-    el.style.color=colors[Math.floor(Math.random()*colors.length)];el.style.fontSize=(emoji?16+Math.random()*24:7+Math.random()*13)+'px';el.style.left=(Math.random()*100)+'vw';
-    el.style.setProperty('--x0',(Math.random()*80-40)+'px');el.style.setProperty('--x1',(Math.random()*260-130)+'px');el.style.setProperty('--rot',(Math.random()*1800-900)+'deg');el.style.setProperty('--dur',(2.4+Math.random()*3.4)+'s');el.style.setProperty('--delay',(Math.random()*1.4)+'s');
-    document.body.appendChild(el);setTimeout(()=>el.remove(),7200)
-  }
-  for(let i=0;i<95;i++){
-    const st=document.createElement('span');st.className='star-rain';st.textContent=Math.random()>.42?'✦':'★';st.style.left=(Math.random()*100)+'vw';st.style.fontSize=(9+Math.random()*24)+'px';st.style.color=colors[Math.floor(Math.random()*colors.length)];st.style.setProperty('--drift',(Math.random()*220-110)+'px');st.style.setProperty('--rot',(Math.random()*900-450)+'deg');st.style.setProperty('--dur',(2+Math.random()*2.8)+'s');st.style.setProperty('--delay',(Math.random()*1.7)+'s');document.body.appendChild(st);setTimeout(()=>st.remove(),6500)
-  }
-  for(let i=0;i<18;i++){
-    const beam=document.createElement('i');beam.className='disco-beam';beam.style.color=colors[i%colors.length];beam.style.background=`linear-gradient(90deg,transparent,currentColor 16%,rgba(255,255,255,.95) 48%,currentColor 76%,transparent)`;beam.style.setProperty('--a0',(-120+Math.random()*100)+'deg');beam.style.setProperty('--a1',(20+Math.random()*130)+'deg');beam.style.setProperty('--dur',(1.5+Math.random()*1.8)+'s');beam.style.setProperty('--delay',(Math.random()*.8)+'s');document.body.appendChild(beam);setTimeout(()=>beam.remove(),8000)
-  }
-  for(let i=0;i<16;i++)setTimeout(()=>{
-    const ring=document.createElement('i');ring.className='firework-ring';ring.style.left=(8+Math.random()*84)+'vw';ring.style.top=(8+Math.random()*58)+'vh';ring.style.color=colors[Math.floor(Math.random()*colors.length)];document.body.appendChild(ring);setTimeout(()=>ring.remove(),1500)
-  },i*240);
-  [0,620,1280,2050].forEach((delay,idx)=>setTimeout(()=>{const flash=document.createElement('div');flash.className='screen-flash go';flash.style.background=idx%2?'#7ffcff':'#fff';document.body.appendChild(flash);setTimeout(()=>flash.remove(),900)},delay));
-  setTimeout(()=>rainbow.remove(),8200)
+const celebration=document.getElementById('celebration');
+const cfw=document.getElementById('celebrationFireworks'),cfctx=cfw.getContext('2d');
+let celebrationLoops=[],cfRaf=0,cfActive=false,cfLastLaunch=0,cfRockets=[],cfParticles=[],celebrationTimer=null;
+function resizeCelebrationFireworks(){const d=Math.min(devicePixelRatio||1,2);cfw.width=Math.floor(innerWidth*d);cfw.height=Math.floor(innerHeight*d);cfw.style.width=innerWidth+'px';cfw.style.height=innerHeight+'px';cfctx.setTransform(d,0,0,d,0,0)}
+addEventListener('resize',resizeCelebrationFireworks);resizeCelebrationFireworks();
+const fireworkPalette=['#ffffff','#ffd45e','#ff7a9f','#40e7ff','#8f78ff','#68ffb2','#ff9a4a'];
+function launchCelebrationRocket(forceX){
+  const x=forceX??(innerWidth*(.08+Math.random()*.84)),tx=innerWidth*(.06+Math.random()*.88),ty=innerHeight*(.08+Math.random()*.50);
+  cfRockets.push({x,y:innerHeight+20,tx,ty,trail:[],speed:.055+Math.random()*.025,color:fireworkPalette[Math.floor(Math.random()*fireworkPalette.length)]})
 }
-function fireworkFinale(){
-  const anchors=[[.18,.22],[.82,.20],[.5,.28],[.28,.42],[.72,.43],[.5,.52],[.12,.58],[.88,.58]];
-  anchors.forEach((a,idx)=>setTimeout(()=>{burst(innerWidth*a[0],innerHeight*a[1],130+Math.floor(Math.random()*55));setTimeout(()=>burst(innerWidth*a[0],innerHeight*a[1],70),160)},idx*190));
-  for(let wave=0;wave<26;wave++)setTimeout(()=>{const y=40+Math.random()*innerHeight*.58;burst(Math.random()*innerWidth,y,80+Math.floor(Math.random()*70));if(wave%4===0){burst(innerWidth*.5,innerHeight*(.18+Math.random()*.36),150)}},wave*125)
-}
-let celebrationLoops=[];
-function stopCelebrationLoops(){celebrationLoops.forEach(id=>{clearInterval(id);clearTimeout(id)});celebrationLoops=[]}
-function miniStarShower(count=22){
-  const colors=['#fff','#40e7ff','#ff4fa3','#ffd45e','#86ffb6','#b69cff'];
+function explodeCelebration(x,y,color,mega=false){
+  const count=mega?150+Math.floor(Math.random()*70):78+Math.floor(Math.random()*48),base=Math.random()*Math.PI*2;
   for(let i=0;i<count;i++){
-    const st=document.createElement('span');st.className='star-rain';st.textContent=Math.random()>.38?'✦':'★';
-    st.style.left=(Math.random()*100)+'vw';st.style.fontSize=(9+Math.random()*22)+'px';st.style.color=colors[Math.floor(Math.random()*colors.length)];
-    st.style.setProperty('--drift',(Math.random()*180-90)+'px');st.style.setProperty('--rot',(Math.random()*720-360)+'deg');
-    st.style.setProperty('--dur',(1.7+Math.random()*2.1)+'s');st.style.setProperty('--delay',(Math.random()*.35)+'s');
-    document.body.appendChild(st);setTimeout(()=>st.remove(),4600)
+    const a=base+Math.PI*2*i/count+(Math.random()-.5)*.07,s=(mega?2.0:1.5)+Math.random()*(mega?5.3:4.0);
+    cfParticles.push({x,y,px:x,py:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,alpha:1,life:80+Math.random()*60,decay:.010+Math.random()*.008,gravity:.018+Math.random()*.018,friction:.985,color:i%7===0?'#fff':color,size:.8+Math.random()*2.2,twinkle:Math.random()>.72})
+  }
+  if(mega){
+    for(let i=0;i<46;i++){const a=Math.random()*Math.PI*2,s=.4+Math.random()*2.0;cfParticles.push({x,y,px:x,py:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,alpha:1,life:100+Math.random()*70,decay:.007+Math.random()*.006,gravity:.025,friction:.993,color:'#ffd45e',size:1+Math.random()*2.7,twinkle:true})}
   }
 }
-function discoFlash(){
-  const flash=document.createElement('div');flash.className='screen-flash go';
-  const hues=['#ffffff','#6ff7ff','#ff77c8','#ffe45f','#9d7dff','#74ffb0'];flash.style.background=hues[Math.floor(Math.random()*hues.length)];
-  document.body.appendChild(flash);setTimeout(()=>flash.remove(),900)
+function fireworkSkyLoop(t){
+  if(!cfActive)return;
+  const w=innerWidth,h=innerHeight;
+  cfctx.globalCompositeOperation='source-over';cfctx.fillStyle='rgba(1,5,20,.20)';cfctx.fillRect(0,0,w,h);cfctx.globalCompositeOperation='lighter';
+  if(t-cfLastLaunch>150+Math.random()*120){cfLastLaunch=t;const waves=Math.random()>.70?3:Math.random()>.42?2:1;for(let i=0;i<waves;i++)setTimeout(()=>cfActive&&launchCelebrationRocket(),i*95)}
+  for(let i=cfRockets.length-1;i>=0;i--){const r=cfRockets[i];r.trail.push([r.x,r.y]);if(r.trail.length>9)r.trail.shift();r.x+=(r.tx-r.x)*r.speed;r.y+=(r.ty-r.y)*r.speed;
+    for(let j=1;j<r.trail.length;j++){const a=r.trail[j-1],b=r.trail[j];cfctx.globalAlpha=j/r.trail.length*.8;cfctx.strokeStyle=r.color;cfctx.lineWidth=1.3;cfctx.beginPath();cfctx.moveTo(a[0],a[1]);cfctx.lineTo(b[0],b[1]);cfctx.stroke()}
+    cfctx.globalAlpha=1;cfctx.fillStyle='#fff';cfctx.shadowBlur=18;cfctx.shadowColor=r.color;cfctx.beginPath();cfctx.arc(r.x,r.y,2.2,0,Math.PI*2);cfctx.fill();cfctx.shadowBlur=0;
+    if(Math.hypot(r.tx-r.x,r.ty-r.y)<7){explodeCelebration(r.x,r.y,r.color,Math.random()>.58);cfRockets.splice(i,1)}
+  }
+  for(let i=cfParticles.length-1;i>=0;i--){const p=cfParticles[i];p.px=p.x;p.py=p.y;p.vx*=p.friction;p.vy=p.vy*p.friction+p.gravity;p.x+=p.vx;p.y+=p.vy;p.alpha-=p.decay;p.life--;
+    const aa=Math.max(0,p.alpha)*(p.twinkle?(0.35+Math.random()*.65):1);cfctx.globalAlpha=aa;cfctx.strokeStyle=p.color;cfctx.lineWidth=p.size;cfctx.shadowBlur=p.twinkle?12:5;cfctx.shadowColor=p.color;cfctx.beginPath();cfctx.moveTo(p.px,p.py);cfctx.lineTo(p.x,p.y);cfctx.stroke();cfctx.shadowBlur=0;if(p.alpha<=0||p.life<=0)cfParticles.splice(i,1)}
+  cfctx.globalAlpha=1;cfRaf=requestAnimationFrame(fireworkSkyLoop)
 }
-function randomFireworkWave(){
-  const n=3+Math.floor(Math.random()*4);for(let i=0;i<n;i++)setTimeout(()=>burst(innerWidth*(.08+Math.random()*.84),innerHeight*(.10+Math.random()*.54),90+Math.floor(Math.random()*85)),i*120)
-}
-function startCelebrationLoops(){
-  stopCelebrationLoops();
-  celebrationLoops.push(setInterval(()=>randomFireworkWave(),1450));
-  celebrationLoops.push(setInterval(()=>miniStarShower(18+Math.floor(Math.random()*14)),1100));
-  celebrationLoops.push(setInterval(()=>spawnCelebrationPieces(),6900));
-  celebrationLoops.push(setInterval(()=>fireworkFinale(),5200));
-  celebrationLoops.push(setInterval(()=>discoFlash(),2600));
-  celebrationLoops.push(setInterval(()=>{if(navigator.vibrate)navigator.vibrate([45,30,70])},4600));
-}
+function startFireworkSky(){cfActive=true;cfRockets=[];cfParticles=[];cfctx.clearRect(0,0,innerWidth,innerHeight);resizeCelebrationFireworks();cfLastLaunch=0;for(let i=0;i<9;i++)setTimeout(()=>cfActive&&launchCelebrationRocket(innerWidth*(.08+i*.105)),i*110);cfRaf=requestAnimationFrame(fireworkSkyLoop)}
+function stopFireworkSky(){cfActive=false;cancelAnimationFrame(cfRaf);cfRockets=[];cfParticles=[];cfctx.clearRect(0,0,innerWidth,innerHeight)}
+function clinkSparkBurst(){const wrap=document.querySelector('.clink-wrap');if(!wrap)return;for(let i=0;i<16;i++){const s=document.createElement('i');s.className='clink-spark';const a=Math.PI*2*i/16+(Math.random()-.5)*.35,d=34+Math.random()*72;s.style.setProperty('--dx',(Math.cos(a)*d)+'px');s.style.setProperty('--dy',(Math.sin(a)*d)+'px');s.style.setProperty('--c',fireworkPalette[i%fireworkPalette.length]);wrap.appendChild(s);setTimeout(()=>s.remove(),900)}}
+function skyFinaleWave(){if(!cfActive)return;const anchors=[[.12,.19],[.32,.28],[.5,.16],[.68,.30],[.88,.20],[.22,.48],[.5,.44],[.78,.49]];anchors.forEach((a,i)=>setTimeout(()=>cfActive&&explodeCelebration(innerWidth*a[0],innerHeight*a[1],fireworkPalette[(i+2)%fireworkPalette.length],true),i*120))}
+function startCelebrationLoops(){stopCelebrationLoops();celebrationLoops.push(setInterval(clinkSparkBurst,1150));celebrationLoops.push(setInterval(skyFinaleWave,4300));celebrationLoops.push(setInterval(()=>{if(navigator.vibrate)navigator.vibrate([35,25,55])},3450))}
+function stopCelebrationLoops(){celebrationLoops.forEach(id=>clearInterval(id));celebrationLoops=[]}
 function launchCelebration(source='manual'){
-  stopCelebrationLoops();
-  celebration.classList.add('show');celebration.setAttribute('aria-hidden','false');document.body.classList.add('celebrating');
-  spawnCelebrationPieces();fireworkFinale();miniStarShower(42);discoFlash();startCelebrationLoops();
-  if(navigator.vibrate)navigator.vibrate([80,40,120,45,170,55,220,60,120]);
-  toast(source==='complete'?'🌈🎆 全部そろった！たつきとあい、エンドレス乾杯！':'🌈🥂 TATSUKI × AI ENDLESS CHEERS！');
+  stopCelebrationLoops();celebration.classList.add('show');celebration.setAttribute('aria-hidden','false');document.body.classList.add('celebrating');startFireworkSky();clinkSparkBurst();skyFinaleWave();startCelebrationLoops();
+  if(navigator.vibrate)navigator.vibrate([70,35,100,45,150]);toast(source==='complete'?'🎆 全部そろった！たつきとあい、花火フィナーレで乾杯！':'🎆🥂 TATSUKI × AI 花火フィナーレ！')
 }
-function closeCelebration(){
-  stopCelebrationLoops();clearTimeout(celebrationTimer);
-  celebration.classList.remove('show');celebration.setAttribute('aria-hidden','true');document.body.classList.remove('celebrating');
-  document.querySelectorAll('.fx-piece,.star-rain,.disco-beam,.firework-ring,.screen-rainbow,.screen-flash').forEach(el=>el.remove())
-}
+function closeCelebration(){stopCelebrationLoops();clearTimeout(celebrationTimer);stopFireworkSky();celebration.classList.remove('show');celebration.setAttribute('aria-hidden','true');document.body.classList.remove('celebrating');document.querySelectorAll('.clink-spark').forEach(el=>el.remove())}
 document.getElementById('closeCelebration').onclick=closeCelebration;
 document.getElementById('cheers').onclick=()=>launchCelebration('manual');
 function smoothScrollCenter(el,duration=1450){const start=window.scrollY,target=Math.max(0,el.getBoundingClientRect().top+window.scrollY-(innerHeight-el.offsetHeight)/2),change=target-start,t0=performance.now();const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;function step(now){const t=Math.min(1,(now-t0)/duration);window.scrollTo(0,start+change*ease(t));if(t<1)requestAnimationFrame(step)}requestAnimationFrame(step)}
-function queueCompletionCelebration(){if(completionScheduled)return;completionScheduled=true;const zone=document.getElementById('cheersZone');smoothScrollCenter(zone,1550);setTimeout(()=>{const done=allKeys.filter(k=>state[k]).length;if(done===allKeys.length){burst(innerWidth*.5,Math.max(100,zone.getBoundingClientRect().top+60),120);launchCelebration('complete')}else{completionScheduled=false}},1750)};
+function queueCompletionCelebration(){if(completionScheduled)return;completionScheduled=true;const zone=document.getElementById('cheersZone');smoothScrollCenter(zone,1550);setTimeout(()=>{if(allKeys.every(k=>state[k])&&state[FINAL_KEY]){burst(innerWidth*.5,Math.max(100,zone.getBoundingClientRect().top+60),120);launchCelebration('complete')}else{completionScheduled=false}},1750)};
 </script>
 
 <script>
