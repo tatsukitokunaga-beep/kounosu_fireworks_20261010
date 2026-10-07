@@ -187,7 +187,7 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
 @keyframes videoSparkFly{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}12%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.05)}}
 
 .celebration.phase-countdown .celebration-content{opacity:.18!important;transform:scale(.84)!important;filter:blur(2px)!important;transition:.35s}.celebration.phase-rotate .celebration-content{opacity:.08!important;transform:scale(.78)!important;filter:blur(3px)!important;transition:.35s}.celebration.video-playing .celebration-content,.celebration.video-playing .celebration-mega,.celebration.video-playing .celebration-night-stars,.celebration.video-playing #celebrationFireworks{opacity:0!important;visibility:hidden!important}
-/* v15: landscape prep should expose only the video-start action */
+/* v16: landscape prep should expose only the video-start action */
 .celebration.phase-countdown #closeCelebration,
 .celebration.phase-rotate #closeCelebration{display:none!important;pointer-events:none!important}
 
@@ -211,7 +211,7 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
 }
 
 
-/* v15: video countdown / cheers live in the top-right in landscape */
+/* v16: video countdown / cheers live in the top-right in landscape */
 @media (orientation:landscape){
   .video-countdown-overlay{
     align-items:flex-start!important;
@@ -224,18 +224,18 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
   }
   .video-countdown-card{
     transform:none!important;
-    min-width:148px!important;
-    padding:10px 16px 12px!important;
-    border-radius:22px!important;
-    background:linear-gradient(145deg,rgba(1,6,18,.76),rgba(20,10,42,.72))!important;
+    min-width:296px!important;
+    padding:20px 28px 24px!important;
+    border-radius:30px!important;
+    background:linear-gradient(145deg,rgba(1,6,18,.30),rgba(20,10,42,.30))!important;
     border:1px solid rgba(255,224,128,.38)!important;
     box-shadow:0 0 0 2px rgba(255,255,255,.05),0 0 34px rgba(255,196,59,.28),0 14px 44px rgba(0,0,0,.44)!important;
-    backdrop-filter:blur(8px)!important;
-    -webkit-backdrop-filter:blur(8px)!important;
+    backdrop-filter:blur(4px)!important;
+    -webkit-backdrop-filter:blur(4px)!important;
   }
-  .video-countdown-kicker{font-size:10px!important;letter-spacing:.18em!important}
-  .video-countdown-number{font-size:clamp(58px,17vh,92px)!important;line-height:.82!important}
-  .video-countdown-sub{font-size:9px!important;margin-top:6px!important}
+  .video-countdown-kicker{font-size:18px!important;letter-spacing:.18em!important}
+  .video-countdown-number{font-size:clamp(108px,30vh,176px)!important;line-height:.80!important}
+  .video-countdown-sub{font-size:16px!important;margin-top:10px!important}
 
   .video-cheers-burst{
     display:flex!important;
@@ -275,7 +275,7 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
     -webkit-backdrop-filter:blur(8px);
   }
   .video-cheers-burst.show .video-cheers-core{
-    animation:v15CheersTopRight 3.4s cubic-bezier(.12,1.25,.28,1) both!important;
+    animation:v15CheersTopRight 1.15s cubic-bezier(.12,1.25,.28,1) both, v16CheersStay 1.8s ease-in-out 1.15s infinite!important;
   }
   .video-cheers-core:before,
   .video-cheers-core:after{
@@ -304,15 +304,19 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
   30%{transform:scale(.96) rotate(0)}
   48%{transform:scale(1.04)}
   76%{transform:scale(1);opacity:1}
-  100%{transform:scale(.98);opacity:0}
+  100%{transform:scale(1);opacity:1;filter:brightness(1)}
+}
+@keyframes v16CheersStay{
+  0%,100%{transform:scale(1);filter:brightness(1)}
+  50%{transform:scale(1.035);filter:brightness(1.16)}
 }
 @keyframes v15Twinkle{
   from{transform:scale(.62) rotate(-10deg);opacity:.45}
   to{transform:scale(1.26) rotate(10deg);opacity:1}
 }
 @media (orientation:landscape) and (max-height:430px){
-  .video-countdown-card{min-width:132px!important;padding:8px 13px 10px!important}
-  .video-countdown-number{font-size:clamp(50px,18vh,76px)!important}
+  .video-countdown-card{min-width:240px!important;padding:14px 20px 16px!important}
+  .video-countdown-number{font-size:clamp(88px,28vh,132px)!important}
   .video-cheers-core{width:min(40vw,270px);padding:11px 14px 10px}
   .video-cheers-title{font-size:clamp(24px,8vh,38px)!important}
 }
@@ -702,7 +706,7 @@ function triggerVideoCheers(){
     if(navigator.vibrate)navigator.vibrate([100,45,150,45,220]);
     setTimeout(videoSparkBurst,260);
     setTimeout(videoSparkBurst,640);
-    videoCheersTimer=setTimeout(()=>showStage(videoCheersBurst,false),3400);
+    /* v16: 乾杯表示は動画を閉じるまで消さない */
   },360)
 }
 function syncVideoCountdown(){
