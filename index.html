@@ -928,6 +928,52 @@ body.celebration-video{
   .showcase-open-sky{min-height:250px}
 }
 
+
+/* ===== v47: showcase becomes near full-screen and synchronized ===== */
+.app{padding-bottom:0}
+.firework-showcase{
+  min-height:max(88svh,760px);
+  margin:12px 0 0;
+  padding:20px max(18px,env(safe-area-inset-left)) calc(18px + env(safe-area-inset-bottom));
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  background:
+    linear-gradient(180deg,rgba(5,9,27,.58) 0%,rgba(5,9,27,.08) 14%,rgba(5,9,27,0) 42%,rgba(5,9,27,.15) 64%,rgba(5,9,27,.78) 100%);
+}
+.showcase-open-sky{
+  min-height:min(54svh,520px);
+  height:min(54svh,520px);
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding-top:18px;
+  position:relative;
+}
+.showcase-launch-badge{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.94);
+  width:min(84vw,360px);padding:14px 16px 15px;border-radius:22px;border:1px solid rgba(255,255,255,.16);
+  background:linear-gradient(145deg,rgba(7,18,43,.68),rgba(15,22,56,.56));
+  -webkit-backdrop-filter:blur(14px) saturate(120%);backdrop-filter:blur(14px) saturate(120%);
+  box-shadow:0 18px 40px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.03) inset;
+  text-align:center;opacity:0;pointer-events:none;
+  transition:opacity .35s ease, transform .45s cubic-bezier(.2,.8,.2,1), filter .35s ease;filter:blur(6px);
+}
+.firework-showcase.previewing .showcase-launch-badge{opacity:1;filter:blur(0);transform:translate(-50%,-50%) scale(1)}
+.showcase-launch-kicker{font-size:9px;font-weight:950;letter-spacing:.18em;color:#72eaff}
+.showcase-launch-title{margin-top:7px;font-size:26px;line-height:1.2;font-weight:1000;color:#fff;letter-spacing:-.03em;text-shadow:0 0 20px rgba(255,255,255,.12)}
+.showcase-launch-award{margin-top:7px;font-size:10px;line-height:1.5;font-weight:850;color:#c7d5ec}
+.showcase-meta{margin-top:auto}
+.source-links{margin:0;padding:12px 16px calc(112px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(5,9,27,.55),rgba(5,9,27,.92))}
+@media(max-width:760px){
+  .firework-showcase{min-height:max(92svh,820px)}
+  .showcase-open-sky{min-height:min(58svh,560px);height:min(58svh,560px)}
+}
+@media(max-width:430px){
+  .showcase-launch-title{font-size:23px}
+  .showcase-open-sky{min-height:56svh;height:56svh}
+}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
 <canvas id="launchTrails" aria-hidden="true"></canvas><canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
@@ -1031,6 +1077,11 @@ body.celebration-video{
   </div>
   <div class="showcase-open-sky" aria-hidden="true">
     <div class="showcase-sky-caption">この空間では背景花火が主役</div>
+    <div class="showcase-launch-badge" id="showcaseLaunchBadge">
+      <div class="showcase-launch-kicker">NEXT FIREWORK</div>
+      <div class="showcase-launch-title" id="showcaseLaunchTitle">モネの蓮池</div>
+      <div class="showcase-launch-award" id="showcaseLaunchAward">2025 / 受賞花火</div>
+    </div>
   </div>
   <div class="showcase-meta" id="showcaseMeta" aria-live="polite">
     <div class="showcase-meta-head">
@@ -1357,6 +1408,25 @@ function ambientPreset(id){return AWARD_INSPIRED_PRESETS.find(v=>v.id===id)||AWA
 
 let ambientShowcaseActive=false;
 let showcaseSwitchTimer=0;
+let showcasePreviewTimer=0,showcaseBadgeTimer=0;
+function setShowcasePreviewVisible(on){
+  const s=document.getElementById('fireworkShowcase');
+  if(!s)return;
+  s.classList.toggle('previewing',!!on)
+}
+function cueShowcase(styleId){
+  const p=ambientPreset(styleId);
+  const title=document.getElementById('showcaseLaunchTitle');
+  const award=document.getElementById('showcaseLaunchAward');
+  if(title)title.textContent=p.label;
+  if(award)award.textContent=`${p.year} / ${p.award}`;
+  clearTimeout(showcaseBadgeTimer);
+  setShowcasePreviewVisible(true)
+}
+function hideShowcaseCueSoon(delay=4200){
+  clearTimeout(showcaseBadgeTimer);
+  showcaseBadgeTimer=setTimeout(()=>setShowcasePreviewVisible(false),delay)
+}
 function renderShowcaseMeta(styleId,instant=false){
   const p=ambientPreset(styleId);
   const box=document.getElementById('showcaseMeta');
@@ -1372,6 +1442,8 @@ function renderShowcaseMeta(styleId,instant=false){
     set('showcaseMaker',p.maker);
     set('showcaseCount',`${String(idx+1).padStart(2,'0')} / ${String(AWARD_INSPIRED_PRESETS.length).padStart(2,'0')}`);
     const link=document.getElementById('showcaseSource');if(link)link.href=p.source;
+    const launchTitle=document.getElementById('showcaseLaunchTitle');if(launchTitle)launchTitle.textContent=p.label;
+    const launchAward=document.getElementById('showcaseLaunchAward');if(launchAward)launchAward.textContent=`${p.year} / ${p.award}`;
     const progress=document.getElementById('showcaseProgress');
     if(progress){progress.style.animation='none';void progress.offsetWidth;progress.style.animation=''}
     box.classList.remove('switching');
@@ -1890,44 +1962,58 @@ function launchAmbientFirework(){
   if(document.visibilityState!=='visible'||document.body.classList.contains('celebrating'))return;
 
   const style=chooseAmbientStyle();
-  renderShowcaseMeta(style);
   const x=IS_MOBILE ? pickMobileBurstX() : ambientVW*(.08+Math.random()*.84);
   const y=IS_MOBILE ? pickMobileBurstY() : 70+Math.random()*Math.min(420,ambientVH*.70);
 
-  // Always keep the rising shell visible on iPhone.
-  // Reduce Motion only lowers load; it must not skip the launch itself.
-  if(Math.random()<.985){
-    launchAmbientRocket(x,y,style)
+  const fire=()=>{
+    if(document.visibilityState!=='visible'||document.body.classList.contains('celebrating'))return;
+    renderShowcaseMeta(style);
+    if(Math.random()<.985){
+      launchAmbientRocket(x,y,style)
+    }else{
+      burst(x,y,null,style)
+    }
+
+    const secondChance=ambientShowcaseActive?0:(IS_MOBILE?.14:.12);
+    if(Math.random()<secondChance){
+      setTimeout(()=>{
+        if(document.visibilityState!=='visible'||document.body.classList.contains('celebrating'))return;
+        const s2=chooseAmbientStyle();
+        const x2=IS_MOBILE?pickMobileBurstX():ambientVW*(.08+Math.random()*.84);
+        const y2=IS_MOBILE?pickMobileBurstY():70+Math.random()*Math.min(420,ambientVH*.70);
+        if(Math.random()<.97)launchAmbientRocket(x2,y2,s2);
+        else burst(x2,y2,null,s2)
+      },220+Math.random()*360)
+    }
+
+    if(IS_MOBILE && !ambientShowcaseActive && !REDUCED_MOTION && Math.random()<.015){
+      setTimeout(()=>{
+        if(document.visibilityState!=='visible'||document.body.classList.contains('celebrating'))return;
+        const s3=chooseAmbientStyle();
+        const x3=pickMobileBurstX(),y3=pickMobileBurstY();
+        launchAmbientRocket(x3,y3,s3)
+      },520+Math.random()*320)
+    }
+  };
+
+  if(ambientShowcaseActive){
+    clearTimeout(showcasePreviewTimer);
+    cueShowcase(style);
+    showcasePreviewTimer=setTimeout(()=>{
+      fire();
+      hideShowcaseCueSoon(4200);
+    },980);
   }else{
-    burst(x,y,null,style)
-  }
-
-  const secondChance=ambientShowcaseActive?0:(IS_MOBILE?.14:.12);
-  if(Math.random()<secondChance){
-    setTimeout(()=>{
-      if(document.visibilityState!=='visible'||document.body.classList.contains('celebrating'))return;
-      const s2=chooseAmbientStyle();
-      const x2=IS_MOBILE?pickMobileBurstX():ambientVW*(.08+Math.random()*.84);
-      const y2=IS_MOBILE?pickMobileBurstY():70+Math.random()*Math.min(420,ambientVH*.70);
-      if(Math.random()<.97)launchAmbientRocket(x2,y2,s2);
-      else burst(x2,y2,null,s2)
-    },220+Math.random()*360)
-  }
-
-  if(IS_MOBILE && !ambientShowcaseActive && !REDUCED_MOTION && Math.random()<.015){
-    setTimeout(()=>{
-      if(document.visibilityState!=='visible'||document.body.classList.contains('celebrating'))return;
-      const s3=chooseAmbientStyle();
-      const x3=pickMobileBurstX(),y3=pickMobileBurstY();
-      launchAmbientRocket(x3,y3,s3)
-    },520+Math.random()*320)
+    fire();
   }
 }
 function scheduleAmbientFirework(){
   clearTimeout(ambientLaunchTimer);
-  const delay=REDUCED_MOTION
-    ? (IS_MOBILE?1900+Math.random()*800:2800+Math.random()*900)
-    : (IS_MOBILE?2200+Math.random()*1600:2200+Math.random()*1600);
+  const delay=ambientShowcaseActive
+    ? 7600+Math.random()*1800
+    : REDUCED_MOTION
+      ? (IS_MOBILE?1900+Math.random()*800:2800+Math.random()*900)
+      : (IS_MOBILE?2200+Math.random()*1600:2200+Math.random()*1600);
   ambientLaunchTimer=setTimeout(()=>{
     launchAmbientFirework();
     scheduleAmbientFirework()
@@ -2560,7 +2646,7 @@ setInterval(updateCheersGateUI, 250);
       ambientShowcaseActive=on;
       section.classList.toggle('in-view',on);
       scheduleAmbientFirework();
-      if(on)setTimeout(()=>{if(ambientShowcaseActive)launchAmbientFirework()},260);
+      if(on)setTimeout(()=>{if(ambientShowcaseActive)launchAmbientFirework()},340);
     }
   },{threshold:[0,.22,.45]});
   io.observe(section);
