@@ -648,6 +648,35 @@ main,.bottomnav{position:relative;z-index:2}
   }
 }
 
+
+/* ===== v38: subtle mobile sky lanes for rising shells ===== */
+@media (max-width:760px){
+  :root{--mobile-sky-lane:24px}
+
+  .hero{
+    padding-left:var(--mobile-sky-lane)!important;
+    padding-right:var(--mobile-sky-lane)!important;
+  }
+  .countdown{
+    margin-left:var(--mobile-sky-lane)!important;
+    margin-right:var(--mobile-sky-lane)!important;
+  }
+  .section{
+    padding-left:var(--mobile-sky-lane)!important;
+    padding-right:var(--mobile-sky-lane)!important;
+  }
+  .cta{
+    margin-left:var(--mobile-sky-lane)!important;
+    margin-right:var(--mobile-sky-lane)!important;
+  }
+
+  /* ticker stays edge-to-edge */
+  .ticker{margin-left:0!important;margin-right:0!important}
+}
+@media (max-width:360px){
+  :root{--mobile-sky-lane:20px}
+}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
 <canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
@@ -1190,13 +1219,17 @@ function launchAmbientRocket(tx,ty,style){
   if(ambientRockets.length>3){
     // Too many rockets already in flight: use a shorter visible launch instead of skipping the sequence.
     const sx=IS_MOBILE
-      ? (tx<innerWidth*.5 ? innerWidth*(.05+Math.random()*.07) : innerWidth*(.88+Math.random()*.07))
+      ? (tx<innerWidth*.5 ? 9+Math.random()*10 : innerWidth-(9+Math.random()*10))
       : Math.max(22,Math.min(innerWidth-22,tx+(Math.random()-.5)*innerWidth*.16));
     ambientRockets.push({
       x:sx,y:innerHeight-4,sx,sy:innerHeight-4,tx,ty,style,
       f:0,frames:IS_MOBILE?44:34,
-      tail:[{x:sx,y:innerHeight+18}],
-      shellR:IS_MOBILE?4.8:4.4
+      tail:[{x:sx,y:innerHeight-4}],
+      shellR:IS_MOBILE?3.9:4.1,
+      wobbleAmp:IS_MOBILE?2.2+Math.random()*4.2:1.8+Math.random()*3.2,
+      wobbleCycles:2.0+Math.random()*1.5,
+      wobblePhase:Math.random()*Math.PI*2,
+      windDrift:(Math.random()-.5)*(IS_MOBILE?14:10)
     });
     return;
   }
@@ -1204,9 +1237,11 @@ function launchAmbientRocket(tx,ty,style){
   let sx;
   if(IS_MOBILE){
     const leftSide=tx<innerWidth*.5;
-    sx=leftSide
-      ? innerWidth*(.045+Math.random()*.075)
-      : innerWidth*(.88+Math.random()*.075);
+    sx=leftSide ? 8+Math.random()*11 : innerWidth-(8+Math.random()*11);
+
+    // If this is a side-lane firework, keep its apex in the same visible lane.
+    if(leftSide && tx<105)tx=30+Math.random()*42;
+    if(!leftSide && tx>innerWidth-105)tx=innerWidth-(30+Math.random()*42);
   }else{
     sx=Math.max(24,Math.min(innerWidth-24,tx+(Math.random()-.5)*innerWidth*.22));
   }
@@ -1217,7 +1252,11 @@ function launchAmbientRocket(tx,ty,style){
     x:sx,y:sy,sx,sy,tx,ty,style,
     f:0,frames,
     tail:[{x:sx,y:sy}],
-    shellR:IS_MOBILE?5.2:4.8
+    shellR:IS_MOBILE?4.1:4.4,
+    wobbleAmp:IS_MOBILE?2.8+Math.random()*5.2:2.0+Math.random()*3.8,
+    wobbleCycles:2.0+Math.random()*1.7,
+    wobblePhase:Math.random()*Math.PI*2,
+    windDrift:(Math.random()-.5)*(IS_MOBILE?18:12)
   });
 }
 
@@ -1228,31 +1267,31 @@ function drawAmbientRocket(r){
 
   for(let i=1;i<tail.length;i++){
     const k=i/(tail.length-1);
-    const fade=Math.pow(k,1.35);
+    const fade=Math.pow(k,1.5);
 
-    // Wide amber afterglow.
-    ctx.globalAlpha=(.07+.28*fade);
-    ctx.strokeStyle='#ff9f32';
-    ctx.lineWidth=(1.6+6.6*fade);
+    // Soft amber exhaust glow — intentionally subdued so it stays background.
+    ctx.globalAlpha=.025+.095*fade;
+    ctx.strokeStyle='#ff9b38';
+    ctx.lineWidth=.8+2.4*fade;
     ctx.beginPath();
     ctx.moveTo(tail[i-1].x,tail[i-1].y);
     ctx.lineTo(tail[i].x,tail[i].y);
     ctx.stroke();
 
-    // Main gold streak.
-    ctx.globalAlpha=(.16+.58*fade);
-    ctx.strokeStyle='#ffd66a';
-    ctx.lineWidth=(.9+3.2*fade);
+    // Thin gold filament.
+    ctx.globalAlpha=.07+.23*fade;
+    ctx.strokeStyle='#ffd47a';
+    ctx.lineWidth=.45+1.25*fade;
     ctx.beginPath();
     ctx.moveTo(tail[i-1].x,tail[i-1].y);
     ctx.lineTo(tail[i].x,tail[i].y);
     ctx.stroke();
 
-    // White-hot inner filament.
-    if(k>.42){
-      ctx.globalAlpha=.32+.60*fade;
-      ctx.strokeStyle='#fff';
-      ctx.lineWidth=.42+1.3*fade;
+    // Small white core only near the shell head.
+    if(k>.66){
+      ctx.globalAlpha=.12+.30*fade;
+      ctx.strokeStyle='#fff4d0';
+      ctx.lineWidth=.28+.46*fade;
       ctx.beginPath();
       ctx.moveTo(tail[i-1].x,tail[i-1].y);
       ctx.lineTo(tail[i].x,tail[i].y);
@@ -1260,38 +1299,41 @@ function drawAmbientRocket(r){
     }
   }
 
-  // Tiny sparks around the moving shell.
-  if(r.f%4===0){
+  // A few tiny irregular sparks from the exhaust.
+  if(r.f%5===0){
+    const angle=r.wobblePhase+r.f*.61;
     for(let j=0;j<2;j++){
-      const a=(j/2)*Math.PI*2+r.f*.37;
-      const rr=4+(j*3);
-      ctx.globalAlpha=.36;
-      ctx.fillStyle=j%2?'#ffd15a':'#fff';
+      const rr=3+j*3;
+      ctx.globalAlpha=.18;
+      ctx.fillStyle=j?'#ffcf64':'#fff0c0';
       ctx.beginPath();
-      ctx.arc(r.x+Math.cos(a)*rr,r.y+Math.sin(a)*rr,1.05+(j*.15),0,Math.PI*2);
+      ctx.arc(
+        r.x+Math.cos(angle+j*2.4)*rr,
+        r.y+Math.sin(angle+j*2.4)*rr,
+        .65+j*.12,0,Math.PI*2
+      );
       ctx.fill();
     }
   }
 
-  // Visible glowing shell ball.
-  const pulse=1+.10*Math.sin(r.f*.55);
-  const glowR=r.shellR*5.8*pulse;
+  // Glowing shell ball — visible, but not an oversized flashlight.
+  const pulse=1+.08*Math.sin(r.f*.50);
+  const glowR=r.shellR*3.7*pulse;
   const grd=ctx.createRadialGradient(r.x,r.y,0,r.x,r.y,glowR);
-  grd.addColorStop(0,'rgba(255,255,255,1)');
-  grd.addColorStop(.16,'rgba(255,250,210,.99)');
-  grd.addColorStop(.38,'rgba(255,203,83,.86)');
-  grd.addColorStop(.68,'rgba(255,143,42,.38)');
-  grd.addColorStop(1,'rgba(255,110,25,0)');
-  ctx.globalAlpha=.96;
+  grd.addColorStop(0,'rgba(255,255,255,.92)');
+  grd.addColorStop(.22,'rgba(255,244,196,.74)');
+  grd.addColorStop(.50,'rgba(255,187,78,.34)');
+  grd.addColorStop(1,'rgba(255,125,35,0)');
+  ctx.globalAlpha=.76;
   ctx.fillStyle=grd;
   ctx.beginPath();
   ctx.arc(r.x,r.y,glowR,0,Math.PI*2);
   ctx.fill();
 
-  ctx.globalAlpha=1;
-  ctx.fillStyle='#fff';
+  ctx.globalAlpha=.78;
+  ctx.fillStyle='#fff8dc';
   ctx.beginPath();
-  ctx.arc(r.x,r.y,r.shellR*.82,0,Math.PI*2);
+  ctx.arc(r.x,r.y,r.shellR*.52,0,Math.PI*2);
   ctx.fill();
 }
 function spawnShellBurst(x,y,style){
@@ -1413,11 +1455,24 @@ function anim(ts){
     r.f++;
 
     const t=Math.min(1,r.f/r.frames);
-    // Strong ease-out: fast launch, then a readable slowdown near the apex.
+    // Fast launch, then a readable slowdown near the apex.
     const e=1-Math.pow(1-t,2.35);
 
-    r.x=r.sx+(r.tx-r.sx)*e;
-    r.y=r.sy+(r.ty-r.sy)*e - Math.sin(t*Math.PI)*innerHeight*.022;
+    const baseX=r.sx+(r.tx-r.sx)*e;
+    const baseY=r.sy+(r.ty-r.sy)*e - Math.sin(t*Math.PI)*innerHeight*.020;
+
+    // Real shells never read as a mathematically perfect ruler line:
+    // a tiny rotational wobble + cumulative wind drift makes the climb feel organic.
+    const dx=r.tx-r.sx,dy=r.ty-r.sy;
+    const len=Math.max(1,Math.hypot(dx,dy));
+    const nx=-dy/len,ny=dx/len; // perpendicular to the main flight path
+    const wobbleEnvelope=Math.sin(Math.PI*t); // zero at launch/apex, strongest mid-flight
+    const wobble=Math.sin(r.wobblePhase+t*Math.PI*2*r.wobbleCycles)*
+                 r.wobbleAmp*wobbleEnvelope;
+    const wind=r.windDrift*Math.pow(t,1.55);
+
+    r.x=baseX+nx*wobble+wind;
+    r.y=baseY+ny*wobble*.32;
 
     r.tail.push({x:r.x,y:r.y});
     if(r.tail.length>(IS_MOBILE?34:28))r.tail.shift();
@@ -1484,10 +1539,10 @@ function pickMobileBurstY(){
 }
 function pickMobileBurstX(){
   const r=Math.random();
-  // Often use side zones, but still allow center bursts so the effect is unmistakable.
-  if(r<.34)return innerWidth*(.06+Math.random()*.22);
-  if(r<.68)return innerWidth*(.72+Math.random()*.22);
-  return innerWidth*(.25+Math.random()*.50);
+  // Most mobile shells open near the side sky lanes so the ascent remains visible.
+  if(r<.42)return 28+Math.random()*46;                      // left
+  if(r<.84)return innerWidth-(28+Math.random()*46);         // right
+  return innerWidth*(.30+Math.random()*.40);                // occasional center
 }
 function launchAmbientFirework(){
   if(document.visibilityState!=='visible'||document.body.classList.contains('celebrating'))return;
