@@ -149,13 +149,62 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
 .rotate-card{width:min(88vw,430px);padding:26px 22px 24px;text-align:center;border-radius:30px;background:linear-gradient(160deg,rgba(7,19,48,.90),rgba(24,13,55,.89));border:1px solid rgba(255,255,255,.18);box-shadow:0 26px 90px rgba(0,0,0,.6),0 0 60px rgba(64,231,255,.12)}
 .rotate-kicker{font-size:10px;font-weight:1000;letter-spacing:.24em;color:#79eeff}.rotate-phone{font-size:76px;display:block;margin:8px auto 8px;filter:drop-shadow(0 0 24px rgba(64,231,255,.35));animation:rotatePhone 1.55s ease-in-out infinite}.rotate-title{font-size:26px;font-weight:1000;letter-spacing:-.04em}.rotate-copy{margin-top:8px;font-size:12px;line-height:1.7;color:#cdd9ee}.rotate-status{margin-top:14px;display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;background:rgba(64,231,255,.10);border:1px solid rgba(64,231,255,.18);font-size:10px;font-weight:950;color:#bff7ff}.rotate-dot{width:7px;height:7px;border-radius:50%;background:#40e7ff;box-shadow:0 0 12px #40e7ff;animation:dotPulse 1s ease-in-out infinite}
 @keyframes rotatePhone{0%,100%{transform:rotate(0deg) scale(1)}45%,55%{transform:rotate(90deg) scale(1.08)}}@keyframes dotPulse{50%{opacity:.25;transform:scale(.72)}}
-.video-ready-pop{z-index:145;inset:auto 50% 8%;transform:translateX(50%);width:min(90vw,430px);padding:0;background:none}
+
+.sound-reminder{margin:13px auto 0;width:min(100%,320px);display:flex;align-items:center;justify-content:center;gap:11px;padding:10px 14px;border-radius:18px;background:linear-gradient(135deg,rgba(255,210,78,.14),rgba(64,231,255,.10));border:1px solid rgba(255,225,142,.28);box-shadow:0 0 24px rgba(255,206,72,.12)}
+.sound-reminder .sound-icon{font-size:29px;display:inline-block;filter:drop-shadow(0 0 14px rgba(255,218,93,.55));animation:soundPulse 1.05s ease-in-out infinite}
+.sound-reminder span:last-child{display:flex;flex-direction:column;text-align:left;line-height:1.2}
+.sound-reminder b{font-size:12px;color:#fff3b8}.sound-reminder small{font-size:9px;color:#b9cbe2;margin-top:4px}
+@keyframes soundPulse{0%,100%{transform:scale(.92)}45%{transform:scale(1.16)}60%{transform:scale(1.05)}}
+.video-ready-pop{z-index:145;left:50%;right:auto;bottom:max(26px,env(safe-area-inset-bottom));top:auto;transform:translateX(-50%);width:min(90vw,430px);padding:0;background:none}
 .video-ready-pop button{width:100%;min-height:78px;border:none;border-radius:24px;color:#06101d;font-weight:1000;font-size:18px;line-height:1.25;background:linear-gradient(135deg,#fff3a4,#ffd45e 32%,#ff7eb8 70%,#6ee9ff);box-shadow:0 0 0 5px rgba(255,255,255,.08),0 0 38px rgba(255,212,94,.48),0 20px 70px rgba(0,0,0,.46);animation:readyPulse 1.05s ease-in-out infinite;position:relative;overflow:hidden}
 .video-ready-pop button:before{content:"";position:absolute;inset:-60%;background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.82) 49%,transparent 59%);animation:readyShine 1.65s linear infinite}.video-ready-pop small{display:block;font-size:10px;margin-top:6px;opacity:.68;letter-spacing:.06em}.video-ready-pop .ready-icon{font-size:24px;margin-right:8px;vertical-align:-2px}
 @keyframes readyPulse{0%,100%{transform:scale(.93)}50%{transform:scale(1.055);box-shadow:0 0 0 8px rgba(255,255,255,.06),0 0 58px rgba(255,212,94,.62),0 22px 80px rgba(0,0,0,.5)}}@keyframes readyShine{to{transform:translateX(70%)}}
-.video-stage{z-index:220;background:#000;align-items:center;justify-content:center}.video-stage-inner{position:relative;width:100vw;height:100dvh;display:flex;align-items:center;justify-content:center;background:#000}.video-stage iframe{width:100vw;height:100dvh;border:0;background:#000}.video-close{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:5;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.68);color:white;font-size:23px;font-weight:900;display:grid;place-items:center;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+
+.video-stage{z-index:220;background:#000;align-items:center;justify-content:center}
+.video-stage-inner{position:relative;width:100vw;height:100dvh;display:flex;align-items:center;justify-content:center;background:#000;overflow:hidden}
+.video-player-mount,.video-player-mount iframe,#celebrationVideo{width:100%;height:100%;border:0;background:#000}
+.video-close{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:20;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.68);color:white;font-size:23px;font-weight:900;display:grid;place-items:center;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+
+.video-countdown-overlay{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;visibility:hidden;transition:.22s}
+.video-countdown-overlay.show{opacity:1;visibility:visible}
+.video-countdown-card{min-width:132px;padding:15px 22px 17px;border-radius:28px;text-align:center;background:rgba(0,0,0,.30);border:1px solid rgba(255,255,255,.20);box-shadow:0 0 42px rgba(255,205,76,.28);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.video-countdown-kicker{font-size:11px;font-weight:1000;letter-spacing:.20em;color:#fff1a5;text-shadow:0 0 14px rgba(255,205,76,.75)}
+.video-countdown-number{font-size:clamp(74px,18vw,138px);line-height:.88;font-weight:1000;letter-spacing:-.08em;color:#fff;text-shadow:0 0 14px #fff,0 0 34px #ffbd44,0 0 72px rgba(255,62,146,.70);animation:videoCountPop .62s cubic-bezier(.12,1.5,.3,1) both}
+.video-countdown-sub{font-size:11px;font-weight:950;color:#fff;margin-top:8px;text-shadow:0 0 12px rgba(0,0,0,.8)}
+@keyframes videoCountPop{0%{transform:scale(.35);opacity:0}55%{transform:scale(1.18);opacity:1}100%{transform:scale(1)}}
+
+.video-cheers-burst{position:absolute;inset:0;z-index:12;display:grid;place-items:center;pointer-events:none;opacity:0;visibility:hidden;background:radial-gradient(circle,rgba(255,213,72,.18),rgba(255,70,158,.08) 32%,transparent 65%)}
+.video-cheers-burst.show{opacity:1;visibility:visible;animation:cheersScreenFlash 2.8s ease both}
+.video-cheers-core{text-align:center;transform:scale(.4);opacity:0}
+.video-cheers-burst.show .video-cheers-core{animation:cheersCoreBoom 2.8s cubic-bezier(.12,1.25,.28,1) both}
+.video-cheers-title{font-size:clamp(52px,12vw,112px);font-weight:1000;letter-spacing:-.07em;color:#fff7c3;text-shadow:0 0 10px #fff,0 0 28px #ffd64f,0 0 62px #ff6ea9,0 0 110px #6ee9ff;white-space:nowrap}
+.video-cheers-sub{font-size:clamp(15px,3vw,24px);font-weight:1000;color:#fff;margin-top:8px;text-shadow:0 0 20px rgba(255,255,255,.8)}
+@keyframes cheersCoreBoom{0%{transform:scale(.28) rotate(-5deg);opacity:0}18%{transform:scale(1.22) rotate(2deg);opacity:1}35%{transform:scale(.96)}72%{transform:scale(1.04);opacity:1}100%{transform:scale(1.08);opacity:0}}
+@keyframes cheersScreenFlash{0%{background:rgba(255,255,255,.72)}8%{background:radial-gradient(circle,rgba(255,223,90,.38),rgba(255,67,158,.14) 34%,transparent 68%)}82%{opacity:1}100%{opacity:0}}
+
+.video-spark-layer{position:absolute;inset:0;z-index:11;pointer-events:none;overflow:hidden}
+.video-spark{position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:50%;background:var(--c,#ffd84e);box-shadow:0 0 12px var(--c,#ffd84e),0 0 28px var(--c,#ffd84e);transform:translate(-50%,-50%);animation:videoSparkFly 1.65s ease-out forwards}
+@keyframes videoSparkFly{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}12%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.05)}}
+
 .celebration.phase-countdown .celebration-content{opacity:.18!important;transform:scale(.84)!important;filter:blur(2px)!important;transition:.35s}.celebration.phase-rotate .celebration-content{opacity:.08!important;transform:scale(.78)!important;filter:blur(3px)!important;transition:.35s}.celebration.video-playing .celebration-content,.celebration.video-playing .celebration-mega,.celebration.video-playing .celebration-night-stars,.celebration.video-playing #celebrationFireworks{opacity:0!important;visibility:hidden!important}
-@media (orientation:landscape){.video-ready-pop{bottom:5%}.rotate-card{padding:18px 24px}.rotate-phone{font-size:56px;margin:2px auto}.rotate-title{font-size:22px}.rotate-copy{font-size:11px}.countdown-box{width:min(54vh,330px)}}
+
+@media (orientation:landscape){
+  .rotate-stage{padding:max(8px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+  .rotate-card{width:min(76vw,620px);padding:14px 22px 92px;transform:translateY(-10px)}
+  .rotate-phone{display:none}
+  .rotate-title{font-size:22px}.rotate-copy{font-size:11px;line-height:1.5}.rotate-status{margin-top:9px}
+  .video-ready-pop{left:50%;right:auto;top:50%;bottom:auto;transform:translate(-50%,42px);width:min(66vw,500px)}
+  .video-ready-pop button{min-height:64px;border-radius:20px;font-size:17px}
+  .countdown-box{width:min(54vh,330px)}
+  .video-countdown-card{transform:translateY(-2vh);min-width:118px;padding:10px 20px 12px}
+  .video-countdown-number{font-size:clamp(70px,22vh,120px)}
+}
+@media (orientation:landscape) and (max-height:430px){
+  .rotate-card{padding:10px 18px 82px;transform:translateY(-6px)}
+  .rotate-kicker{font-size:9px}.rotate-title{font-size:19px}.rotate-copy{font-size:10px;margin-top:5px}.sound-reminder{margin-top:7px;padding:6px 10px}.sound-reminder .sound-icon{font-size:22px}.sound-reminder b{font-size:10px}.sound-reminder small{font-size:8px}.rotate-status{margin-top:7px;padding:6px 10px}
+  .video-ready-pop{transform:translate(-50%,34px);width:min(70vw,480px)}
+  .video-ready-pop button{min-height:58px;font-size:16px}
+}
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./config.js"></script></head>
@@ -235,25 +284,40 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
     <div class="countdown-box">
       <div class="countdown-label">NEXT MOMENT</div>
       <div class="countdown-number" id="countdownNumber">5</div>
-      <div class="countdown-note">このあとスマホを横向きに！</div>
+      <div class="countdown-note">このあと横向きに！🔊 音量もONにしてね</div>
     </div>
   </div>
   <div class="rotate-stage" id="rotateStage" aria-hidden="true">
     <div class="rotate-card">
       <div class="rotate-kicker">TATSUKI × AI</div>
       <span class="rotate-phone">📱</span>
-      <div class="rotate-title">スマホを横向きにして！</div>
-      <div class="rotate-copy">横向きになったら、動画スタートのボタンが出ます！<br>そのまま押して花火ムービーへ！</div>
+      <div class="rotate-title">横向き＋音量ON！</div>
+      <div class="rotate-copy"><b>スマホを横向きにして、メディア音量を聞こえる大きさに上げてください！</b><br>横向きになったら動画スタートのボタンが出ます！</div>
+      <div class="sound-reminder" aria-label="音量確認"><span class="sound-icon">🔊</span><span><b>音が出る準備OK？</b><small>動画は音付きで始まります</small></span></div>
       <div class="rotate-status"><span class="rotate-dot"></span><span id="rotateStatusText">横向きを待っています…</span></div>
     </div>
   </div>
   <div class="video-ready-pop" id="videoReadyPop" aria-hidden="true">
-    <button id="playCelebrationVideo"><span class="ready-icon">▶</span>横向きOK！動画スタート<small>タップすると自動再生します</small></button>
+    <button id="playCelebrationVideo"><span class="ready-icon">🔊</span>音量ON！動画スタート<small>横向きのままタップすると音付きで再生します</small></button>
   </div>
   <div class="video-stage" id="videoStage" aria-hidden="true">
     <div class="video-stage-inner">
       <button class="video-close" id="closeCelebrationVideo" aria-label="動画を閉じる">×</button>
-      <iframe id="celebrationVideo" title="花火ムービー" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+      <div class="video-player-mount" id="videoPlayerMount"><div id="celebrationVideo"></div></div>
+      <div class="video-countdown-overlay" id="videoCountdownOverlay" aria-hidden="true">
+        <div class="video-countdown-card">
+          <div class="video-countdown-kicker">乾杯まで</div>
+          <div class="video-countdown-number" id="videoCountdownNumber">10</div>
+          <div class="video-countdown-sub">グラスを持って準備！</div>
+        </div>
+      </div>
+      <div class="video-spark-layer" id="videoSparkLayer"></div>
+      <div class="video-cheers-burst" id="videoCheersBurst" aria-hidden="true">
+        <div class="video-cheers-core">
+          <div class="video-cheers-title">乾杯〜！🎉🥂</div>
+          <div class="video-cheers-sub">たつき × あい　最高の花火ナイト！</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -466,13 +530,75 @@ const rotateStatusText=document.getElementById('rotateStatusText');
 const videoReadyPop=document.getElementById('videoReadyPop');
 const playCelebrationVideo=document.getElementById('playCelebrationVideo');
 const videoStage=document.getElementById('videoStage');
-const celebrationVideo=document.getElementById('celebrationVideo');
+const videoPlayerMount=document.getElementById('videoPlayerMount');
 const closeCelebrationVideo=document.getElementById('closeCelebrationVideo');
+const videoCountdownOverlay=document.getElementById('videoCountdownOverlay');
+const videoCountdownNumber=document.getElementById('videoCountdownNumber');
+const videoCheersBurst=document.getElementById('videoCheersBurst');
+const videoSparkLayer=document.getElementById('videoSparkLayer');
 let sequenceTimers=[];let orientationWatching=false;
+let ytPlayer=null,videoCountdownRaf=0,videoCheersTriggered=false,lastVideoDigit=null,ytApiReady=false,ytApiCallbacks=[];
 function addSequenceTimer(fn,ms){const id=setTimeout(fn,ms);sequenceTimers.push(id);return id}
 function clearSequenceTimers(){sequenceTimers.forEach(clearTimeout);sequenceTimers=[]}
 function isLandscapeNow(){return innerWidth>innerHeight||window.matchMedia?.('(orientation: landscape)').matches}
 function showStage(el,on=true){el.classList.toggle('show',on);el.setAttribute('aria-hidden',on?'false':'true')}
+function loadYouTubeAPI(){
+  if(window.YT&&window.YT.Player){ytApiReady=true;return Promise.resolve()}
+  return new Promise(resolve=>{
+    ytApiCallbacks.push(resolve);
+    if(document.getElementById('youtubeIframeApi'))return;
+    const s=document.createElement('script');s.id='youtubeIframeApi';s.src='https://www.youtube.com/iframe_api';document.head.appendChild(s)
+  })
+}
+window.onYouTubeIframeAPIReady=()=>{ytApiReady=true;ytApiCallbacks.splice(0).forEach(fn=>fn())};
+loadYouTubeAPI();
+function resetVideoOverlays(){
+  cancelAnimationFrame(videoCountdownRaf);videoCountdownRaf=0;videoCheersTriggered=false;lastVideoDigit=null;
+  showStage(videoCountdownOverlay,false);showStage(videoCheersBurst,false);
+  videoSparkLayer.innerHTML=''
+}
+function pulseVideoDigit(n){
+  if(lastVideoDigit===n)return;lastVideoDigit=n;videoCountdownNumber.textContent=n;
+  videoCountdownNumber.style.animation='none';void videoCountdownNumber.offsetWidth;videoCountdownNumber.style.animation='videoCountPop .62s cubic-bezier(.12,1.5,.3,1) both';
+  if(navigator.vibrate)navigator.vibrate(n<=3?[35,20,55]:[18])
+}
+function videoSparkBurst(){
+  const colors=['#fff','#ffd84e','#ff6ea9','#72ecff','#ff944d','#b98cff'];
+  const count=innerWidth<700?52:78;
+  for(let i=0;i<count;i++){
+    const s=document.createElement('i');s.className='video-spark';
+    const a=Math.PI*2*(i/count)+(Math.random()-.5)*.45,d=80+Math.random()*Math.min(innerWidth,innerHeight)*.62;
+    s.style.setProperty('--dx',(Math.cos(a)*d)+'px');s.style.setProperty('--dy',(Math.sin(a)*d)+'px');s.style.setProperty('--c',colors[i%colors.length]);
+    videoSparkLayer.appendChild(s);setTimeout(()=>s.remove(),1800)
+  }
+}
+function triggerVideoCheers(){
+  if(videoCheersTriggered)return;videoCheersTriggered=true;
+  showStage(videoCountdownOverlay,false);showStage(videoCheersBurst,true);videoSparkBurst();
+  if(navigator.vibrate)navigator.vibrate([100,45,150,45,220]);
+  setTimeout(videoSparkBurst,300);setTimeout(videoSparkBurst,700);
+  setTimeout(()=>showStage(videoCheersBurst,false),2900)
+}
+function syncVideoCountdown(){
+  if(!ytPlayer||typeof ytPlayer.getCurrentTime!=='function')return;
+  let t=0;try{t=ytPlayer.getCurrentTime()||0}catch(e){}
+  if(t<10.02){
+    showStage(videoCountdownOverlay,true);
+    const remain=Math.max(0,Math.ceil(10-t));
+    pulseVideoDigit(remain);
+    if(t>=9.92)triggerVideoCheers()
+  }else{
+    triggerVideoCheers()
+  }
+  if(!videoCheersTriggered)videoCountdownRaf=requestAnimationFrame(syncVideoCountdown)
+}
+function onYouTubeStateChange(e){
+  if(!window.YT)return;
+  if(e.data===YT.PlayerState.PLAYING){
+    showStage(videoCountdownOverlay,true);
+    cancelAnimationFrame(videoCountdownRaf);videoCountdownRaf=requestAnimationFrame(syncVideoCountdown)
+  }
+}
 function pulseCountdownDigit(n){countdownNumber.textContent=n;countdownNumber.style.animation='none';void countdownNumber.offsetWidth;countdownNumber.style.animation='countPulse .8s cubic-bezier(.15,1.5,.35,1) both';skyFinaleWave();if(navigator.vibrate)navigator.vibrate(n===1?[45,25,85]:[28])}
 function onOrientationCheck(){if(!rotateStage.classList.contains('show'))return;const land=isLandscapeNow();rotateStatusText.textContent=land?'横向きOK！下のボタンを押して！':'横向きを待っています…';showStage(videoReadyPop,land);if(land&&navigator.vibrate)navigator.vibrate([35,30,60])}
 function startOrientationWatch(){if(orientationWatching)return;orientationWatching=true;window.addEventListener('resize',onOrientationCheck);window.addEventListener('orientationchange',onOrientationCheck);onOrientationCheck()}
@@ -484,20 +610,43 @@ function beginPostCheersSequence(){
   addSequenceTimer(tick,1000)
 }
 function launchCelebration(source='manual'){
-  clearSequenceTimers();stopOrientationWatch();showStage(countdownStage,false);showStage(rotateStage,false);showStage(videoReadyPop,false);showStage(videoStage,false);celebrationVideo.src='';celebration.classList.remove('phase-countdown','phase-rotate','video-playing');
+  clearSequenceTimers();stopOrientationWatch();showStage(countdownStage,false);showStage(rotateStage,false);showStage(videoReadyPop,false);showStage(videoStage,false);resetVideoOverlays();if(ytPlayer){try{ytPlayer.destroy()}catch(e){}ytPlayer=null}videoPlayerMount.innerHTML='<div id="celebrationVideo"></div>';celebration.classList.remove('phase-countdown','phase-rotate','video-playing');
   stopCelebrationLoops();celebration.classList.add('show');celebration.setAttribute('aria-hidden','false');document.body.classList.add('celebrating');startFireworkSky();clinkSparkBurst();skyFinaleWave();startCelebrationLoops();
   if(navigator.vibrate)navigator.vibrate([60,30,90,40,120]);toast(source==='complete'?'🎆 全部そろった！たつきとあい、乾杯！':'🎆🥂 TATSUKI × AI 乾杯！');
   addSequenceTimer(beginPostCheersSequence,1500)
 }
-function playFinalVideo(){
+async function playFinalVideo(){
   if(!isLandscapeNow()){showStage(videoReadyPop,false);rotateStatusText.textContent='もう一度、スマホを横向きにして！';return}
   stopOrientationWatch();showStage(rotateStage,false);showStage(videoReadyPop,false);celebration.classList.remove('phase-rotate');celebration.classList.add('video-playing');stopCelebrationLoops();stopFireworkSky();
-  showStage(videoStage,true);
-  celebrationVideo.src='https://www.youtube.com/embed/Mv0Jo_P9XrA?autoplay=1&playsinline=1&rel=0&controls=1&enablejsapi=1';
-  if(navigator.vibrate)navigator.vibrate([45,25,80])
+  resetVideoOverlays();showStage(videoStage,true);
+  if(navigator.vibrate)navigator.vibrate([45,25,80]);
+  try{
+    await loadYouTubeAPI();
+    videoPlayerMount.innerHTML='<div id="celebrationVideo"></div>';
+    ytPlayer=new YT.Player('celebrationVideo',{
+      videoId:'Mv0Jo_P9XrA',
+      width:'100%',height:'100%',
+      playerVars:{autoplay:1,playsinline:1,rel:0,controls:1,fs:1,modestbranding:1},
+      events:{
+        onReady:(e)=>{try{e.target.playVideo()}catch(_){}},
+        onStateChange:onYouTubeStateChange
+      }
+    })
+  }catch(e){
+    videoPlayerMount.innerHTML='<iframe id="celebrationVideo" title="花火ムービー" src="https://www.youtube.com/embed/Mv0Jo_P9XrA?autoplay=1&playsinline=1&rel=0&controls=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+    showStage(videoCountdownOverlay,true);let fallback=10;pulseVideoDigit(fallback);
+    const fallbackTick=setInterval(()=>{fallback--;if(fallback>0)pulseVideoDigit(fallback);else{clearInterval(fallbackTick);triggerVideoCheers()}},1000)
+  }
 }
-function closeVideoOnly(){celebrationVideo.src='';showStage(videoStage,false);celebration.classList.remove('video-playing');startFireworkSky();startCelebrationLoops();showStage(rotateStage,true);celebration.classList.add('phase-rotate');startOrientationWatch()}
-function closeCelebration(){clearSequenceTimers();stopOrientationWatch();stopCelebrationLoops();clearTimeout(celebrationTimer);stopFireworkSky();celebrationVideo.src='';showStage(countdownStage,false);showStage(rotateStage,false);showStage(videoReadyPop,false);showStage(videoStage,false);celebration.classList.remove('show','phase-countdown','phase-rotate','video-playing');celebration.setAttribute('aria-hidden','true');document.body.classList.remove('celebrating');document.querySelectorAll('.clink-spark').forEach(el=>el.remove())}
+function closeVideoOnly(){
+  resetVideoOverlays();if(ytPlayer){try{ytPlayer.destroy()}catch(e){}ytPlayer=null}videoPlayerMount.innerHTML='<div id="celebrationVideo"></div>';
+  showStage(videoStage,false);celebration.classList.remove('video-playing');startFireworkSky();startCelebrationLoops();showStage(rotateStage,true);celebration.classList.add('phase-rotate');startOrientationWatch()
+}
+function closeCelebration(){
+  clearSequenceTimers();stopOrientationWatch();stopCelebrationLoops();clearTimeout(celebrationTimer);stopFireworkSky();resetVideoOverlays();
+  if(ytPlayer){try{ytPlayer.destroy()}catch(e){}ytPlayer=null}videoPlayerMount.innerHTML='<div id="celebrationVideo"></div>';
+  showStage(countdownStage,false);showStage(rotateStage,false);showStage(videoReadyPop,false);showStage(videoStage,false);celebration.classList.remove('show','phase-countdown','phase-rotate','video-playing');celebration.setAttribute('aria-hidden','true');document.body.classList.remove('celebrating');document.querySelectorAll('.clink-spark').forEach(el=>el.remove())
+}
 document.getElementById('closeCelebration').onclick=closeCelebration;
 document.getElementById('cheers').onclick=()=>launchCelebration('manual');
 playCelebrationVideo.onclick=playFinalVideo;
