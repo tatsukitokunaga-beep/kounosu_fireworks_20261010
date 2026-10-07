@@ -187,6 +187,10 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
 @keyframes videoSparkFly{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}12%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.05)}}
 
 .celebration.phase-countdown .celebration-content{opacity:.18!important;transform:scale(.84)!important;filter:blur(2px)!important;transition:.35s}.celebration.phase-rotate .celebration-content{opacity:.08!important;transform:scale(.78)!important;filter:blur(3px)!important;transition:.35s}.celebration.video-playing .celebration-content,.celebration.video-playing .celebration-mega,.celebration.video-playing .celebration-night-stars,.celebration.video-playing #celebrationFireworks{opacity:0!important;visibility:hidden!important}
+/* v15: landscape prep should expose only the video-start action */
+.celebration.phase-countdown #closeCelebration,
+.celebration.phase-rotate #closeCelebration{display:none!important;pointer-events:none!important}
+
 
 @media (orientation:landscape){
   .rotate-stage{padding:max(8px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
@@ -204,6 +208,113 @@ body.celebrating #fireworks,body.celebrating .stars,body.celebrating .aurora{vis
   .rotate-kicker{font-size:9px}.rotate-title{font-size:19px}.rotate-copy{font-size:10px;margin-top:5px}.sound-reminder{margin-top:7px;padding:6px 10px}.sound-reminder .sound-icon{font-size:22px}.sound-reminder b{font-size:10px}.sound-reminder small{font-size:8px}.rotate-status{margin-top:7px;padding:6px 10px}
   .video-ready-pop{transform:translate(-50%,34px);width:min(70vw,480px)}
   .video-ready-pop button{min-height:58px;font-size:16px}
+}
+
+
+/* v15: video countdown / cheers live in the top-right in landscape */
+@media (orientation:landscape){
+  .video-countdown-overlay{
+    align-items:flex-start!important;
+    justify-content:flex-end!important;
+    padding:
+      max(12px,env(safe-area-inset-top))
+      max(14px,env(safe-area-inset-right))
+      12px
+      max(14px,env(safe-area-inset-left))!important;
+  }
+  .video-countdown-card{
+    transform:none!important;
+    min-width:148px!important;
+    padding:10px 16px 12px!important;
+    border-radius:22px!important;
+    background:linear-gradient(145deg,rgba(1,6,18,.76),rgba(20,10,42,.72))!important;
+    border:1px solid rgba(255,224,128,.38)!important;
+    box-shadow:0 0 0 2px rgba(255,255,255,.05),0 0 34px rgba(255,196,59,.28),0 14px 44px rgba(0,0,0,.44)!important;
+    backdrop-filter:blur(8px)!important;
+    -webkit-backdrop-filter:blur(8px)!important;
+  }
+  .video-countdown-kicker{font-size:10px!important;letter-spacing:.18em!important}
+  .video-countdown-number{font-size:clamp(58px,17vh,92px)!important;line-height:.82!important}
+  .video-countdown-sub{font-size:9px!important;margin-top:6px!important}
+
+  .video-cheers-burst{
+    display:flex!important;
+    align-items:flex-start!important;
+    justify-content:flex-end!important;
+    padding:
+      max(12px,env(safe-area-inset-top))
+      max(14px,env(safe-area-inset-right))
+      12px
+      max(14px,env(safe-area-inset-left))!important;
+    background:none!important;
+  }
+  .video-cheers-burst.show{
+    animation:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+  }
+  .video-cheers-core{
+    position:relative;
+    width:min(36vw,300px);
+    padding:15px 18px 14px;
+    border-radius:24px;
+    text-align:center;
+    opacity:1!important;
+    transform:none!important;
+    overflow:visible;
+    background:
+      radial-gradient(circle at 50% -20%,rgba(255,240,153,.28),transparent 52%),
+      linear-gradient(145deg,rgba(32,14,52,.90),rgba(4,16,38,.90));
+    border:1px solid rgba(255,229,139,.50);
+    box-shadow:
+      0 0 0 2px rgba(255,255,255,.06),
+      0 0 30px rgba(255,200,66,.32),
+      0 0 58px rgba(255,83,152,.18),
+      0 16px 54px rgba(0,0,0,.50);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+  }
+  .video-cheers-burst.show .video-cheers-core{
+    animation:v15CheersTopRight 3.4s cubic-bezier(.12,1.25,.28,1) both!important;
+  }
+  .video-cheers-core:before,
+  .video-cheers-core:after{
+    content:"✦";
+    position:absolute;
+    color:#fff4a5;
+    text-shadow:0 0 10px #fff,0 0 24px #ffd34e;
+    font-size:25px;
+    animation:v15Twinkle .62s ease-in-out infinite alternate;
+  }
+  .video-cheers-core:before{left:-12px;top:-13px}
+  .video-cheers-core:after{right:-10px;bottom:-11px;animation-delay:.2s}
+  .video-cheers-title{
+    font-size:clamp(27px,7vh,46px)!important;
+    letter-spacing:-.06em!important;
+    white-space:nowrap;
+  }
+  .video-cheers-sub{
+    font-size:clamp(9px,2.6vh,14px)!important;
+    margin-top:5px!important;
+  }
+}
+@keyframes v15CheersTopRight{
+  0%{transform:scale(.25) rotate(-5deg);opacity:0;filter:brightness(2.2)}
+  16%{transform:scale(1.16) rotate(2deg);opacity:1}
+  30%{transform:scale(.96) rotate(0)}
+  48%{transform:scale(1.04)}
+  76%{transform:scale(1);opacity:1}
+  100%{transform:scale(.98);opacity:0}
+}
+@keyframes v15Twinkle{
+  from{transform:scale(.62) rotate(-10deg);opacity:.45}
+  to{transform:scale(1.26) rotate(10deg);opacity:1}
+}
+@media (orientation:landscape) and (max-height:430px){
+  .video-countdown-card{min-width:132px!important;padding:8px 13px 10px!important}
+  .video-countdown-number{font-size:clamp(50px,18vh,76px)!important}
+  .video-cheers-core{width:min(40vw,270px);padding:11px 14px 10px}
+  .video-cheers-title{font-size:clamp(24px,8vh,38px)!important}
 }
 
 </style>
@@ -537,7 +648,7 @@ const videoCountdownNumber=document.getElementById('videoCountdownNumber');
 const videoCheersBurst=document.getElementById('videoCheersBurst');
 const videoSparkLayer=document.getElementById('videoSparkLayer');
 let sequenceTimers=[];let orientationWatching=false;
-let ytPlayer=null,videoCountdownRaf=0,videoCheersTriggered=false,lastVideoDigit=null,ytApiReady=false,ytApiCallbacks=[];
+let ytPlayer=null,videoCountdownRaf=0,videoCheersTriggered=false,lastVideoDigit=null,ytApiReady=false,ytApiCallbacks=[],videoCheersTimer=0;
 function addSequenceTimer(fn,ms){const id=setTimeout(fn,ms);sequenceTimers.push(id);return id}
 function clearSequenceTimers(){sequenceTimers.forEach(clearTimeout);sequenceTimers=[]}
 function isLandscapeNow(){return innerWidth>innerHeight||window.matchMedia?.('(orientation: landscape)').matches}
@@ -553,7 +664,7 @@ function loadYouTubeAPI(){
 window.onYouTubeIframeAPIReady=()=>{ytApiReady=true;ytApiCallbacks.splice(0).forEach(fn=>fn())};
 loadYouTubeAPI();
 function resetVideoOverlays(){
-  cancelAnimationFrame(videoCountdownRaf);videoCountdownRaf=0;videoCheersTriggered=false;lastVideoDigit=null;
+  cancelAnimationFrame(videoCountdownRaf);videoCountdownRaf=0;clearTimeout(videoCheersTimer);videoCheersTimer=0;videoCheersTriggered=false;lastVideoDigit=null;
   showStage(videoCountdownOverlay,false);showStage(videoCheersBurst,false);
   videoSparkLayer.innerHTML=''
 }
@@ -564,33 +675,47 @@ function pulseVideoDigit(n){
 }
 function videoSparkBurst(){
   const colors=['#fff','#ffd84e','#ff6ea9','#72ecff','#ff944d','#b98cff'];
-  const count=innerWidth<700?52:78;
+  const count=innerWidth<700?42:64;
+  const land=isLandscapeNow();
+  const ox=land?Math.max(40,innerWidth-Math.min(170,innerWidth*.18)):innerWidth*.5;
+  const oy=land?Math.min(90,innerHeight*.23):innerHeight*.5;
   for(let i=0;i<count;i++){
     const s=document.createElement('i');s.className='video-spark';
-    const a=Math.PI*2*(i/count)+(Math.random()-.5)*.45,d=80+Math.random()*Math.min(innerWidth,innerHeight)*.62;
+    const a=Math.PI*2*(i/count)+(Math.random()-.5)*.52,d=55+Math.random()*Math.min(innerWidth,innerHeight)*(land?.48:.62);
+    s.style.left=ox+'px';s.style.top=oy+'px';
     s.style.setProperty('--dx',(Math.cos(a)*d)+'px');s.style.setProperty('--dy',(Math.sin(a)*d)+'px');s.style.setProperty('--c',colors[i%colors.length]);
     videoSparkLayer.appendChild(s);setTimeout(()=>s.remove(),1800)
   }
 }
 function triggerVideoCheers(){
-  if(videoCheersTriggered)return;videoCheersTriggered=true;
-  showStage(videoCountdownOverlay,false);showStage(videoCheersBurst,true);videoSparkBurst();
-  if(navigator.vibrate)navigator.vibrate([100,45,150,45,220]);
-  setTimeout(videoSparkBurst,300);setTimeout(videoSparkBurst,700);
-  setTimeout(()=>showStage(videoCheersBurst,false),2900)
+  if(videoCheersTriggered)return;
+  videoCheersTriggered=true;
+  pulseVideoDigit(0);
+  showStage(videoCountdownOverlay,true);
+  clearTimeout(videoCheersTimer);
+  videoCheersTimer=setTimeout(()=>{
+    showStage(videoCountdownOverlay,false);
+    videoCheersBurst.classList.remove('show');
+    void videoCheersBurst.offsetWidth;
+    showStage(videoCheersBurst,true);
+    videoSparkBurst();
+    if(navigator.vibrate)navigator.vibrate([100,45,150,45,220]);
+    setTimeout(videoSparkBurst,260);
+    setTimeout(videoSparkBurst,640);
+    videoCheersTimer=setTimeout(()=>showStage(videoCheersBurst,false),3400);
+  },360)
 }
 function syncVideoCountdown(){
   if(!ytPlayer||typeof ytPlayer.getCurrentTime!=='function')return;
   let t=0;try{t=ytPlayer.getCurrentTime()||0}catch(e){}
-  if(t<10.02){
+  if(t<10){
     showStage(videoCountdownOverlay,true);
-    const remain=Math.max(0,Math.ceil(10-t));
+    const remain=Math.max(1,Math.ceil(10-t));
     pulseVideoDigit(remain);
-    if(t>=9.92)triggerVideoCheers()
-  }else{
-    triggerVideoCheers()
+    videoCountdownRaf=requestAnimationFrame(syncVideoCountdown);
+    return
   }
-  if(!videoCheersTriggered)videoCountdownRaf=requestAnimationFrame(syncVideoCountdown)
+  triggerVideoCheers()
 }
 function onYouTubeStateChange(e){
   if(!window.YT)return;
@@ -600,7 +725,15 @@ function onYouTubeStateChange(e){
   }
 }
 function pulseCountdownDigit(n){countdownNumber.textContent=n;countdownNumber.style.animation='none';void countdownNumber.offsetWidth;countdownNumber.style.animation='countPulse .8s cubic-bezier(.15,1.5,.35,1) both';skyFinaleWave();if(navigator.vibrate)navigator.vibrate(n===1?[45,25,85]:[28])}
-function onOrientationCheck(){if(!rotateStage.classList.contains('show'))return;const land=isLandscapeNow();rotateStatusText.textContent=land?'横向きOK！下のボタンを押して！':'横向きを待っています…';showStage(videoReadyPop,land);if(land&&navigator.vibrate)navigator.vibrate([35,30,60])}
+function onOrientationCheck(){
+  if(!rotateStage.classList.contains('show'))return;
+  const land=isLandscapeNow();
+  rotateStatusText.textContent=land?'横向きOK！':'横向きを待っています…';
+  const statusWrap=rotateStatusText.closest('.rotate-status');
+  if(statusWrap)statusWrap.style.display=land?'none':'inline-flex';
+  showStage(videoReadyPop,land);
+  if(land&&navigator.vibrate)navigator.vibrate([35,30,60])
+}
 function startOrientationWatch(){if(orientationWatching)return;orientationWatching=true;window.addEventListener('resize',onOrientationCheck);window.addEventListener('orientationchange',onOrientationCheck);onOrientationCheck()}
 function stopOrientationWatch(){if(!orientationWatching)return;orientationWatching=false;window.removeEventListener('resize',onOrientationCheck);window.removeEventListener('orientationchange',onOrientationCheck)}
 function beginPostCheersSequence(){
