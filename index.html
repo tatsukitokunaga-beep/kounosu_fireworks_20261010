@@ -1018,6 +1018,70 @@ body.showcase-mode .app{
   .showcase-open-sky{min-height:59svh!important;height:59svh!important}
 }
 
+
+/* ===== v49: centered fireworks + true end-of-page gallery ===== */
+html,body{
+  padding-bottom:0!important;
+  margin-bottom:0!important;
+}
+main,.app{
+  margin-bottom:0!important;
+}
+body.showcase-mode,
+body.showcase-mode .app,
+body.showcase-mode main{
+  padding-bottom:0!important;
+  margin-bottom:0!important;
+}
+
+.firework-showcase{
+  box-sizing:border-box!important;
+  height:var(--showcase-vh,100svh)!important;
+  min-height:var(--showcase-vh,100svh)!important;
+  max-height:var(--showcase-vh,100svh)!important;
+  margin:0!important;
+  padding:18px max(18px,env(safe-area-inset-left)) max(14px,env(safe-area-inset-bottom))!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden!important;
+}
+.showcase-topline{
+  flex:0 0 auto!important;
+}
+.showcase-open-sky{
+  flex:1 1 auto!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  padding:14px 0 0!important;
+}
+.showcase-meta{
+  flex:0 0 auto!important;
+  margin-top:10px!important;
+  background:linear-gradient(145deg,rgba(6,14,35,.94),rgba(13,21,47,.92))!important;
+  -webkit-backdrop-filter:blur(16px) saturate(120%)!important;
+  backdrop-filter:blur(16px) saturate(120%)!important;
+}
+.showcase-sky-caption{
+  opacity:.30!important;
+}
+
+/* There must be no flow content after the gallery. */
+.firework-showcase:last-child{
+  margin-bottom:0!important;
+}
+@media(max-width:760px){
+  .firework-showcase{
+    height:var(--showcase-vh,100svh)!important;
+    min-height:var(--showcase-vh,100svh)!important;
+    max-height:var(--showcase-vh,100svh)!important;
+  }
+  .showcase-open-sky{
+    height:auto!important;
+    min-height:0!important;
+  }
+}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
 <canvas id="launchTrails" aria-hidden="true"></canvas><canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
@@ -1519,13 +1583,14 @@ function particleVector(cfg,i,amount,baseAngle){
 function burst(x=Math.random()*ambientVW,y=70+Math.random()*ambientVH*.50,amount=null,style=null){
   style=style||chooseAmbientStyle();const cfg=styleConfig(style),p=cfg.preset,pal=cfg.pal;
   amount=Math.min(amount??cfg.amount,IS_MOBILE?92:128);
+  const showcaseScale=(IS_MOBILE&&ambientShowcaseActive)?.78:1;
   ambientRings.push({x,y,r:3,a:IS_MOBILE?.70:.62,c:pal[1]||pal[0],s:p.base==='willow'?3.3:(IS_MOBILE?3.8:3.4),spokes:true,spokeSeed:Math.random()*Math.PI*2});
   if(ambientRings.length>12)ambientRings.shift();
   const baseAngle=Math.random()*Math.PI*2;
   for(let i=0;i<amount;i++){
     const v=particleVector(cfg,i,amount,baseAngle);const hero=cfg.heroEvery===1||i%cfg.heroEvery===0;
     const life=cfg.life+Math.random()*22+(hero?10:0),c=pal[i%pal.length];
-    particles.push({x,y,vx:Math.cos(v.a)*v.speed*v.xs,vy:Math.sin(v.a)*v.speed*v.ys,life,maxLife:life,c,r:(hero?1.6:1)+Math.random()*(hero?1.1:.75),hero,drag:cfg.drag,grav:cfg.grav+(Math.random()*.005),twinkle:Math.random()*Math.PI*2,crackle:!!cfg.crackle,style:p.base,presetId:style,ox:x,oy:y,tailMax:cfg.tail+(hero?2:0),tail:[{x,y}],ageFrames:0,openFrames:(p.base==='willow'?14:(p.base==='palm'?12:9)),wave:p.wave||0});
+    particles.push({x,y,vx:Math.cos(v.a)*v.speed*v.xs*showcaseScale,vy:Math.sin(v.a)*v.speed*v.ys*showcaseScale,life,maxLife:life,c,r:(hero?1.6:1)+Math.random()*(hero?1.1:.75),hero,drag:cfg.drag,grav:cfg.grav+(Math.random()*.005),twinkle:Math.random()*Math.PI*2,crackle:!!cfg.crackle,style:p.base,presetId:style,ox:x,oy:y,tailMax:cfg.tail+(hero?2:0),tail:[{x,y}],ageFrames:0,openFrames:(p.base==='willow'?14:(p.base==='palm'?12:9)),wave:p.wave||0});
   }
   const cap=IS_MOBILE?440:570;if(particles.length>cap)particles.splice(0,particles.length-cap)
 }
@@ -1654,7 +1719,9 @@ function drawParticle(p){
 function launchAmbientRocket(tx,ty,style){
   const gallery=IS_MOBILE && ambientShowcaseActive;
   const mobileSide=IS_MOBILE ? (tx<ambientVW*.5?-1:1) : 0;
-  const sy=IS_MOBILE?Math.max(160,ambientVH*.86):ambientVH-4;
+  const sy=IS_MOBILE
+    ? Math.max(160,ambientVH*(gallery?.74:.86))
+    : ambientVH-4;
   let sx=tx,c1x=tx,c2x=tx;
 
   if(IS_MOBILE && gallery){
@@ -1964,14 +2031,22 @@ baseRaf=requestAnimationFrame(anim);
 
 function pickMobileBurstY(){
   const h=ambientVH;
+
+  // Gallery: reserve the top for the title and the bottom for the explanation card.
+  // Every showcase firework now opens around the visual center of the clean sky.
+  if(ambientShowcaseActive){
+    return h*(.34+Math.random()*.10);              // 34–44%
+  }
+
   const r=Math.random();
-  // Enough vertical travel to make the rising shell visible.
-  if(r<.38)return h*(.10+Math.random()*.18);      // 10–28%
-  if(r<.86)return h*(.30+Math.random()*.30);      // 30–60%
-  return h*(.62+Math.random()*.16);               // 62–78%
+  if(r<.38)return h*(.10+Math.random()*.18);       // 10–28%
+  if(r<.86)return h*(.30+Math.random()*.30);       // 30–60%
+  return h*(.62+Math.random()*.16);                // 62–78%
 }
 function pickMobileBurstX(){
-  if(ambientShowcaseActive)return ambientVW*(.18+Math.random()*.64);
+  // Gallery fireworks stay around the horizontal center instead of opening at the edges.
+  if(ambientShowcaseActive)return ambientVW*(.38+Math.random()*.24);
+
   const r=Math.random();
   if(r<.42)return 28+Math.random()*46;
   if(r<.84)return ambientVW-(28+Math.random()*46);
@@ -2665,6 +2740,20 @@ setInterval(updateCheersGateUI, 250);
     }
   },{threshold:[0,.05,.25],rootMargin:'0px 0px -4% 0px'});
   io.observe(section);
+})();
+
+
+/* ===== v49: exact visible gallery height on iPhone Chrome / Safari ===== */
+(function syncShowcaseViewportHeight(){
+  const apply=()=>{
+    const h=Math.round(window.visualViewport?.height || window.innerHeight || document.documentElement.clientHeight);
+    document.documentElement.style.setProperty('--showcase-vh',Math.max(1,h)+'px');
+  };
+  apply();
+  window.addEventListener('resize',apply,{passive:true});
+  window.addEventListener('orientationchange',()=>setTimeout(apply,80),{passive:true});
+  window.visualViewport?.addEventListener('resize',apply,{passive:true});
+  window.visualViewport?.addEventListener('scroll',apply,{passive:true});
 })();
 
 </script>
