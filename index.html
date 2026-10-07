@@ -246,7 +246,7 @@ body.celebrating .app *,body.celebrating .bottomnav *{animation-play-state:pause
 .sync-tap{display:block;width:100%;background:#ffe095;color:#241e0c;font-weight:900;font-size:14px;margin:10px 0}.sync-tap:active{transform:scale(.97)}.sync-reset{margin-top:8px;font-size:11px}.sync-detail{display:flex;gap:18px;align-items:center}.sync-detail label{display:flex;align-items:center;gap:8px}
 .sync-readout{font-size:12px;color:#ffebb5;display:block;text-align:center;min-height:24px;margin-top:6px}.sync-fine{font-size:10px!important;color:#9cb0c9!important}
 @media (orientation:portrait){.count-value{font-size:clamp(56px,18vw,88px)}.count-dial{width:92%;padding:12px 3px}.count-label{font-size:10px}.count-under{font-size:9px}.cheers-caption strong{font-size:24px}.cheers-caption.right strong{font-size:25px}.cheers-caption .caption-small,.cheers-caption p{font-size:9px}.cheers-caption.left,.cheers-caption.right{top:30%}.scene-emote{font-size:24px}}
-@media (prefers-reduced-motion:reduce){.prep-icon,.prep-play,.pre-count-orbit:after{animation:none}.scene-emote{display:none}.ticker-inner{animation:none!important}.ticker{overflow-x:auto}}
+@media (prefers-reduced-motion:reduce){.prep-icon,.prep-play,.pre-count-orbit:after{animation:none}.scene-emote{display:none}.ticker-inner{animation:ticker 22s linear infinite!important}.ticker{overflow:hidden}}
 
 /* Final responsive typography and touch targets. */
 .hero h1{font-size:clamp(24px,7.7vw,32px);line-height:1.3;letter-spacing:-.045em}
@@ -262,6 +262,14 @@ body.celebrating .app *,body.celebrating .bottomnav *{animation-play-state:pause
 .map-wrap.map-active #mapInteract{background:linear-gradient(135deg,#40e7ff,#8f78ff);color:#061027}
 .full-map #full{top:max(12px,env(safe-area-inset-top))}.full-map #mapInteract{top:max(64px,calc(env(safe-area-inset-top) + 52px))}
 .full-map .map-loader{max-width:calc(100% - 110px)}
+
+/* v22: ticker is driven by rAF on mobile for reliable endless scrolling */
+.ticker-inner.ticker-js{
+  animation:none!important;
+  transform:translate3d(0,0,0);
+  will-change:transform;
+}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
 <canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
@@ -417,7 +425,7 @@ body.celebrating .app *,body.celebrating .bottomnav *{animation-play-state:pause
 <div class="sync-steps"><button id="syncEarlier" type="button">0.02秒 早く</button><button id="syncLater" type="button">0.02秒 遅く</button></div>
 <input aria-label="演出のタイミング補正（ミリ秒）" id="syncOffset" max="500" min="-500" step="20" type="range"/><output class="sync-readout" id="syncReadout">補正なし</output>
 <button class="sync-tap" id="tapBeat" type="button">曲の拍に合わせて8回タップ</button><output class="sync-readout" id="tapReadout">サビの一定の拍でタップしてください</output>
-<details><summary class="check-note">詳細設定</summary><div class="sync-detail"><label>テンポ<input id="syncBpm" inputmode="decimal" max="200" min="80" step="0.1" type="number" value="158"/></label><label>乾杯地点<input id="syncOrigin" inputmode="decimal" max="120" min="5" step="0.02" type="number" value="10"/></label></div><p class="sync-fine">初期値は従来版の158拍/分・10秒地点です。音声を自動解析した値ではありません。Bluetoothなどの再生環境によって微調整してください。</p><button class="sync-reset" id="resetSync" type="button">初期値に戻す</button></details>
+<details><summary class="check-note">詳細設定</summary><div class="sync-detail"><label>テンポ<input id="syncBpm" inputmode="decimal" max="200" min="80" step="0.1" type="number" value="158"/></label><label>乾杯地点<input id="syncOrigin" inputmode="decimal" max="120" min="5" step="0.02" type="number" value="10"/></label><label>カン音 先行補正<input id="syncSfxLead" inputmode="numeric" max="140" min="0" step="5" type="number" value="55"/></label></div><p class="sync-fine">「カン音 先行補正」はスマホの音声出力遅延を吸収する値です。通常は55ms前後。Bluetooth使用時は端末側の遅延が大きくなる場合があります。</p><button class="sync-reset" id="resetSync" type="button">初期値に戻す</button></details>
 </aside>
 </div>
 </div>
@@ -633,11 +641,11 @@ function stopCelebrationLoops(){celebrationLoops.forEach(id=>clearInterval(id));
    The default 158 BPM / 10s is inherited, NOT an audio measurement.
    YouTube does not expose decoded audio through its iframe API. */
 const $=id=>document.getElementById(id);
-const sceneDefaults={bpm:158,origin:10,offsetMs:0,sfx:true};
+const sceneDefaults={bpm:158,origin:10,offsetMs:0,sfx:true,sfxLeadMs:55};
 let sceneSettings=Object.assign({},sceneDefaults,safeRead('hanabi-scene-v21',{}));
 function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
 function finite(v,f){return Number.isFinite(+v)?+v:f}
-function validateSceneSettings(){sceneSettings.bpm=clamp(finite(sceneSettings.bpm,158),80,200);sceneSettings.origin=clamp(finite(sceneSettings.origin,10),5,120);sceneSettings.offsetMs=clamp(finite(sceneSettings.offsetMs,0),-500,500);sceneSettings.sfx=sceneSettings.sfx!==false}
+function validateSceneSettings(){sceneSettings.bpm=clamp(finite(sceneSettings.bpm,158),80,200);sceneSettings.origin=clamp(finite(sceneSettings.origin,10),5,120);sceneSettings.offsetMs=clamp(finite(sceneSettings.offsetMs,0),-500,500);sceneSettings.sfx=sceneSettings.sfx!==false;sceneSettings.sfxLeadMs=clamp(finite(sceneSettings.sfxLeadMs,55),0,140)}
 validateSceneSettings();
 const motionReduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let phase='closed',session=0,ytPlayer=null,ytLoadPromise=null,ytPrepared=null;
@@ -662,7 +670,7 @@ function alertMovie(text,button='音を出して再生'){$('movieAlertText').tex
 function clearMovieAlert(){$('movieAlert').hidden=true}
 function saveSceneSettings(){validateSceneSettings();safeWrite('hanabi-scene-v21',sceneSettings);updateSettingsUi();cancelScheduledClink();lastSoundIndex=-Infinity;lastSceneT=null;shots.length=0;renderOneFrame(true)}
 function updateSettingsUi(){
-  $('syncOffset').value=sceneSettings.offsetMs;$('syncBpm').value=sceneSettings.bpm;$('syncOrigin').value=sceneSettings.origin;
+  $('syncOffset').value=sceneSettings.offsetMs;$('syncBpm').value=sceneSettings.bpm;$('syncOrigin').value=sceneSettings.origin;$('syncSfxLead').value=sceneSettings.sfxLeadMs;
   $('syncReadout').textContent=sceneSettings.offsetMs===0?'補正なし':`演出を ${Math.abs(sceneSettings.offsetMs/1000).toFixed(2)}秒 ${sceneSettings.offsetMs<0?'早く':'遅く'}`;
   $('toggleSfx').setAttribute('aria-pressed',String(sceneSettings.sfx));$('toggleSfx').textContent=sceneSettings.sfx?'♪':'♪̸';$('toggleSfx').setAttribute('aria-label',sceneSettings.sfx?'グラス効果音をオフにする':'グラス効果音をオンにする');
 }
@@ -730,17 +738,26 @@ function cancelScheduledClink(){
 }
 function scheduleSound(delay,index){
   const ctx=clinkAudio;if(!ctx||ctx.state!=='running'||!sceneSettings.sfx)return;
-  const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=glassBuffer();gain.gain.value=index===0?.6:.36;source.connect(gain);gain.connect(ctx.destination);
-  let when=ctx.currentTime+Math.max(.004,delay-(ctx.outputLatency||0));
-  if(ctx.getOutputTimestamp){const stamp=ctx.getOutputTimestamp();if(stamp.contextTime>0&&stamp.performanceTime>0)when=Math.max(ctx.currentTime+.003,stamp.contextTime+(performance.now()+delay*1000-stamp.performanceTime)/1000)}
-  sounds.add(source);source.onended=()=>{sounds.delete(source);source.disconnect();gain.disconnect()};source.start(when);source.stop(when+.82);soundSource=source
+  const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=glassBuffer();
+  gain.gain.value=index===0?.62:.38;source.connect(gain);gain.connect(ctx.destination);
+  /* Important: do NOT add getOutputTimestamp/outputLatency here.
+     The lead compensation is handled in syncImpactSound. Double-counting it was
+     the main cause of the noticeably late "カンッ" on phones. */
+  const when=ctx.currentTime+Math.max(.002,delay);
+  sounds.add(source);source.onended=()=>{sounds.delete(source);try{source.disconnect();gain.disconnect()}catch(_){}};
+  source.start(when);source.stop(when+.82);soundSource=source
 }
 function syncImpactSound(mediaTime){
   if(playerState!==1||document.hidden||!sceneSettings.sfx)return;
   const b=60/sceneSettings.bpm,o=sceneSettings.origin+sceneSettings.offsetMs/1000;
-  const index=Math.max(0,Math.ceil((mediaTime-o-.04)/(8*b))),target=o+index*8*b,delay=(target-mediaTime)/(clock?.rate||1);
-  if(index===lastSoundIndex||delay<-.045||delay>.14)return;
-  lastSoundIndex=index;scheduleSound(Math.max(0,delay),index)
+  const lead=sceneSettings.sfxLeadMs/1000;
+  const index=Math.max(0,Math.ceil((mediaTime-o-lead-.012)/(8*b)));
+  const target=o+index*8*b;
+  const fireAt=target-lead;
+  const delay=(fireAt-mediaTime)/(clock?.rate||1);
+  if(index===lastSoundIndex||delay<-.025||delay>.095)return;
+  lastSoundIndex=index;
+  scheduleSound(Math.max(0,delay),index)
 }
 function measureScene(){
   const r=$('videoStage').getBoundingClientRect();sceneW=Math.max(1,r.width);sceneH=Math.max(1,r.height);sceneDpr=Math.min(devicePixelRatio||1,IS_MOBILE?1.25:1.75);
@@ -758,8 +775,8 @@ function renderHands(t){
   if(q<0){const e=smooth((q+4)/4);xL=mix(-w*.12,w*.5-1,e);xR=mix(w*1.12,w*.5+1,e);tilt=mix(-24,0,e);y=contactY+Math.sin(e*Math.PI)*h*.065}
   else{
     const c=mod(q,8),beatP=mod(q,1),bob=Math.sin(beatP*Math.PI*2)*h*.009;
-    if(c<.24){const r=Math.sin(c/.24*Math.PI);xL=w*.5-1-r*w*.008;xR=w*.5+1+r*w*.008;tilt=-r*4;y=contactY+r*h*.008}
-    else if(c<2){const e=smooth((c-.24)/1.76);xL=mix(w*.5-1,w*.26,e);xR=mix(w*.5+1,w*.74,e);tilt=mix(0,-11,e);y=contactY+Math.sin(e*Math.PI)*h*.045}
+    if(c<.30){const e=smooth(c/.30);xL=mix(w*.5-1,w*.5-w*.042,e);xR=w-xL;tilt=mix(0,-6,e);y=contactY-h*.014*Math.sin(e*Math.PI*.5)}
+    else if(c<2){const e=smooth((c-.30)/1.70);xL=mix(w*.5-w*.042,w*.26,e);xR=w-xL;tilt=mix(-6,-11,e);y=contactY-h*.014*(1-e)+Math.sin(e*Math.PI)*h*.035}
     else if(c<5.5){xL=w*.26+Math.sin(q*Math.PI/2)*w*.006;xR=w-xL;tilt=-11+Math.sin(beatP*Math.PI*2)*2.5;y=contactY+bob}
     else if(c<6){const e=smooth((c-5.5)/.5);xL=mix(w*.26,w*.225,e);xR=w-xL;tilt=mix(-11,-20,e);y=contactY-h*.035*e}
     else{const e=smooth((c-6)/2);xL=mix(w*.225,w*.5-1,e);xR=mix(w*.775,w*.5+1,e);tilt=mix(-20,0,e);y=contactY-h*.035*(1-e)}
@@ -852,6 +869,7 @@ function showSync(on){$('syncPanel').hidden=!on;$('openSync').setAttribute('aria
 $('openSync').onclick=()=>showSync($('syncPanel').hidden);$('closeSync').onclick=()=>showSync(false);
 $('syncEarlier').onclick=()=>{sceneSettings.offsetMs-=20;saveSceneSettings()};$('syncLater').onclick=()=>{sceneSettings.offsetMs+=20;saveSceneSettings()};$('syncOffset').oninput=e=>{sceneSettings.offsetMs=+e.target.value;saveSceneSettings()};
 $('syncBpm').onchange=e=>{sceneSettings.bpm=+e.target.value;saveSceneSettings()};$('syncOrigin').onchange=e=>{sceneSettings.origin=+e.target.value;saveSceneSettings()};
+$('syncSfxLead').onchange=e=>{sceneSettings.sfxLeadMs=+e.target.value;saveSceneSettings()};
 $('resetSync').onclick=()=>{sceneSettings={...sceneDefaults};taps=[];saveSceneSettings();$('tapReadout').textContent='初期設定に戻しました'};
 $('tapBeat').onclick=()=>{
   if(playerState!==1||!clock){$('tapReadout').textContent='動画を再生しながらタップしてください';return}
@@ -877,4 +895,28 @@ window.HanabiReview={
   getState:()=>({phase,playerState,videoStarted,settings:{...sceneSettings},activeSoundNodes:sounds.size,activeSequenceTimers:sequenceTimers.size,raf:!!showRaf,geometry:window.__hanabiGeometry}),
   poseAt(t){if(resizePending)measureScene();renderScene(t);return window.__hanabiGeometry}
 };
-</script><script>document.addEventListener('visibilitychange',()=>{if(!document.hidden){const t=document.querySelector('.ticker-inner');if(t&&!matchMedia('(prefers-reduced-motion: reduce)').matches)t.style.animationPlayState='running'}});</script></body></html>
+
+function initReliableTicker(){
+  const inner=document.querySelector('.ticker-inner');if(!inner||inner.dataset.jsTicker==='1')return;
+  inner.dataset.jsTicker='1';inner.classList.add('ticker-js');
+  let x=0,raf=0,half=0,lastPaint=performance.now();
+  const speed=44; // px/sec; readable but obviously alive
+  const measure=()=>{half=Math.max(1,inner.scrollWidth/2);x%=half};
+  const frame=now=>{
+    raf=requestAnimationFrame(frame);
+    if(document.hidden){lastPaint=now;return}
+    /* 30fps is enough for the banner and keeps mobile load low. */
+    if(now-lastPaint<30)return;
+    const dt=Math.min(.08,(now-lastPaint)/1000);lastPaint=now;
+    measure();x=(x+speed*dt)%half;
+    inner.style.transform=`translate3d(${-x}px,0,0)`
+  };
+  measure();
+  if('ResizeObserver'in window)new ResizeObserver(measure).observe(inner);
+  window.addEventListener('orientationchange',()=>setTimeout(measure,120),{passive:true});
+  document.addEventListener('visibilitychange',()=>{lastPaint=performance.now();if(!document.hidden)measure()});
+  raf=requestAnimationFrame(frame)
+}
+initReliableTicker();
+
+</script><script>document.addEventListener('visibilitychange',()=>{if(!document.hidden){const t=document.querySelector('.ticker-inner');if(t)t.style.animationPlayState='running'}});</script></body></html>
