@@ -948,7 +948,7 @@ setMode('guide');setMapInteraction(false,true);
 
 // Cheers + fireworks — v10 adaptive mobile renderer
 const cvs=document.getElementById('fireworks'),ctx=cvs.getContext('2d',{alpha:true});
-let particles=[],ambientRings=[],ambientRockets=[],baseRaf=0,baseLast=0,ambientLaunchTimer=0;
+let particles=[],ambientRings=[],ambientRockets=[],ambientShells=[],baseRaf=0,baseLast=0,ambientLaunchTimer=0;
 const IS_MOBILE=matchMedia('(pointer:coarse)').matches||innerWidth<760;
 const REDUCED_MOTION=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const baseDpr=()=>Math.min(devicePixelRatio||1,IS_MOBILE?1.1:1.5);
@@ -1055,7 +1055,9 @@ function burst(x=Math.random()*innerWidth,y=70+Math.random()*innerHeight*.50,amo
       ox:x,oy:y,
       tailMax:cfg.tail+(hero?2:0),
       tail:[{x,y}],
-      radialProgress:0
+      radialProgress:0,
+      ageFrames:0,
+      openFrames:(style==='willow'?14:(style==='palm'?12:9))
     });
   }
 
@@ -1183,47 +1185,140 @@ function drawParticle(p){
   ctx.fill();
 }
 
+
 function launchAmbientRocket(tx,ty,style){
   if(ambientRockets.length>3){
-    // If several are already climbing, preserve the rhythm with a direct pop.
-    burst(tx,ty,null,style);return;
+    // Too many rockets already in flight: use a shorter visible launch instead of skipping the sequence.
+    const sx=Math.max(22,Math.min(innerWidth-22,tx+(Math.random()-.5)*innerWidth*.16));
+    ambientRockets.push({
+      x:sx,y:innerHeight+18,sx,sy:innerHeight+18,tx,ty,style,
+      f:0,frames:IS_MOBILE?18:22,
+      tail:[{x:sx,y:innerHeight+18}],
+      shellR:IS_MOBILE?4.8:4.4
+    });
+    return;
   }
-  const sx=Math.max(24,Math.min(innerWidth-24,tx+(Math.random()-.5)*innerWidth*.24));
+
+  const sx=Math.max(24,Math.min(innerWidth-24,tx+(Math.random()-.5)*innerWidth*.22));
   const sy=innerHeight+24;
-  const frames=IS_MOBILE?25+Math.random()*9:31+Math.random()*10;
+  const frames=IS_MOBILE?30+Math.random()*8:36+Math.random()*10;
+
   ambientRockets.push({
     x:sx,y:sy,sx,sy,tx,ty,style,
     f:0,frames,
-    tail:[{x:sx,y:sy}]
+    tail:[{x:sx,y:sy}],
+    shellR:IS_MOBILE?5.2:4.8
   });
 }
+
 function drawAmbientRocket(r){
   const tail=r.tail;
   ctx.globalCompositeOperation='lighter';
   ctx.lineCap='round';
 
+  // Long launch trail from the ground to the glowing shell.
   for(let i=1;i<tail.length;i++){
     const k=i/(tail.length-1);
-    ctx.globalAlpha=.10+.40*k;
-    ctx.strokeStyle='#ffd970';
-    ctx.lineWidth=.8+2.6*k;
-    ctx.beginPath();ctx.moveTo(tail[i-1].x,tail[i-1].y);ctx.lineTo(tail[i].x,tail[i].y);ctx.stroke();
 
-    if(k>.55){
-      ctx.globalAlpha=.28+.48*k;
-      ctx.strokeStyle='#fff';
-      ctx.lineWidth=.45+1.0*k;
-      ctx.beginPath();ctx.moveTo(tail[i-1].x,tail[i-1].y);ctx.lineTo(tail[i].x,tail[i].y);ctx.stroke();
-    }
+    ctx.globalAlpha=.08+.26*k;
+    ctx.strokeStyle='#ffb84f';
+    ctx.lineWidth=.7+3.8*k;
+    ctx.beginPath();
+    ctx.moveTo(tail[i-1].x,tail[i-1].y);
+    ctx.lineTo(tail[i].x,tail[i].y);
+    ctx.stroke();
+
+    ctx.globalAlpha=.18+.52*k;
+    ctx.strokeStyle='#fff7cf';
+    ctx.lineWidth=.35+1.35*k;
+    ctx.beginPath();
+    ctx.moveTo(tail[i-1].x,tail[i-1].y);
+    ctx.lineTo(tail[i].x,tail[i].y);
+    ctx.stroke();
   }
 
-  ctx.globalAlpha=.76;
-  ctx.fillStyle='#ffd86c';
-  ctx.beginPath();ctx.arc(r.x,r.y,IS_MOBILE?5.5:5,0,Math.PI*2);ctx.fill();
+  // Visible "shell ball" at the head of the launch.
+  const grd=ctx.createRadialGradient(r.x,r.y,0,r.x,r.y,r.shellR*4.5);
+  grd.addColorStop(0,'rgba(255,255,255,1)');
+  grd.addColorStop(.18,'rgba(255,248,190,.98)');
+  grd.addColorStop(.44,'rgba(255,188,74,.70)');
+  grd.addColorStop(1,'rgba(255,140,35,0)');
+  ctx.globalAlpha=.95;
+  ctx.fillStyle=grd;
+  ctx.beginPath();
+  ctx.arc(r.x,r.y,r.shellR*4.5,0,Math.PI*2);
+  ctx.fill();
+
   ctx.globalAlpha=1;
   ctx.fillStyle='#fff';
-  ctx.beginPath();ctx.arc(r.x,r.y,1.5,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();
+  ctx.arc(r.x,r.y,r.shellR*.72,0,Math.PI*2);
+  ctx.fill();
 }
+
+function spawnShellBurst(x,y,style){
+  ambientShells.push({
+    x,y,style,
+    f:0,
+    burstAt:IS_MOBILE?6:7,
+    endAt:IS_MOBILE?15:17,
+    spawned:false
+  });
+  if(ambientShells.length>8)ambientShells.shift();
+}
+
+function drawShellBurst(s){
+  const t=s.f/s.endAt;
+  ctx.globalCompositeOperation='lighter';
+
+  // Phase 1: shell compresses into a bright ball at the top.
+  if(s.f<s.burstAt){
+    const pulse=1+Math.sin((s.f/s.burstAt)*Math.PI)*.55;
+    const r=(IS_MOBILE?7:6)*pulse;
+    const grd=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,r*6);
+    grd.addColorStop(0,'rgba(255,255,255,1)');
+    grd.addColorStop(.16,'rgba(255,249,199,.98)');
+    grd.addColorStop(.42,'rgba(255,199,79,.72)');
+    grd.addColorStop(1,'rgba(255,120,40,0)');
+    ctx.globalAlpha=.98;
+    ctx.fillStyle=grd;
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,r*6,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.globalAlpha=1;
+    ctx.fillStyle='#fff';
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,r*.72,0,Math.PI*2);
+    ctx.fill();
+    return;
+  }
+
+  // Phase 2: the shell "pops" with a white flash + shock ring.
+  const q=(s.f-s.burstAt)/Math.max(1,(s.endAt-s.burstAt));
+  const rr=12+q*(IS_MOBILE?82:96);
+
+  ctx.globalAlpha=(1-q)*.42;
+  ctx.fillStyle='#fff8cf';
+  ctx.beginPath();
+  ctx.arc(s.x,s.y,Math.max(2,18*(1-q)),0,Math.PI*2);
+  ctx.fill();
+
+  ctx.globalAlpha=(1-q)*.85;
+  ctx.strokeStyle='#fff';
+  ctx.lineWidth=2.2*(1-q)+.5;
+  ctx.beginPath();
+  ctx.arc(s.x,s.y,rr,0,Math.PI*2);
+  ctx.stroke();
+
+  ctx.globalAlpha=(1-q)*.42;
+  ctx.strokeStyle='#ffd45e';
+  ctx.lineWidth=5*(1-q)+1;
+  ctx.beginPath();
+  ctx.arc(s.x,s.y,rr*.72,0,Math.PI*2);
+  ctx.stroke();
+}
+
 function anim(ts){
   baseRaf=requestAnimationFrame(anim);
   if(document.hidden||document.body.classList.contains('celebrating'))return;
@@ -1274,27 +1369,58 @@ function anim(ts){
     if(q.a<.035||q.r>(IS_MOBILE?128:145))ambientRings.splice(i,1)
   }
 
-  // Rising launch comets: the upward trail is part of the fireworks now.
+  // ① Shell rises from the bottom and visibly slows near the apex.
   for(let i=ambientRockets.length-1;i>=0;i--){
     const r=ambientRockets[i];
     r.f++;
+
     const t=Math.min(1,r.f/r.frames);
-    const e=1-Math.pow(1-t,2.25);
+    // Cubic ease-out: fast launch, then clear deceleration near the explosion point.
+    const e=1-Math.pow(1-t,3.0);
+
     r.x=r.sx+(r.tx-r.sx)*e;
-    r.y=r.sy+(r.ty-r.sy)*e - Math.sin(t*Math.PI)*innerHeight*.025;
+    r.y=r.sy+(r.ty-r.sy)*e - Math.sin(t*Math.PI)*innerHeight*.018;
+
     r.tail.push({x:r.x,y:r.y});
-    if(r.tail.length>(IS_MOBILE?12:15))r.tail.shift();
+    if(r.tail.length>(IS_MOBILE?18:22))r.tail.shift();
+
     drawAmbientRocket(r);
+
     if(t>=1){
-      burst(r.tx,r.ty,null,r.style);
-      ambientRockets.splice(i,1)
+      // ② At the top: turn the glowing shell into a short "burst preparation" flash.
+      spawnShellBurst(r.tx,r.ty,r.style);
+      ambientRockets.splice(i,1);
     }
   }
 
+  // ③ Shell flashes and cracks before the flower actually opens.
+  for(let i=ambientShells.length-1;i>=0;i--){
+    const s=ambientShells[i];
+    s.f++;
+    drawShellBurst(s);
+
+    // Spawn the firework rays a few frames AFTER the ball reaches the top.
+    // This tiny pause makes "ball -> crack -> flower" readable as one sequence.
+    if(!s.spawned && s.f>=s.burstAt){
+      s.spawned=true;
+      burst(s.x,s.y,null,s.style);
+    }
+
+    if(s.f>=s.endAt)ambientShells.splice(i,1);
+  }
+
+  // ④ Flower opens outward from the exact shell-burst center.
   for(let i=particles.length-1;i>=0;i--){
     const p=particles[i];
-    p.x+=p.vx;p.y+=p.vy;
-    p.vy+=p.grav;
+    p.ageFrames++;
+    // Flower opens progressively from the cracked shell instead of teleporting outward.
+    const open=Math.min(1,p.ageFrames/Math.max(1,p.openFrames));
+    const speedRamp=.22+.78*(1-Math.pow(1-open,2.1));
+
+    p.x+=p.vx*speedRamp;
+    p.y+=p.vy*speedRamp;
+
+    p.vy+=p.grav*(.35+.65*open);
     p.vx*=p.drag;
     p.vy*=.997;
 
@@ -1334,7 +1460,7 @@ function launchAmbientFirework(){
   const y=IS_MOBILE ? pickMobileBurstY() : 70+Math.random()*Math.min(420,innerHeight*.70);
 
   // Most fireworks now visibly rise before they open.
-  if(!REDUCED_MOTION && Math.random()<.82){
+  if(!REDUCED_MOTION && Math.random()<.96){
     launchAmbientRocket(x,y,style)
   }else{
     burst(x,y,null,style)
@@ -1347,7 +1473,7 @@ function launchAmbientFirework(){
       const s2=chooseAmbientStyle();
       const x2=IS_MOBILE?pickMobileBurstX():innerWidth*(.08+Math.random()*.84);
       const y2=IS_MOBILE?pickMobileBurstY():70+Math.random()*Math.min(420,innerHeight*.70);
-      if(!REDUCED_MOTION && Math.random()<.70)launchAmbientRocket(x2,y2,s2);
+      if(!REDUCED_MOTION && Math.random()<.92)launchAmbientRocket(x2,y2,s2);
       else burst(x2,y2,null,s2)
     },220+Math.random()*360)
   }
