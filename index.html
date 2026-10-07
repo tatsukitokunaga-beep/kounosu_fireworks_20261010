@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=yes" />
+<meta name="theme-color" content="#061027" />
+<title>こうのす花火大会 2026｜ふたりの花火ナイト</title>
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<style>
+:root{
+  --bg:#05091b; --bg2:#081631; --card:rgba(10,23,52,.78); --line:rgba(255,255,255,.12);
+  --text:#f9fbff; --muted:#aebbd4; --cyan:#40e7ff; --pink:#ff4fa3; --gold:#ffd45e; --orange:#ff8a3d;
+  --green:#50ef9d; --violet:#8f78ff; --danger:#ff4d65; --shadow:0 22px 70px rgba(0,0,0,.42);
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--bg)}body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:radial-gradient(circle at 50% -10%,#17295f 0,#08132b 34%,#05091b 68%);overflow-x:hidden}
+button,input,select{font:inherit}button{color:inherit}.app{max-width:640px;margin:auto;position:relative;min-height:100vh;padding-bottom:96px}
+#fireworks{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.82}.stars,.aurora{position:fixed;inset:0;pointer-events:none;z-index:0}.stars{background-image:radial-gradient(circle,#fff 0 1px,transparent 1.4px),radial-gradient(circle,#67e8ff 0 1px,transparent 1.4px);background-size:52px 52px,89px 89px;background-position:0 0,18px 31px;opacity:.22;animation:stars 9s linear infinite}.aurora{background:radial-gradient(ellipse at 20% 20%,rgba(79,228,255,.12),transparent 35%),radial-gradient(ellipse at 80% 8%,rgba(255,79,163,.16),transparent 30%),radial-gradient(ellipse at 60% 70%,rgba(143,120,255,.09),transparent 38%);animation:aurora 8s ease-in-out infinite alternate}@keyframes stars{to{transform:translateY(24px)}}@keyframes aurora{to{filter:hue-rotate(16deg);transform:scale(1.04)}}
+main,.bottomnav{position:relative;z-index:2}.hero{padding:18px 16px 6px;position:relative}.hero-card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.16);border-radius:28px;padding:24px 20px 21px;background:linear-gradient(150deg,rgba(12,33,76,.92),rgba(50,12,76,.78));box-shadow:var(--shadow)}.hero-card:after{content:"";position:absolute;width:220px;height:220px;right:-100px;top:-120px;border-radius:50%;background:radial-gradient(circle,rgba(255,213,93,.34),transparent 65%);animation:pulse 3s ease-in-out infinite}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.17em;color:var(--cyan);text-transform:uppercase}.hero h1{font-size:31px;line-height:1.16;margin:8px 0 5px;letter-spacing:-.04em;text-shadow:0 0 20px rgba(64,231,255,.22)}.grad{background:linear-gradient(90deg,#fff 0,#63e9ff 25%,#ff75bb 58%,#ffd75e 100%);-webkit-background-clip:text;background-clip:text;color:transparent}.sub{color:#d6dded;font-size:13px;line-height:1.65}.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(1,8,24,.45);font-size:11px;font-weight:800;backdrop-filter:blur(12px)}
+.countdown{margin:10px 16px 0;display:grid;grid-template-columns:1.05fr .95fr;gap:10px}.glass{background:var(--card);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(16px);box-shadow:0 14px 40px rgba(0,0,0,.18)}.datebox{padding:15px}.datebig{font-size:32px;font-weight:950;letter-spacing:-.04em}.datebox small,.weather small{color:var(--muted)}.weather{padding:15px;background:linear-gradient(155deg,rgba(15,47,74,.84),rgba(10,24,49,.82));position:relative;overflow:hidden}.weather .temp{font-weight:950;font-size:24px}.weather .sun{position:absolute;right:12px;top:12px;font-size:34px;filter:drop-shadow(0 0 14px rgba(255,216,82,.5));animation:float 3s ease-in-out infinite}
+.ticker{margin:12px 0 2px;overflow:hidden;white-space:nowrap;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);background:rgba(6,14,38,.55)}.ticker-inner{display:inline-block;padding:9px 0;font-size:11px;font-weight:850;color:#dce6ff;animation:ticker 24s linear infinite}.ticker span{margin-right:34px}.ticker b{color:var(--gold)}@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.section{padding:16px}.section-title{display:flex;justify-content:space-between;align-items:end;margin-bottom:10px}.section-title h2{font-size:20px;margin:0}.section-title p{font-size:10px;color:var(--muted);margin:0}.timeline{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.timeline::-webkit-scrollbar{display:none}.timecard{min-width:108px;padding:13px;border-radius:18px;background:linear-gradient(160deg,rgba(19,42,84,.88),rgba(10,21,46,.88));border:1px solid rgba(255,255,255,.1)}.timecard strong{font-size:15px}.timecard div{font-size:10px;color:var(--muted);margin-top:4px}.timecard.em{box-shadow:0 0 0 1px rgba(255,212,94,.32),0 0 24px rgba(255,193,65,.12)}
+.progress-card{padding:16px;position:relative;overflow:hidden}.progress-top{display:flex;align-items:center;gap:13px}.ring{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--cyan) var(--p,0%),rgba(255,255,255,.08) 0);position:relative;box-shadow:0 0 26px rgba(64,231,255,.17)}.ring:after{content:"";position:absolute;inset:7px;border-radius:50%;background:#0c1732}.ring span{z-index:1;font-size:14px;font-weight:950}.progress-copy{flex:1}.progress-copy b{font-size:16px}.progress-copy p{margin:4px 0 0;color:var(--muted);font-size:11px;line-height:1.6}.bar{height:9px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--pink),var(--gold));border-radius:inherit;box-shadow:0 0 16px rgba(64,231,255,.35);transition:.35s}
+.cat{margin-top:12px;padding:15px}.cat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}.cat-head b{font-size:14px}.cat-head span{font-size:10px;color:var(--muted)}.item{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:12px 0;border-top:1px solid rgba(255,255,255,.075)}.item:first-of-type{border-top:0}.check{width:24px;height:24px;border-radius:8px;border:1.5px solid rgba(255,255,255,.3);display:grid;place-items:center;background:rgba(255,255,255,.02);cursor:pointer;transition:.25s}.check.done{border-color:var(--cyan);background:linear-gradient(135deg,rgba(64,231,255,.26),rgba(255,79,163,.20));box-shadow:0 0 22px rgba(64,231,255,.2)}.check.done:before{content:"✓";font-weight:950}.item.done .name{text-decoration:line-through;color:#8290ad}.name{font-size:13px;font-weight:750}.meta{font-size:10px;color:var(--muted);margin-top:3px}.qty{padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.06);font-size:10px;color:#cbd6ea}.cat.red{border-color:rgba(255,77,101,.2)}.cat.orange{border-color:rgba(255,138,61,.22)}.cat.blue{border-color:rgba(64,231,255,.2)}.cat.purple{border-color:rgba(143,120,255,.24)}
+.map-shell{padding:0;overflow:hidden}.map-top{padding:14px 14px 10px;display:flex;gap:8px;align-items:center;justify-content:space-between}.seg{display:flex;background:rgba(255,255,255,.06);border-radius:13px;padding:3px}.seg button{border:0;background:transparent;border-radius:10px;padding:8px 10px;font-size:10px;font-weight:900}.seg button.on{background:linear-gradient(135deg,#134063,#4c2269);box-shadow:0 5px 18px rgba(0,0,0,.25)}.mapnote{font-size:9px;color:var(--muted)}#map{height:520px;background:#0c1732}.leaflet-container{font-family:inherit}.leaflet-control-zoom a{background:#071326!important;color:#fff!important;border-color:rgba(255,255,255,.12)!important}.leaflet-control-attribution{font-size:8px!important;background:rgba(2,8,20,.7)!important;color:#b8c4d8!important}.leaflet-control-attribution a{color:#76e9ff!important}.custom-pin{filter:drop-shadow(0 8px 10px rgba(0,0,0,.45))}.pulse-marker{width:22px;height:22px;border-radius:50%;background:#39a8ff;border:3px solid #fff;box-shadow:0 0 0 0 rgba(57,168,255,.6);animation:gps 1.8s infinite}@keyframes gps{70%{box-shadow:0 0 0 18px rgba(57,168,255,0)}100%{box-shadow:0 0 0 0 rgba(57,168,255,0)}}.map-buttons{position:absolute;right:10px;bottom:16px;z-index:500;display:flex;flex-direction:column;gap:8px}.map-buttons button{width:44px;height:44px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(4,12,31,.85);backdrop-filter:blur(12px);box-shadow:0 10px 24px rgba(0,0,0,.28);font-size:18px}.map-info{padding:12px 14px;background:linear-gradient(180deg,rgba(8,18,43,.95),rgba(6,12,30,.98));display:grid;grid-template-columns:1fr 1fr;gap:8px}.infobox{padding:11px;border-radius:15px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}.infobox small{color:var(--muted);display:block}.infobox b{font-size:13px;display:block;margin-top:4px}.gps-status{grid-column:1/-1;font-size:10px;color:#cdd9ed}.map-wrap{position:relative}.navlink{grid-column:1/-1;display:flex;gap:8px}.navlink a,.navlink button{flex:1;text-align:center;text-decoration:none;padding:11px 8px;border-radius:13px;border:1px solid rgba(255,255,255,.11);background:linear-gradient(135deg,rgba(64,231,255,.16),rgba(143,120,255,.15));color:#fff;font-size:11px;font-weight:900}
+.toast{position:fixed;left:50%;bottom:92px;transform:translate(-50%,18px);opacity:0;z-index:3000;padding:10px 15px;border-radius:999px;background:rgba(3,11,28,.92);border:1px solid rgba(255,255,255,.13);box-shadow:var(--shadow);font-size:11px;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
+.bottomnav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(640px,100%);padding:7px 8px calc(7px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(3,1fr);background:rgba(4,10,26,.86);backdrop-filter:blur(22px);border-top:1px solid rgba(255,255,255,.12);z-index:1200}.bottomnav button{border:0;background:transparent;border-radius:14px;padding:8px 4px;color:#8796b3;font-size:10px;font-weight:900}.bottomnav button i{display:block;font-style:normal;font-size:20px;margin-bottom:2px}.bottomnav button.on{color:#fff;background:linear-gradient(135deg,rgba(64,231,255,.12),rgba(255,79,163,.1))}.cta{margin:0 16px 8px;padding:14px;border-radius:20px;background:linear-gradient(135deg,rgba(255,79,163,.19),rgba(255,212,94,.13));border:1px solid rgba(255,255,255,.12);text-align:center}.cta button{width:100%;border:0;border-radius:14px;padding:12px;background:linear-gradient(90deg,#ff4fa3,#ff8a3d,#ffd45e);font-weight:950;color:#190918;box-shadow:0 12px 34px rgba(255,79,163,.2)}
+@keyframes pulse{50%{transform:scale(1.08);opacity:.7}}@keyframes float{50%{transform:translateY(-5px) rotate(6deg)}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}#fireworks{display:none}}
+
+/* Robust live-map layer + instant visual fallback */
+.map-wrap{position:relative;height:min(70vh,620px);min-height:460px;background:#071329;overflow:hidden}
+#map{position:absolute;inset:0;height:100%;z-index:2;background:#0c1732;opacity:0;transition:opacity .35s ease}
+#map.ready{opacity:1}
+.map-fallback{position:absolute;inset:0;z-index:1;background:#0a1830;overflow:hidden;touch-action:none}
+.map-fallback img{position:absolute;left:50%;top:50%;width:100%;height:auto;max-width:none;transform:translate(-50%,-50%) scale(1);transform-origin:center;user-select:none;-webkit-user-drag:none;will-change:transform}
+.map-loader{position:absolute;left:50%;top:18px;transform:translateX(-50%);z-index:550;padding:9px 13px;border-radius:999px;background:rgba(4,12,31,.86);border:1px solid rgba(255,255,255,.14);font-size:10px;font-weight:900;backdrop-filter:blur(12px);box-shadow:0 10px 28px rgba(0,0,0,.3)}
+.map-loader.ok{background:rgba(17,87,70,.88)}.map-loader.warn{background:rgba(104,58,19,.9)}
+.map-buttons{z-index:600}.map-mode-badge{position:absolute;left:10px;bottom:14px;z-index:600;padding:7px 10px;border-radius:999px;background:rgba(2,9,24,.82);border:1px solid rgba(255,255,255,.12);font-size:9px;color:#dce6ff;backdrop-filter:blur(10px)}
+.map-wrap:fullscreen{height:100vh;width:100vw}.map-wrap:fullscreen #map,.map-wrap:fullscreen .map-fallback{height:100vh}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./config.js"></script></head>
+<body>
+<canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
+<div class="app">
+<main>
+<section id="home" class="hero">
+  <div class="hero-card">
+    <div class="eyebrow">KOUNOSU HANABI NIGHT 2026</div>
+    <h1><span class="grad">こうのす花火大会</span><br>ふたりの花火ナイト</h1>
+    <div class="sub">ポピー会場で、お酒・おつまみ・屋台飯をゆったり楽しみながら花火を見るための当日専用サイト！</div>
+    <div class="hero-badges"><span class="pill">🎆 10/10 SAT</span><span class="pill">📍 ポピー会場</span><span class="pill">🍺 買い出しあり</span><span class="pill">📱 2人用</span></div>
+  </div>
+</section>
+<div class="countdown">
+  <div class="glass datebox"><small>開催日</small><div class="datebig">10.10</div><small>15時ごろ現地入り想定</small></div>
+  <div class="glass weather"><span class="sun">☀️</span><small>鴻巣の予報</small><div class="temp" id="weatherTemp">26℃</div><small id="weatherSub">夕方は20℃前後</small></div>
+</div>
+<div class="ticker"><div class="ticker-inner"><span>🍺 <b>お酒は事前に確保</b></span><span>🍢 屋台飯は現地で楽しむ</span><span>🛩 16:00 ブルーインパルス</span><span>✨ 17:45ごろ ドローン</span><span>🎆 花火本番</span><span>🍺 <b>お酒は事前に確保</b></span><span>🍢 屋台飯は現地で楽しむ</span><span>🛩 16:00 ブルーインパルス</span><span>✨ 17:45ごろ ドローン</span><span>🎆 花火本番</span></div></div>
+<section class="section">
+  <div class="section-title"><h2>当日の流れ</h2><p>横にスワイプ</p></div>
+  <div class="timeline">
+    <div class="timecard"><strong>15:00</strong><div>鴻巣方面へ</div></div><div class="timecard"><strong>15:05</strong><div>お酒・飲み物を買う</div></div><div class="timecard"><strong>15:35</strong><div>ポピー会場着</div></div><div class="timecard em"><strong>16:00</strong><div>ブルーインパルス</div></div><div class="timecard"><strong>17:45</strong><div>ドローンショー</div></div><div class="timecard em"><strong>17:30〜</strong><div>花火を楽しむ</div></div>
+  </div>
+</section>
+<section id="check" class="section">
+  <div class="section-title"><h2>準備チェック</h2><p>タップで完了</p></div>
+  <div class="glass progress-card"><div class="progress-top"><div class="ring" id="ring"><span id="pct">0%</span></div><div class="progress-copy"><b id="doneCount">0 / 0 完了</b><p>2人で持ち物を確認！チェック状態はこの端末に保存されます！</p></div></div><div class="bar"><i id="bar"></i></div></div>
+  <div class="glass cat red" data-cat="持ち物"><div class="cat-head"><b>🎒 最優先で持つもの</b><span>快適さの土台</span></div></div>
+  <div class="glass cat orange" data-cat="お酒"><div class="cat-head"><b>🍺 お酒・飲み物</b><span>事前調達推奨</span></div></div>
+  <div class="glass cat blue" data-cat="おつまみ"><div class="cat-head"><b>🧀 おつまみ・消耗品</b><span>屋台と併用</span></div></div>
+  <div class="glass cat purple" data-cat="服装"><div class="cat-head"><b>🧥 服装・夜対策</b><span>河川敷向け</span></div></div>
+</section>
+<div class="cta"><div style="font-size:12px;font-weight:900;margin-bottom:8px">全部そろったら…</div><button id="cheers">🥂 乾杯モードを起動！</button></div>
+<section id="mapsec" class="section">
+  <div class="section-title"><h2>ライブ会場MAP</h2><p>ピンチ拡大・現在地対応</p></div>
+  <div class="glass map-shell">
+    <div class="map-top"><div class="seg"><button id="realBtn" class="on">リアル地図</button><button id="guideBtn">会場ガイド</button></div><div class="mapnote" id="mapModeNote">GPSはリアル地図が正確です</div></div>
+    <div class="map-wrap" id="mapWrap">
+      <div class="map-fallback" id="mapFallback"><img id="fallbackImg" src="assets/poppy-map.png" alt="ポピー会場ガイドマップ"></div>
+      <div id="map"></div>
+      <div class="map-loader" id="mapLoader">リアル地図を読み込み中…</div>
+      <div class="map-mode-badge" id="mapBadge">会場ガイドを表示中</div>
+      <div class="map-buttons"><button id="locate" aria-label="現在地">◎</button><button id="best" aria-label="おすすめ位置">①</button><button id="venue" aria-label="会場全体">🏮</button><button id="full" aria-label="全画面">⛶</button></div>
+    </div>
+    <div class="map-info">
+      <div class="infobox"><small>現在地 → 会場①</small><b id="distance">位置情報をONにすると表示</b></div>
+      <div class="infobox"><small>目安</small><b id="walktime">GPS待ち</b></div>
+      <div class="gps-status" id="gpsStatus">「◎」を押すと位置情報の許可を確認します！</div>
+      <div class="navlink"><a id="gmaps" href="https://www.google.com/maps/dir/?api=1&destination=36.0533%2C139.5012&travelmode=walking" target="_blank" rel="noopener">徒歩ナビを開く</a><button id="share">このページを共有</button></div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:var(--muted);line-height:1.7;margin-top:8px">※会場ガイド画像上のGPS位置・会場内ピンは目安です！正確な現在地は「リアル地図」で確認し、当日の規制・係員誘導を優先してください！</div>
+</section>
+</main>
+<nav class="bottomnav"><button class="on" data-go="home"><i>🎆</i>TOP</button><button data-go="check"><i>✅</i>準備</button><button data-go="mapsec"><i>🗺️</i>MAP</button></nav>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const items={
+ '持ち物':[
+  ['厚手のレジャーシート','2人なら大きめ','1枚'],['折りたたみクッション','長時間座るので重要','2個'],['モバイルバッテリー','写真・地図・LINE対策','1台'],['現金','屋台・トイレ用に小銭も','必須'],['ウェットティッシュ','屋台飯に便利','1個'],['ゴミ袋','持ち帰り＋荷物の防水','2〜3枚']
+ ],
+ 'お酒':[
+  ['ビール','好きな本数を事前購入','2〜4本'],['ハイボール / チューハイ','気分で追加','2〜4本'],['水・お茶','お酒だけにしない','各1'],['保冷バッグ','小さめでOK','1個'],['保冷剤 / 凍らせた水','夕方まで冷たく','1〜2個'],['紙コップ','必要なら','2〜4個']
+ ],
+ 'おつまみ':[
+  ['枝豆 / チーズ','軽くつまめる物','適量'],['ナッツ / 乾き物','持ち歩きやすい','1袋'],['割り箸','屋台で不足した時用','2膳'],['おしぼり','手拭き用','2枚'],['屋台飯は現地で選ぶ','焼きそば・焼鳥・唐揚げなど','楽しむ']
+ ],
+ '服装':[
+  ['薄手の羽織り','夜は気温が下がる','各1'],['ブランケット','脚が冷えた時用','1枚'],['汚れてもよいスニーカー','河川敷・芝対策','必須'],['帽子 / 日焼け止め','15時台の日差し対策','任意']
+ ]
+};
+const ROOM=new URLSearchParams(location.search).get('room')||'hanabi-2026';
+const state=JSON.parse(localStorage.getItem('kounosu2026-check-'+ROOM)||'{}');
+let sb=null;
+if(window.SUPABASE_URL&&window.SUPABASE_ANON_KEY&&window.supabase){try{sb=window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY)}catch(e){}}
+const cats=[...document.querySelectorAll('.cat')];let allKeys=[];
+for(const cat of cats){const name=cat.dataset.cat;items[name].forEach((it,idx)=>{const key=name+'-'+idx;allKeys.push(key);const row=document.createElement('div');row.className='item'+(state[key]?' done':'');row.innerHTML=`<button class="check ${state[key]?'done':''}" data-k="${key}" aria-label="チェック"></button><div><div class="name">${it[0]}</div><div class="meta">${it[1]}</div></div><span class="qty">${it[2]}</span>`;cat.appendChild(row)})}
+function progress(){const done=allKeys.filter(k=>state[k]).length,p=Math.round(done/allKeys.length*100);document.getElementById('pct').textContent=p+'%';document.getElementById('doneCount').textContent=`${done} / ${allKeys.length} 完了`;document.getElementById('ring').style.setProperty('--p',p+'%');document.getElementById('bar').style.width=p+'%'}progress();
+document.addEventListener('click',e=>{const b=e.target.closest('.check');if(!b)return;const k=b.dataset.k;state[k]=!state[k];localStorage.setItem('kounosu2026-check-'+ROOM,JSON.stringify(state)); if(sb) syncOne(k,state[k]);b.classList.toggle('done',state[k]);b.closest('.item').classList.toggle('done',state[k]);progress();burst(b.getBoundingClientRect().left+12,b.getBoundingClientRect().top+12);toast(state[k]?'準備完了！ ✨':'チェックを戻しました')});
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>el.classList.remove('show'),1800)}
+for(const b of document.querySelectorAll('.bottomnav button'))b.onclick=()=>{document.querySelectorAll('.bottomnav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById(b.dataset.go).scrollIntoView({behavior:'smooth',block:'start'})};
+
+// Optional Supabase realtime sync. If config.js is blank, localStorage is used only.
+async function syncOne(k,v){try{await sb.from('hanabi_checks').upsert({room:ROOM,item_key:k,done:v,updated_at:new Date().toISOString()},{onConflict:'room,item_key'})}catch(e){}}
+async function initSync(){if(!sb)return;try{const {data}=await sb.from('hanabi_checks').select('item_key,done').eq('room',ROOM);for(const r of (data||[])){state[r.item_key]=r.done}localStorage.setItem('kounosu2026-check-'+ROOM,JSON.stringify(state));document.querySelectorAll('.check').forEach(b=>{const v=!!state[b.dataset.k];b.classList.toggle('done',v);b.closest('.item').classList.toggle('done',v)});progress();sb.channel('checks-'+ROOM).on('postgres_changes',{event:'*',schema:'public',table:'hanabi_checks',filter:'room=eq.'+ROOM},payload=>{const r=payload.new;if(!r||!r.item_key)return;state[r.item_key]=r.done;localStorage.setItem('kounosu2026-check-'+ROOM,JSON.stringify(state));const b=document.querySelector(`.check[data-k="${CSS.escape(r.item_key)}"]`);if(b){b.classList.toggle('done',r.done);b.closest('.item').classList.toggle('done',r.done);progress()}}).subscribe()}catch(e){}}
+initSync();
+// Weather: Open-Meteo, fallback to current forecast copy.
+(async()=>{try{const u='https://api.open-meteo.com/v1/forecast?latitude=36.0592&longitude=139.5096&hourly=temperature_2m,precipitation_probability&timezone=Asia%2FTokyo&start_date=2026-10-10&end_date=2026-10-10';const j=await fetch(u).then(r=>r.json());const times=j.hourly.time,temps=j.hourly.temperature_2m,pp=j.hourly.precipitation_probability;const i15=times.findIndex(x=>x.endsWith('15:00')),i20=times.findIndex(x=>x.endsWith('20:00'));if(i15>=0){document.getElementById('weatherTemp').textContent=Math.round(temps[i15])+'℃';document.getElementById('weatherSub').textContent=`20時 ${Math.round(temps[i20])}℃ / 降水 ${pp[i15]}%`}}catch(e){}})();
+
+// Live map — robust loader with instant fallback image
+const station=[36.059225,139.509647], venueCenter=[36.0539,139.50055], bestSpot=[36.05325,139.50115], bridgeEast=[36.0520811,139.5054076];
+let map=null,osm=null,currentMarker=null,accuracyCircle=null,watchId=null,routeLine=null;
+const mapEl=document.getElementById('map'), fallback=document.getElementById('mapFallback'), fallbackImg=document.getElementById('fallbackImg');
+const loader=document.getElementById('mapLoader'), badge=document.getElementById('mapBadge');
+let currentMode='guide';
+
+// Pure-JS pinch / drag zoom for the guide image, so the MAP is usable even if the map library is blocked.
+let gScale=1,gX=0,gY=0,startX=0,startY=0,startGX=0,startGY=0,pinch0=0,scale0=1,pointers=new Map();
+function applyGuide(){fallbackImg.style.transform=`translate(calc(-50% + ${gX}px),calc(-50% + ${gY}px)) scale(${gScale})`}
+fallback.addEventListener('pointerdown',e=>{fallback.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===1){startX=e.clientX;startY=e.clientY;startGX=gX;startGY=gY}else if(pointers.size===2){const a=[...pointers.values()];pinch0=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);scale0=gScale}});
+fallback.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===1){gX=startGX+(e.clientX-startX);gY=startGY+(e.clientY-startY)}else if(pointers.size===2){const a=[...pointers.values()];const d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);gScale=Math.max(1,Math.min(4.5,scale0*(d/(pinch0||d))))}applyGuide()});
+['pointerup','pointercancel'].forEach(ev=>fallback.addEventListener(ev,e=>{pointers.delete(e.pointerId)}));
+fallback.addEventListener('dblclick',()=>{gScale=Math.min(4.5,gScale*1.45);applyGuide()});
+
+function setMode(mode){currentMode=mode;const real=mode==='real';document.getElementById('realBtn').classList.toggle('on',real);document.getElementById('guideBtn').classList.toggle('on',!real);document.getElementById('mapModeNote').textContent=real?'GPSはリアル地図が正確です':'会場ガイドは指で拡大・移動できます';badge.textContent=real?'リアル地図 / GPS':'会場ガイド / ピンチズーム';fallback.style.display=real&&map?'none':'block';mapEl.style.display=real?'block':'none';if(real&&map){mapEl.classList.add('ready');setTimeout(()=>map.invalidateSize(),80)}else if(!real){mapEl.classList.remove('ready')}}
+
+document.getElementById('realBtn').onclick=()=>{if(map){setMode('real')}else{loader.textContent='リアル地図を再読み込み中…';loadLeaflet(true)}};
+document.getElementById('guideBtn').onclick=()=>setMode('guide');
+
+function loadCSS(href){return new Promise(res=>{if([...document.styleSheets].some(s=>s.href&&s.href.includes('leaflet')))return res();const l=document.createElement('link');l.rel='stylesheet';l.href=href;l.onload=res;l.onerror=res;document.head.appendChild(l)})}
+function loadScript(src,ms=7000){return new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=src;sc.async=true;sc.onload=res;sc.onerror=rej;document.head.appendChild(sc);setTimeout(()=>rej(new Error('timeout')),ms)})}
+async function loadLeaflet(force=false){if(window.L){initLeaflet();return}loader.className='map-loader';loader.textContent='リアル地図を読み込み中…';await loadCSS('https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css');const urls=['https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js','https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'];for(const u of urls){try{await loadScript(u);if(window.L)break}catch(e){}}if(window.L){initLeaflet();if(force)setMode('real')}else{loader.className='map-loader warn';loader.textContent='リアル地図は公開URLで利用できます / 会場ガイドは操作可能';setMode('guide')}}
+
+function pinIcon(label,color='#ff9d32'){return L.divIcon({className:'custom-pin',html:`<div style="width:34px;height:34px;border-radius:13px 13px 13px 3px;transform:rotate(-45deg);background:${color};border:3px solid #fff;box-shadow:0 7px 18px rgba(0,0,0,.35);display:grid;place-items:center"><b style="transform:rotate(45deg);color:#111;font-size:14px">${label}</b></div>`,iconSize:[34,34],iconAnchor:[17,32]})}
+function initLeaflet(){if(map||!window.L)return;map=L.map('map',{zoomControl:true,minZoom:12,maxZoom:20,tap:true,preferCanvas:true}).setView(venueCenter,15.4);osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'© OpenStreetMap contributors',crossOrigin:true}).addTo(map);osm.on('load',()=>{loader.className='map-loader ok';loader.textContent='リアル地図 読み込み完了';setTimeout(()=>loader.style.opacity='0',1200)});L.marker(station,{icon:pinIcon('🚉','#4bd4ff')}).addTo(map).bindPopup('<b>JR鴻巣駅 西口</b><br>ポピー会場への出発地点');L.marker(bestSpot,{icon:pinIcon('①','#ffd45e')}).addTo(map).bindPopup('<b>おすすめ①</b><br>会場内のベスト候補地点（目安）');L.marker(venueCenter,{icon:pinIcon('🏮','#ff64ae')}).addTo(map).bindPopup('<b>ポピー会場</b><br>無料観覧エリア');L.marker(bridgeEast,{icon:pinIcon('×','#ff526a')}).addTo(map).bindPopup('<b>御成橋付近</b><br>橋上・土手上での観覧は不可');routeLine=L.polyline([station,[36.0588,139.5070],[36.0584,139.5037],[36.0577,139.5012],[36.0557,139.5011],venueCenter],{color:'#ff4f91',weight:5,dashArray:'9 9',opacity:.9}).addTo(map).bindPopup('鴻巣駅からの概略徒歩ルート（現地誘導優先）');mapEl.classList.add('ready');if(currentMode==='real')setMode('real')}
+
+function hav(a,b){const R=6371000,rad=x=>x*Math.PI/180,d1=rad(b[0]-a[0]),d2=rad(b[1]-a[1]),q=Math.sin(d1/2)**2+Math.cos(rad(a[0]))*Math.cos(rad(b[0]))*Math.sin(d2/2)**2;return 2*R*Math.asin(Math.sqrt(q))}
+function startLocation(){if(!navigator.geolocation){document.getElementById('gpsStatus').textContent='この端末では位置情報を利用できません';return}if(!map){document.getElementById('gpsStatus').textContent='リアル地図を準備しています…';loadLeaflet(true).then(()=>setTimeout(startLocation,700));return}setMode('real');document.getElementById('gpsStatus').textContent='現在地を取得中…';if(watchId)navigator.geolocation.clearWatch(watchId);watchId=navigator.geolocation.watchPosition(pos=>{const p=[pos.coords.latitude,pos.coords.longitude];if(currentMarker)map.removeLayer(currentMarker);if(accuracyCircle)map.removeLayer(accuracyCircle);currentMarker=L.marker(p,{icon:L.divIcon({className:'',html:'<div class="pulse-marker"></div>',iconSize:[22,22],iconAnchor:[11,11]})}).addTo(map).bindPopup('現在地');accuracyCircle=L.circle(p,{radius:pos.coords.accuracy,color:'#42b5ff',weight:1,fillOpacity:.07}).addTo(map);const d=hav(p,bestSpot);document.getElementById('distance').textContent=d<1000?`${Math.round(d)} m（直線）`:`${(d/1000).toFixed(1)} km（直線）`;document.getElementById('walktime').textContent=`徒歩 約${Math.max(1,Math.round(d*1.25/75))}分目安`;document.getElementById('gpsStatus').textContent=`現在地更新中 / 精度 約${Math.round(pos.coords.accuracy)}m`;document.getElementById('gmaps').href=`https://www.google.com/maps/dir/?api=1&origin=${p[0]},${p[1]}&destination=${bestSpot[0]},${bestSpot[1]}&travelmode=walking`;map.flyTo(p,17,{duration:.7})},err=>{document.getElementById('gpsStatus').textContent='位置情報を取得できませんでした：'+({1:'許可が必要です',2:'現在地を取得できません',3:'タイムアウト'}[err.code]||err.message)},{enableHighAccuracy:true,maximumAge:4000,timeout:12000})}
+
+document.getElementById('locate').onclick=startLocation;
+document.getElementById('best').onclick=()=>{if(map){setMode('real');map.flyTo(bestSpot,18,{duration:.8})}else{gScale=2.1;gX=-20;gY=65;applyGuide()}};
+document.getElementById('venue').onclick=()=>{if(map){setMode('real');map.fitBounds([[36.0514,139.4978],[36.0563,139.5030]],{padding:[25,25]})}else{gScale=1;gX=gY=0;applyGuide()}};
+document.getElementById('full').onclick=async()=>{const el=document.getElementById('mapWrap');try{if(!document.fullscreenElement)await el.requestFullscreen();else await document.exitFullscreen();setTimeout(()=>map&&map.invalidateSize(),250)}catch(e){toast('全画面表示に対応していません')}};
+document.getElementById('share').onclick=async()=>{const data={title:document.title,text:'こうのす花火大会の2人用サイト！',url:location.href};try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(location.href);toast('URLをコピーしました！')}}catch(e){}};
+
+// Start with the preferred illustrated guide visible immediately, then pre-load the live map in the background.
+setMode('guide');loadLeaflet(false);
+
+// Cheers + fireworks
+const cvs=document.getElementById('fireworks'),ctx=cvs.getContext('2d');let particles=[];function resize(){cvs.width=innerWidth*devicePixelRatio;cvs.height=innerHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}addEventListener('resize',resize);resize();function burst(x=Math.random()*innerWidth,y=80+Math.random()*innerHeight*.55,amount=44){const colors=['#40e7ff','#ff4fa3','#ffd45e','#ff8a3d','#8f78ff','#50ef9d'];for(let i=0;i<amount;i++){const a=Math.random()*Math.PI*2,s=1.4+Math.random()*4.3;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:70+Math.random()*35,c:colors[i%colors.length],r:1+Math.random()*2.3})}}function anim(){ctx.clearRect(0,0,innerWidth,innerHeight);for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.025;p.vx*=.992;p.life--;ctx.globalAlpha=Math.max(0,p.life/90);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();if(p.life<=0)particles.splice(i,1)}ctx.globalAlpha=1;requestAnimationFrame(anim)}anim();setInterval(()=>{if(document.visibilityState==='visible'&&Math.random()>.35)burst(Math.random()*innerWidth,80+Math.random()*180,22)},2600);document.getElementById('cheers').onclick=()=>{toast('🥂 乾杯！最高の花火ナイトに！');for(let i=0;i<7;i++)setTimeout(()=>burst(Math.random()*innerWidth,80+Math.random()*innerHeight*.5,65),i*180)};
+</script>
+</body></html>
