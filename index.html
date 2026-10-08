@@ -1133,6 +1133,65 @@ body.showcase-mode #fireworks{
   filter:saturate(1.32) brightness(1.10) contrast(1.04);
 }
 
+
+/* ===== v51: remove the actual bottom gap =====
+   Do NOT force the final gallery to 100vh/lvh/dvh.
+   The section height is now exactly: heading + sky + metadata card.
+*/
+html,body{
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+  overscroll-behavior-y:none!important;
+}
+.app,main{
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+.firework-showcase{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:18px max(18px,env(safe-area-inset-left)) 0!important;
+  display:block!important;
+  overflow:hidden!important;
+  border-bottom:0!important;
+}
+.showcase-topline{
+  margin:0!important;
+}
+.showcase-open-sky{
+  display:flex!important;
+  position:relative!important;
+  flex:none!important;
+  height:clamp(430px,58svh,560px)!important;
+  min-height:clamp(430px,58svh,560px)!important;
+  max-height:560px!important;
+  padding:14px 0 0!important;
+  margin:0!important;
+}
+.showcase-meta{
+  display:block!important;
+  margin:0!important;
+  border-bottom-left-radius:0!important;
+  border-bottom-right-radius:0!important;
+}
+main > .firework-showcase:last-child{
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+body.showcase-mode .app,
+body.showcase-mode main{
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+@media(max-width:430px){
+  .showcase-open-sky{
+    height:clamp(420px,57svh,540px)!important;
+    min-height:clamp(420px,57svh,540px)!important;
+  }
+}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
 <canvas id="launchTrails" aria-hidden="true"></canvas><canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
@@ -1226,7 +1285,7 @@ body.showcase-mode #fireworks{
 <div style="font-size:10px;color:var(--muted);line-height:1.7;margin-top:8px">※ガイド画像には現在地を重ねません。①は参考候補で、実際の観覧区画や混雑は現地で確認してください。GPSには端末の測位誤差があります。</div>
 </section>
 
-<footer class="source-links"><b>出発前と帰りにチェック</b><br/><a href="https://kounosuhanabi.com/areainfo/event_poppy.html" rel="noopener noreferrer" target="_blank">公式会場案内</a><a href="https://kounosuhanabi.com/access/accsess-train.html" rel="noopener noreferrer" target="_blank">公式の帰り方</a><a href="https://tenki.jp/forecast/3/14/4320/11217/" rel="noopener noreferrer" target="_blank">鴻巣の天気</a><br/><span class="revision">v48 / 2026-10-08 花火ギャラリー最終調整</span></footer>
+<footer class="source-links"><b>出発前と帰りにチェック</b><br/><a href="https://kounosuhanabi.com/areainfo/event_poppy.html" rel="noopener noreferrer" target="_blank">公式会場案内</a><a href="https://kounosuhanabi.com/access/accsess-train.html" rel="noopener noreferrer" target="_blank">公式の帰り方</a><a href="https://tenki.jp/forecast/3/14/4320/11217/" rel="noopener noreferrer" target="_blank">鴻巣の天気</a><br/><span class="revision">v51 / 2026-10-08 最終余白修正版</span></footer>
 <section class="firework-showcase" id="fireworkShowcase" aria-label="受賞花火モチーフギャラリー">
   <div class="showcase-topline">
     <div>
@@ -2818,6 +2877,58 @@ setInterval(updateCheersGateUI, 250);
 
 
 /* v50: gallery uses stable 100lvh; no scroll-time height mutation. */
+
+
+/* ===== v51: stop iPhone rubber-band below the last gallery card ===== */
+(function lockTruePageBottom(){
+  let lastTouchY=null;
+
+  const maxScroll=()=>Math.max(
+    0,
+    document.documentElement.scrollHeight -
+    (window.visualViewport?.height || window.innerHeight || document.documentElement.clientHeight)
+  );
+
+  const atBottom=()=>window.scrollY >= maxScroll()-2;
+
+  document.addEventListener('touchstart',e=>{
+    if(e.touches && e.touches.length===1){
+      lastTouchY=e.touches[0].clientY;
+    }
+  },{passive:true});
+
+  document.addEventListener('touchmove',e=>{
+    if(!document.body.classList.contains('showcase-mode')) return;
+    if(!e.touches || e.touches.length!==1 || lastTouchY===null) return;
+
+    const y=e.touches[0].clientY;
+    const fingerDelta=y-lastTouchY;
+
+    /* Finger moving upward means "scroll farther down". Block it at the real bottom. */
+    if(fingerDelta<0 && atBottom()){
+      e.preventDefault();
+      window.scrollTo(0,maxScroll());
+    }
+    lastTouchY=y;
+  },{passive:false});
+
+  document.addEventListener('touchend',()=>{lastTouchY=null},{passive:true});
+  document.addEventListener('touchcancel',()=>{lastTouchY=null},{passive:true});
+
+  document.addEventListener('wheel',e=>{
+    if(document.body.classList.contains('showcase-mode') && e.deltaY>0 && atBottom()){
+      e.preventDefault();
+      window.scrollTo(0,maxScroll());
+    }
+  },{passive:false});
+
+  /* If WebKit reports a transient overshoot, clamp it back immediately after release. */
+  document.addEventListener('scrollend',()=>{
+    if(!document.body.classList.contains('showcase-mode')) return;
+    const max=maxScroll();
+    if(window.scrollY>max) window.scrollTo(0,max);
+  },{passive:true});
+})();
 
 </script>
 </body></html>
