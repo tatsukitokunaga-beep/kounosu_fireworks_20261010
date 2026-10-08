@@ -1082,6 +1082,57 @@ body.showcase-mode main{
   }
 }
 
+
+/* ===== v50: stable final gallery + stronger award-firework rendering ===== */
+html,body{
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+  overscroll-behavior-y:none;
+}
+.app,main{margin-bottom:0!important}
+.app{padding-bottom:0!important}
+.source-links{
+  padding-bottom:calc(104px + env(safe-area-inset-bottom))!important;
+}
+.firework-showcase{
+  box-sizing:border-box!important;
+  height:100lvh!important;
+  min-height:100lvh!important;
+  max-height:100lvh!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+@supports not (height:100lvh){
+  .firework-showcase{
+    height:100vh!important;
+    min-height:100vh!important;
+    max-height:100vh!important;
+  }
+}
+/* Fixed nav may hide visually, but never changes document geometry. */
+body.showcase-mode .bottomnav{
+  display:grid!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+  transform:translate3d(-50%,130%,0)!important;
+}
+body.showcase-mode .sticky-progress{
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+body.showcase-mode .app,
+body.showcase-mode main{
+  padding-bottom:0!important;
+  margin-bottom:0!important;
+}
+/* Stronger color only inside the final gallery; still behind all text/cards. */
+body.showcase-mode #fireworks{
+  opacity:.98!important;
+  filter:saturate(1.32) brightness(1.10) contrast(1.04);
+}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
 <canvas id="launchTrails" aria-hidden="true"></canvas><canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
@@ -1582,17 +1633,22 @@ function particleVector(cfg,i,amount,baseAngle){
 }
 function burst(x=Math.random()*ambientVW,y=70+Math.random()*ambientVH*.50,amount=null,style=null){
   style=style||chooseAmbientStyle();const cfg=styleConfig(style),p=cfg.preset,pal=cfg.pal;
-  amount=Math.min(amount??cfg.amount,IS_MOBILE?92:128);
-  const showcaseScale=(IS_MOBILE&&ambientShowcaseActive)?.78:1;
+  const galleryShot=!!ambientShowcaseActive;
+  const requested=amount??cfg.amount;
+  const rayBoost=galleryShot?(p.base==='palm'?1.32:1.46):1;
+  amount=Math.min(Math.round(requested*rayBoost),IS_MOBILE?(galleryShot?128:92):(galleryShot?176:128));
+  const showcaseScale=(IS_MOBILE&&galleryShot)?.80:1;
   ambientRings.push({x,y,r:3,a:IS_MOBILE?.70:.62,c:pal[1]||pal[0],s:p.base==='willow'?3.3:(IS_MOBILE?3.8:3.4),spokes:true,spokeSeed:Math.random()*Math.PI*2});
   if(ambientRings.length>12)ambientRings.shift();
   const baseAngle=Math.random()*Math.PI*2;
   for(let i=0;i<amount;i++){
-    const v=particleVector(cfg,i,amount,baseAngle);const hero=cfg.heroEvery===1||i%cfg.heroEvery===0;
+    const v=particleVector(cfg,i,amount,baseAngle);
+    const hero=cfg.heroEvery===1||i%cfg.heroEvery===0||(galleryShot&&i%4===0);
     const life=cfg.life+Math.random()*22+(hero?10:0),c=pal[i%pal.length];
-    particles.push({x,y,vx:Math.cos(v.a)*v.speed*v.xs*showcaseScale,vy:Math.sin(v.a)*v.speed*v.ys*showcaseScale,life,maxLife:life,c,r:(hero?1.6:1)+Math.random()*(hero?1.1:.75),hero,drag:cfg.drag,grav:cfg.grav+(Math.random()*.005),twinkle:Math.random()*Math.PI*2,crackle:!!cfg.crackle,style:p.base,presetId:style,ox:x,oy:y,tailMax:cfg.tail+(hero?2:0),tail:[{x,y}],ageFrames:0,openFrames:(p.base==='willow'?14:(p.base==='palm'?12:9)),wave:p.wave||0});
+    const radiusBoost=galleryShot?1.08:1;
+    particles.push({x,y,vx:Math.cos(v.a)*v.speed*v.xs*showcaseScale,vy:Math.sin(v.a)*v.speed*v.ys*showcaseScale,life,maxLife:life,c,r:((hero?1.6:1)+Math.random()*(hero?1.1:.75))*radiusBoost,hero,drag:cfg.drag,grav:cfg.grav+(Math.random()*.005),twinkle:Math.random()*Math.PI*2,crackle:!!cfg.crackle,style:p.base,presetId:style,ox:x,oy:y,tailMax:cfg.tail+(hero?2:0)+(galleryShot?2:0),tail:[{x,y}],ageFrames:0,openFrames:(p.base==='willow'?14:(p.base==='palm'?12:9)),wave:p.wave||0,gallery:galleryShot});
   }
-  const cap=IS_MOBILE?440:570;if(particles.length>cap)particles.splice(0,particles.length-cap)
+  const cap=IS_MOBILE?(galleryShot?620:440):(galleryShot?820:570);if(particles.length>cap)particles.splice(0,particles.length-cap)
 }
 
 function drawTrail(p,alpha,twinkle){
@@ -1600,6 +1656,7 @@ function drawTrail(p,alpha,twinkle){
   if(!t||t.length<2)return;
 
   const styleBoost=p.style==='willow'?1.30:(p.style==='palm'?1.22:1);
+  const galleryBoost=p.gallery?1.28:1;
   const totalDist=Math.hypot(p.x-p.ox,p.y-p.oy);
   const centerVisible=totalDist>8;
 
@@ -1612,7 +1669,7 @@ function drawTrail(p,alpha,twinkle){
     const len=Math.max(1,totalDist);
 
     // Outer soft glow spanning the full explosion ray.
-    ctx.globalAlpha=alpha*(p.hero?.17:.10)*styleBoost*twinkle;
+    ctx.globalAlpha=Math.min(1,alpha*(p.hero?.17:.10)*styleBoost*twinkle*galleryBoost);
     ctx.strokeStyle=p.c;
     ctx.lineWidth=(p.hero?5.4:3.3)*styleBoost;
     ctx.beginPath();
@@ -1626,7 +1683,7 @@ function drawTrail(p,alpha,twinkle){
     grad.addColorStop(.18,p.c);
     grad.addColorStop(.72,p.c);
     grad.addColorStop(1,'rgba(255,255,255,0.98)');
-    ctx.globalAlpha=alpha*(p.hero?.44:.30)*twinkle;
+    ctx.globalAlpha=Math.min(1,alpha*(p.hero?.44:.30)*twinkle*galleryBoost);
     ctx.strokeStyle=grad;
     ctx.lineWidth=(p.hero?2.7:1.55)*styleBoost;
     ctx.beginPath();
@@ -1636,7 +1693,7 @@ function drawTrail(p,alpha,twinkle){
 
     // Very thin white-hot inner ray, only once the particle has moved far enough out.
     if(len>24){
-      ctx.globalAlpha=alpha*(p.hero?.58:.40)*twinkle;
+      ctx.globalAlpha=Math.min(1,alpha*(p.hero?.58:.40)*twinkle*galleryBoost);
       ctx.strokeStyle='rgba(255,255,255,.92)';
       ctx.lineWidth=p.hero?1.15:.66;
       ctx.beginPath();
@@ -1658,17 +1715,17 @@ function drawTrail(p,alpha,twinkle){
     const k=i/(t.length-1);
     const fade=Math.pow(k,1.6);
 
-    ctx.globalAlpha=alpha*fade*(p.hero?.18:.10)*styleBoost*twinkle;
+    ctx.globalAlpha=Math.min(1,alpha*fade*(p.hero?.18:.10)*styleBoost*twinkle*galleryBoost);
     ctx.strokeStyle=p.c;
     ctx.lineWidth=(p.hero?5.0:3.1)*(0.30+0.70*k)*styleBoost;
     ctx.beginPath();ctx.moveTo(q0.x,q0.y);ctx.lineTo(q1.x,q1.y);ctx.stroke();
 
-    ctx.globalAlpha=alpha*fade*(p.hero?.48:.34)*twinkle;
+    ctx.globalAlpha=Math.min(1,alpha*fade*(p.hero?.48:.34)*twinkle*galleryBoost);
     ctx.lineWidth=(p.hero?2.6:1.45)*(0.25+0.75*k)*styleBoost;
     ctx.beginPath();ctx.moveTo(q0.x,q0.y);ctx.lineTo(q1.x,q1.y);ctx.stroke();
 
     if(k>.58){
-      ctx.globalAlpha=alpha*fade*(p.hero?.74:.54)*twinkle;
+      ctx.globalAlpha=Math.min(1,alpha*fade*(p.hero?.74:.54)*twinkle*galleryBoost);
       ctx.strokeStyle='#fff';
       ctx.lineWidth=(p.hero?1.05:.60)*(0.22+0.78*k);
       ctx.beginPath();ctx.moveTo(q0.x,q0.y);ctx.lineTo(q1.x,q1.y);ctx.stroke();
@@ -1693,22 +1750,23 @@ function drawParticle(p){
   ctx.lineCap='round';
   drawTrail(p,alpha,twinkle);
 
+  const galleryBloom=p.gallery?1.30:1;
   // Large but soft color bloom.
-  ctx.globalAlpha=alpha*(p.hero?.31:.18)*twinkle;
+  ctx.globalAlpha=Math.min(1,alpha*(p.hero?.31:.18)*twinkle*galleryBloom);
   ctx.fillStyle=p.c;
   ctx.beginPath();
   ctx.arc(p.x,p.y,p.r*(p.hero?5.1:3.8),0,Math.PI*2);
   ctx.fill();
 
   // White-hot center.
-  ctx.globalAlpha=Math.min(1,alpha*.98);
+  ctx.globalAlpha=Math.min(1,alpha*.98*(p.gallery?1.10:1));
   ctx.fillStyle='#fff';
   ctx.beginPath();
   ctx.arc(p.x,p.y,Math.max(.58,p.r*(p.hero?.68:.48)),0,Math.PI*2);
   ctx.fill();
 
   // Colored core.
-  ctx.globalAlpha=alpha*.88;
+  ctx.globalAlpha=Math.min(1,alpha*.88*(p.gallery?1.18:1));
   ctx.fillStyle=p.c;
   ctx.beginPath();
   ctx.arc(p.x,p.y,p.r*(p.hero?1.22:.92),0,Math.PI*2);
@@ -1920,7 +1978,7 @@ function anim(ts){
     // Very short-lived radial spokes right after detonation.
     // These make the explosion clearly read as "center -> outward".
     if(q.spokes && q.r<44){
-      const count=18;
+      const count=ambientShowcaseActive?28:18;
       ctx.lineCap='round';
       for(let s=0;s<count;s++){
         const a=q.spokeSeed+(Math.PI*2*s/count);
@@ -2723,38 +2781,43 @@ setInterval(updateCheersGateUI, 250);
 })();
 
 
-/* ===== v48: final gallery mode ===== */
+/* ===== v50: stable gallery mode with hysteresis (no threshold oscillation) ===== */
 (function initFireworkShowcase(){
   const section=document.getElementById('fireworkShowcase');
   if(!section)return;
   renderShowcaseMeta(AWARD_INSPIRED_PRESETS[0].id,true);
-  const io=new IntersectionObserver(entries=>{
-    for(const entry of entries){
-      const on=entry.isIntersecting;
-      if(on===ambientShowcaseActive)continue;
-      ambientShowcaseActive=on;
-      document.body.classList.toggle('showcase-mode',on);
-      section.classList.toggle('in-view',on);
-      scheduleAmbientFirework();
-      if(on)setTimeout(()=>{if(ambientShowcaseActive)launchAmbientFirework()},420);
-    }
-  },{threshold:[0,.05,.25],rootMargin:'0px 0px -4% 0px'});
-  io.observe(section);
-})();
 
-
-/* ===== v49: exact visible gallery height on iPhone Chrome / Safari ===== */
-(function syncShowcaseViewportHeight(){
-  const apply=()=>{
-    const h=Math.round(window.visualViewport?.height || window.innerHeight || document.documentElement.clientHeight);
-    document.documentElement.style.setProperty('--showcase-vh',Math.max(1,h)+'px');
+  let mode=false,raf=0;
+  const viewportHeight=()=>document.documentElement.clientHeight||window.innerHeight||700;
+  const applyMode=on=>{
+    if(on===mode)return;
+    mode=on;
+    ambientShowcaseActive=on;
+    document.body.classList.toggle('showcase-mode',on);
+    section.classList.toggle('in-view',on);
+    scheduleAmbientFirework();
+    if(on)setTimeout(()=>{if(mode)launchAmbientFirework()},420);
   };
-  apply();
-  window.addEventListener('resize',apply,{passive:true});
-  window.addEventListener('orientationchange',()=>setTimeout(apply,80),{passive:true});
-  window.visualViewport?.addEventListener('resize',apply,{passive:true});
-  window.visualViewport?.addEventListener('scroll',apply,{passive:true});
+  const update=()=>{
+    raf=0;
+    const r=section.getBoundingClientRect(),h=viewportHeight();
+    if(!mode){
+      if(r.top<h*.62 && r.bottom>h*.35)applyMode(true);
+    }else{
+      /* Wide hysteresis prevents iPhone elastic scrolling from toggling the mode. */
+      if(r.top>h*.92 || r.bottom<h*.12)applyMode(false);
+    }
+  };
+  const request=()=>{if(!raf)raf=requestAnimationFrame(update)};
+  addEventListener('scroll',request,{passive:true});
+  addEventListener('resize',request,{passive:true});
+  addEventListener('orientationchange',()=>setTimeout(request,120),{passive:true});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)request()});
+  update();
 })();
+
+
+/* v50: gallery uses stable 100lvh; no scroll-time height mutation. */
 
 </script>
 </body></html>
