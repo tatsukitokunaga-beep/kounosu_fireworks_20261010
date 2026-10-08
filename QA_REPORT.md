@@ -1,21 +1,28 @@
-# v51 最終余白修正 QA
+# v52 QA — 真の最下部修正
 
-## 原因
-v50では最終ギャラリーに `height:100lvh` を強制していました。
-iPhone Chrome / SafariではブラウザUIの状態と `lvh` が一致しないことがあり、
-解説カードの後ろに「内容のないセクション高さ」が残る可能性がありました。
+## 構造変更
+v51までは花火ギャラリーが `.app > main` の末尾にありました。
+v52ではギャラリーを `.app` の外へ移し、body直下の最終通常フロー要素に変更しています。
 
-## v51修正
-- `.firework-showcase` の `100lvh / 100vh / 100dvh` 強制固定を最終CSSで完全無効化
-- ギャラリーの高さを実コンテンツ量で決定
-- 花火空間だけ `clamp(430px, 58svh, 560px)` を確保
-- 解説カード直下をセクション終端に変更
-- セクション下padding / margin / borderを0
-- html / body / main / app の下余白を0
-- iPhoneの最下部 rubber-band を touchmove で抑止
-- トラックパッド / wheelの下方向overscrollも抑止
+DOM概略:
 
-## 構造確認
-- footerは花火ギャラリーより前
-- 花火ギャラリーは main の最後のflow要素
-- その後にある下部ナビ・乾杯モーダルは fixed overlayで、通常flowの高さを持たない
+body
+├─ fixed背景
+├─ .app
+│  ├─ main（通常コンテンツ）
+│  └─ .bottomnav（fixed）
+├─ #fireworkShowcase ← 最後に高さを持つ要素
+├─ #celebration（fixed）
+├─ #toast（fixed）
+├─ scripts（display:none）
+└─ #eventLockPop（fixed）
+
+## スクロール終端
+- documentの通常フローは `#fireworkShowcase` の下端で終了
+- 花火より後ろのUIは fixed
+- iOSのelastic overscroll中に gallery mode をOFFにしない
+- 下端でさらに下方向へドラッグした場合は touchmove を preventDefault
+- overshootした scrollY は requestAnimationFrame で花火下端へclamp
+
+## 狙い
+ブラウザのスクロールバーが示す文書終端と、花火ギャラリーの下端を同じ位置にすること。

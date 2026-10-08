@@ -1192,6 +1192,70 @@ body.showcase-mode main{
   }
 }
 
+
+/* ===== v52: TRUE document bottom =====
+   The fireworks gallery is now a direct body child after .app.
+   It is the LAST normal-flow element in the document.
+*/
+html,body{
+  margin:0!important;
+  padding:0!important;
+  min-height:0!important;
+  overscroll-behavior-y:none!important;
+}
+body{
+  overflow-x:hidden!important;
+}
+.app{
+  margin:0 auto!important;
+  padding-bottom:0!important;
+}
+.firework-showcase{
+  width:min(640px,100%)!important;
+  box-sizing:border-box!important;
+  margin:0 auto!important;
+  padding:18px max(18px,env(safe-area-inset-left)) 0!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:hidden!important;
+  border-bottom:0!important;
+}
+.showcase-open-sky{
+  height:clamp(430px,58svh,560px)!important;
+  min-height:clamp(430px,58svh,560px)!important;
+  max-height:560px!important;
+}
+.showcase-meta{
+  margin:0!important;
+  border-bottom-left-radius:0!important;
+  border-bottom-right-radius:0!important;
+}
+
+/* Nothing after the gallery may create document height. */
+body > .celebration,
+body > .toast,
+body > .event-lock-pop{
+  position:fixed!important;
+}
+body > script{
+  display:none!important;
+}
+
+/* Hide fixed UI while looking at the true final section. */
+body.showcase-mode .bottomnav,
+body.showcase-mode .sticky-progress{
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+@media(max-width:430px){
+  .showcase-open-sky{
+    height:clamp(420px,57svh,540px)!important;
+    min-height:clamp(420px,57svh,540px)!important;
+  }
+}
+
 </style><meta content="たつきとあいの花火ナイト。持ち物チェック、会場ガイド、ふたりの乾杯シーン。" name="description"/><meta content="noindex,nofollow" name="robots"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="dark" name="color-scheme"/></head>
 <body>
 <canvas id="launchTrails" aria-hidden="true"></canvas><canvas id="fireworks"></canvas><div class="stars"></div><div class="aurora"></div>
@@ -1285,7 +1349,12 @@ body.showcase-mode main{
 <div style="font-size:10px;color:var(--muted);line-height:1.7;margin-top:8px">※ガイド画像には現在地を重ねません。①は参考候補で、実際の観覧区画や混雑は現地で確認してください。GPSには端末の測位誤差があります。</div>
 </section>
 
-<footer class="source-links"><b>出発前と帰りにチェック</b><br/><a href="https://kounosuhanabi.com/areainfo/event_poppy.html" rel="noopener noreferrer" target="_blank">公式会場案内</a><a href="https://kounosuhanabi.com/access/accsess-train.html" rel="noopener noreferrer" target="_blank">公式の帰り方</a><a href="https://tenki.jp/forecast/3/14/4320/11217/" rel="noopener noreferrer" target="_blank">鴻巣の天気</a><br/><span class="revision">v51 / 2026-10-08 最終余白修正版</span></footer>
+<footer class="source-links"><b>出発前と帰りにチェック</b><br/><a href="https://kounosuhanabi.com/areainfo/event_poppy.html" rel="noopener noreferrer" target="_blank">公式会場案内</a><a href="https://kounosuhanabi.com/access/accsess-train.html" rel="noopener noreferrer" target="_blank">公式の帰り方</a><a href="https://tenki.jp/forecast/3/14/4320/11217/" rel="noopener noreferrer" target="_blank">鴻巣の天気</a><br/><span class="revision">v52 / 2026-10-08 真の最下部修正版</span></footer>
+
+</main>
+<nav class="bottomnav"><button class="on" data-go="home" type="button"><i>🎆</i>TOP</button><button data-go="check" type="button"><i>✅</i>準備</button><button data-go="mapsec" type="button"><i>🗺️</i>MAP</button></nav>
+</div>
+
 <section class="firework-showcase" id="fireworkShowcase" aria-label="受賞花火モチーフギャラリー">
   <div class="showcase-topline">
     <div>
@@ -1316,9 +1385,6 @@ body.showcase-mode main{
     </div>
   </div>
 </section>
-</main>
-<nav class="bottomnav"><button class="on" data-go="home" type="button"><i>🎆</i>TOP</button><button data-go="check" type="button"><i>✅</i>準備</button><button data-go="mapsec" type="button"><i>🗺️</i>MAP</button></nav>
-</div>
 
 <div aria-hidden="true" aria-label="たつきとあいの乾杯シーン" aria-modal="true" class="celebration" data-phase="closed" id="celebration" role="dialog">
 <div class="celebration-bg"></div><div class="celebration-night-stars"></div>
@@ -2864,7 +2930,9 @@ setInterval(updateCheersGateUI, 250);
       if(r.top<h*.62 && r.bottom>h*.35)applyMode(true);
     }else{
       /* Wide hysteresis prevents iPhone elastic scrolling from toggling the mode. */
-      if(r.top>h*.92 || r.bottom<h*.12)applyMode(false);
+      /* Only leave gallery mode when the user actually scrolls BACK UP.
+         Never disable it because iOS elastic overscroll moved the bottom past the viewport. */
+      if(r.top>h*.92)applyMode(false);
     }
   };
   const request=()=>{if(!raf)raf=requestAnimationFrame(update)};
@@ -2879,55 +2947,86 @@ setInterval(updateCheersGateUI, 250);
 /* v50: gallery uses stable 100lvh; no scroll-time height mutation. */
 
 
-/* ===== v51: stop iPhone rubber-band below the last gallery card ===== */
-(function lockTruePageBottom(){
-  let lastTouchY=null;
 
-  const maxScroll=()=>Math.max(
-    0,
-    document.documentElement.scrollHeight -
-    (window.visualViewport?.height || window.innerHeight || document.documentElement.clientHeight)
+/* ===== v52: hard stop at the physical end of the fireworks gallery ===== */
+(function hardStopAtFireworks(){
+  const section=document.getElementById('fireworkShowcase');
+  if(!section)return;
+
+  let lastTouchY=null;
+  let clampRaf=0;
+
+  const viewportHeight=()=>(
+    window.visualViewport?.height ||
+    document.documentElement.clientHeight ||
+    window.innerHeight ||
+    1
   );
 
-  const atBottom=()=>window.scrollY >= maxScroll()-2;
+  const galleryBottom=()=>{
+    const r=section.getBoundingClientRect();
+    return window.scrollY + r.bottom;
+  };
 
-  document.addEventListener('touchstart',e=>{
-    if(e.touches && e.touches.length===1){
-      lastTouchY=e.touches[0].clientY;
+  const maxAllowedScroll=()=>Math.max(0,galleryBottom()-viewportHeight());
+
+  const atTrueBottom=()=>window.scrollY >= maxAllowedScroll()-2;
+
+  const clampToGalleryBottom=()=>{
+    clampRaf=0;
+    const max=maxAllowedScroll();
+    if(window.scrollY>max){
+      window.scrollTo({top:max,left:0,behavior:'instant'});
     }
-  },{passive:true});
+  };
 
-  document.addEventListener('touchmove',e=>{
-    if(!document.body.classList.contains('showcase-mode')) return;
-    if(!e.touches || e.touches.length!==1 || lastTouchY===null) return;
+  const requestClamp=()=>{
+    if(!clampRaf)clampRaf=requestAnimationFrame(clampToGalleryBottom);
+  };
+
+  /* A scroll event may report elastic overshoot on iOS. Clamp every such frame. */
+  window.addEventListener('scroll',requestClamp,{passive:true});
+
+  window.addEventListener('touchstart',e=>{
+    if(e.touches?.length===1)lastTouchY=e.touches[0].clientY;
+  },{passive:true,capture:true});
+
+  window.addEventListener('touchmove',e=>{
+    if(!document.body.classList.contains('showcase-mode'))return;
+    if(e.touches?.length!==1 || lastTouchY===null)return;
 
     const y=e.touches[0].clientY;
-    const fingerDelta=y-lastTouchY;
+    const draggingFurtherDown=(y-lastTouchY)<0;
 
-    /* Finger moving upward means "scroll farther down". Block it at the real bottom. */
-    if(fingerDelta<0 && atBottom()){
+    if(draggingFurtherDown && atTrueBottom()){
       e.preventDefault();
-      window.scrollTo(0,maxScroll());
+      const max=maxAllowedScroll();
+      if(window.scrollY!==max){
+        window.scrollTo({top:max,left:0,behavior:'instant'});
+      }
     }
     lastTouchY=y;
-  },{passive:false});
+  },{passive:false,capture:true});
 
-  document.addEventListener('touchend',()=>{lastTouchY=null},{passive:true});
-  document.addEventListener('touchcancel',()=>{lastTouchY=null},{passive:true});
+  window.addEventListener('touchend',()=>{
+    lastTouchY=null;
+    requestClamp();
+  },{passive:true,capture:true});
 
-  document.addEventListener('wheel',e=>{
-    if(document.body.classList.contains('showcase-mode') && e.deltaY>0 && atBottom()){
+  window.addEventListener('touchcancel',()=>{
+    lastTouchY=null;
+    requestClamp();
+  },{passive:true,capture:true});
+
+  window.addEventListener('wheel',e=>{
+    if(document.body.classList.contains('showcase-mode') && e.deltaY>0 && atTrueBottom()){
       e.preventDefault();
-      window.scrollTo(0,maxScroll());
+      window.scrollTo({top:maxAllowedScroll(),left:0,behavior:'instant'});
     }
-  },{passive:false});
+  },{passive:false,capture:true});
 
-  /* If WebKit reports a transient overshoot, clamp it back immediately after release. */
-  document.addEventListener('scrollend',()=>{
-    if(!document.body.classList.contains('showcase-mode')) return;
-    const max=maxScroll();
-    if(window.scrollY>max) window.scrollTo(0,max);
-  },{passive:true});
+  window.visualViewport?.addEventListener('resize',requestClamp,{passive:true});
+  window.addEventListener('orientationchange',()=>setTimeout(requestClamp,100),{passive:true});
 })();
 
 </script>
